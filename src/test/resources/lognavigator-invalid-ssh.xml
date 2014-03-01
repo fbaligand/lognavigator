@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lognavigator-config>
+    <log-access-config id="invalid-ssh-config" type="SSH" user="Fabien" directory="target/test-classes/files"/>
+</lognavigator-config>

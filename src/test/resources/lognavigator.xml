@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lognavigator-config>
+    <log-access-config id="a-localhost" type="LOCAL" directory="D:/Developpement/workspaces/workspaceTest/LogNavigator/src/test/resources/files"/>
+    <log-access-config id="b-localhost-ssh" type="SSH" user="Fabien" host="127.0.0.1" directory="D:/Developpement/workspaces/workspaceTest/LogNavigator/src/test/resources/files"/>
+    <log-access-config id="c-tomcat-httpd" type="HTTPD" url="http://archive.apache.org/dist/tomcat/"/>
+    <log-access-config id="d-invalid-config" type="LOCAL" directory="C:/DoesNotExist"/>
+    <log-access-config id="e-protected-access" type="LOCAL" directory="D:/Developpement/workspaces/workspaceTest/LogNavigator/src/test/resources/files" authorized-roles="lognavigator-protected" authorized-users="user2"/>
+</lognavigator-config>

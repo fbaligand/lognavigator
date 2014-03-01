@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"> 
+
+	<display-name>LogNavigator</display-name>
+
+	<!-- Spring MVC Servlet -->
+	<servlet>
+		<servlet-name>lognavigator</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:lognavigator-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Spring MVC Servlet Mapping -->
+	<servlet-mapping>
+		<servlet-name>lognavigator</servlet-name>
+		<url-pattern>/index.html</url-pattern>
+		<url-pattern>/logs/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Welcome Page -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- Protected Access Configuration -->	
+	 <security-constraint>
+        <web-resource-collection>
+             <web-resource-name>LogNavigator-Protected-Resources</web-resource-name>
+            <url-pattern>/logs/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>lognavigator</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>lognavigator-authentication</realm-name>
+    </login-config>
+</web-app>

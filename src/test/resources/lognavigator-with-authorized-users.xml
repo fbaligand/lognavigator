@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lognavigator-config>
+    <log-access-config id="config-with-users" type="LOCAL" directory="target/test-classes/files" authorized-users="fabien baligand"/>
+</lognavigator-config>

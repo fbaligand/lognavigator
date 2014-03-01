@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lognavigator-config>
+    <log-access-config id="invalid-config-type" type="UNKNOW_TYPE" />
+</lognavigator-config>

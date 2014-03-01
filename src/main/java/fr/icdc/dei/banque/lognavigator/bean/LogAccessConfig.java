@@ -1,0 +1,166 @@
+package fr.icdc.dei.banque.lognavigator.bean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+
+/**
+ * Bean containing access config information to access one set of logs.
+ * Parameters to define by type :
+ * - LOCAL : directory
+ * - SSH : user, host, directory
+ * - HTTPD: url
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder={"authorizedRoles", "authorizedUsers", "url", "directory", "host", "user", "type", "id"})
+public class LogAccessConfig implements Comparable<LogAccessConfig> {
+	
+	public static final String EVERYONE_IS_AUTHORIZED = "*";
+
+	public static enum LogAccessType {SSH, LOCAL, HTTPD};
+	
+	@XmlAttribute(required=true)
+	private String id;
+	
+	@XmlAttribute(required=true)
+	private LogAccessType type;
+
+	@XmlAttribute
+	private String host;
+
+	@XmlAttribute
+	private String user;
+
+	@XmlAttribute
+	private String directory;
+
+	@XmlAttribute
+	private String url;
+	
+	@XmlAttribute(name="authorized-users")
+	private List<String> authorizedUsers;
+	
+	@XmlAttribute(name="authorized-roles")
+	private List<String> authorizedRoles;
+	
+	
+	//////////////////
+	// CONSTRUCTORS //
+	//////////////////
+	
+	public LogAccessConfig() {
+		authorizedUsers = new ArrayList<String>();
+		authorizedUsers.add(EVERYONE_IS_AUTHORIZED);
+		
+		authorizedRoles = new ArrayList<String>();
+		authorizedRoles.add(EVERYONE_IS_AUTHORIZED);
+	}
+	
+	public LogAccessConfig(String id, LogAccessType type, String host, String directory, String user) {
+		this();
+		this.id = id;
+		this.type = type;
+		this.host = host;
+		this.directory = directory;
+		this.user = user;
+	}
+
+	public LogAccessConfig(String id, LogAccessType type, String host, String directory) {
+		this();
+		this.id = id;
+		this.type = type;
+		this.directory = directory;
+	}
+	
+	public LogAccessConfig(String id, LogAccessType type, String url) {
+		this();
+		this.id = id;
+		this.type = type;
+		this.url = url;
+	}
+	
+
+	/////////////
+	// METHODS //
+	/////////////
+	
+	public boolean isEveryUserAuthorized() {
+		return this.authorizedUsers.isEmpty() || this.authorizedUsers.get(0).equals(EVERYONE_IS_AUTHORIZED);
+	}
+	
+	public boolean isEveryRoleAuthorized() {
+		return this.authorizedRoles.isEmpty() || this.authorizedRoles.get(0).equals(EVERYONE_IS_AUTHORIZED);
+	}
+	
+	/////////////////////////
+	// GETTERS AND SETTERS //
+	/////////////////////////
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public LogAccessType getType() {
+		return type;
+	}
+	public void setType(LogAccessType type) {
+		this.type = type;
+	}
+	public String getHost() {
+		return host;
+	}
+	public void setHost(String host) {
+		this.host = host;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getDirectory() {
+		return directory;
+	}
+	public void setDirectory(String directory) {
+		this.directory = directory;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public List<String> getAuthorizedUsers() {
+		return authorizedUsers;
+	}
+	public void setAuthorizedUsers(List<String> authorizedUsers) {
+		this.authorizedUsers = authorizedUsers;
+	}
+	public List<String> getAuthorizedRoles() {
+		return authorizedRoles;
+	}
+	public void setAuthorizedRoles(List<String> authorizedRoles) {
+		this.authorizedRoles = authorizedRoles;
+	}
+
+	
+	//////////////////////////
+	// TOSTRING / COMPARETO // 
+	//////////////////////////
+	
+	@Override
+	public String toString() {
+		return "LogAccessConfig [" + id + ": " + user + "@" + host + ":" + directory + "]";
+	}
+	
+	@Override
+	public int compareTo(LogAccessConfig other) {
+		return this.id.compareTo(other.getId());
+	}
+}
