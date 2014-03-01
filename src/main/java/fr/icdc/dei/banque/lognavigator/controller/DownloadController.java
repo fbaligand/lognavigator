@@ -41,10 +41,6 @@ public class DownloadController {
 
 		// Download the file
 		logAccessService.downloadFile(logAccessConfigId, fileName, response.getOutputStream());
-		
-		// Set nav bar data
-		Set<LogAccessConfig> logAccessConfigList = configService.getLogAccessConfigs();
-		model.addAttribute(logAccessConfigList);
 	}
 	
 }
