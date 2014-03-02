@@ -1,6 +1,6 @@
 package fr.icdc.dei.banque.lognavigator.controller;
 
-import static fr.icdc.dei.banque.lognavigator.util.WebConstants.*;
+import static fr.icdc.dei.banque.lognavigator.util.Constants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.icdc.dei.banque.lognavigator.bean.DisplayType;
+import fr.icdc.dei.banque.lognavigator.bean.FileInfo;
 import fr.icdc.dei.banque.lognavigator.bean.TableCell;
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig.LogAccessType;
 import fr.icdc.dei.banque.lognavigator.exception.LogAccessException;
 import fr.icdc.dei.banque.lognavigator.service.LogAccessService;
+import fr.icdc.dei.banque.lognavigator.util.FileInfoFactory;
 import fr.icdc.dei.banque.lognavigator.util.TableCellFactory;
 
 @Controller
@@ -39,8 +43,18 @@ public class CommandController {
 					  @PathVariable String logAccessConfigId, 
 					  @RequestParam(value="cmd", required=false, defaultValue=DEFAULT_LIST_COMMAND) String cmd,
 					  @RequestParam(value="encoding", required=false, defaultValue=DEFAULT_ENCODING_OPTION) String encoding,
-					  @RequestParam(value="displayType", required=false, defaultValue=DEFAULT_DISPLAY_TYPE_OPTION) DisplayType displayType
+					  @RequestParam(value="displayType", required=false) DisplayType displayType
 	) throws LogAccessException, IOException {
+		
+		// Define displayType when not given by client
+		if (displayType == null) { 
+			if (cmd.startsWith("ls ") || cmd.startsWith("tar -ztvf ") || cmd.endsWith("| tar -ztv")) {
+				displayType = DisplayType.TABLE;
+			}
+			else {
+				displayType = DisplayType.RAW;
+			}
+		}
 		
 		// Add options to model
 		model.addAttribute(SHOW_OPTIONS_KEY, true);
@@ -60,11 +74,14 @@ public class CommandController {
 		// Process the result lines for html table display
 		else {
 			try {
-				if (cmd.startsWith("ls")) {
+				if (cmd.startsWith("ls ")) {
 					processLs(resultReader, model);
 				}
+				else if (cmd.startsWith("tar -ztvf ") || cmd.endsWith("| tar -ztv")) {
+					processTarGzList(resultReader, model, cmd);
+				}
 				else {
-					processNonLs(resultReader, model);
+					processOtherCommand(resultReader, model);
 				}
 			}
 			finally {
@@ -79,6 +96,9 @@ public class CommandController {
 		return PREPARE_MAIN_VIEW;
 	}
 	
+	/**
+	 * Display the result of a "ls" command as a convenient html table
+	 */
 	private void processLs(BufferedReader resultReader, Model model) throws IOException {
 		
 		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
@@ -131,7 +151,62 @@ public class CommandController {
 		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
 	}
 
-	private void processNonLs(BufferedReader resultReader, Model model) throws IOException {
+	/**
+	 * Display the result of a "tar.gz list" command as a convenient html table
+	 */
+	private void processTarGzList(BufferedReader resultReader, Model model, String cmd) throws IOException {
+		
+		// Compute archive filename
+		Matcher matcher = Pattern.compile("[^ ]+\\.tar\\.gz").matcher(cmd);
+		matcher.find();
+		String targzFileName = matcher.group();
+		
+		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
+
+		// Add link to parent folder
+		FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(targzFileName);
+		List<TableCell> parentFolderCells = TableCellFactory.createTableCellList(parentFolderLink);
+		tableLines.add(parentFolderCells);
+		
+		// Compute archive contents list
+		String line;
+		while ( (line = resultReader.readLine()) != null) {
+			
+			// directories are ignored
+			boolean isDirectory = line.startsWith(DIRECTORY_RIGHT);
+			if (isDirectory) {
+				continue;
+			}
+			
+			line = line.replaceAll(" +", " ");
+			StringTokenizer stLine = new StringTokenizer(line, " ");
+			
+			// Skip 2 first columns
+			stLine.nextToken();
+			stLine.nextToken();
+			
+			// Get columns to display
+			String fileSize = stLine.nextToken();
+			String fileDate = stLine.nextToken();
+			fileDate += " " + stLine.nextToken() + ":00";
+			String filePath = stLine.nextToken();
+			
+			// Construct cells
+			LogAccessType logAccessType = cmd.startsWith(HTTPD_FILE_VIEW_COMMAND_START) ? LogAccessType.HTTPD : LogAccessType.LOCAL;
+			List<TableCell> lineCells = TableCellFactory.createTableCellList(filePath, targzFileName + "!" + filePath, isDirectory, fileSize, fileDate, logAccessType);
+			tableLines.add(lineCells);
+		}
+		
+		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, SIZE_TABLE_HEADER, DATE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
+		
+		model.addAttribute(TABLE_LINES_KEY, tableLines);
+		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
+	}
+
+	/**
+	 * Display the result of any command as a default html table
+	 */
+	private void processOtherCommand(BufferedReader resultReader, Model model) throws IOException {
 		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
 		String line;
 		while ( (line = resultReader.readLine()) != null) {

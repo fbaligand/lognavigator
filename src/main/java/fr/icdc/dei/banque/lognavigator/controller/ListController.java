@@ -1,6 +1,6 @@
 package fr.icdc.dei.banque.lognavigator.controller;
 
-import static fr.icdc.dei.banque.lognavigator.util.WebConstants.*;
+import static fr.icdc.dei.banque.lognavigator.util.Constants.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import fr.icdc.dei.banque.lognavigator.bean.FileInfo;
 import fr.icdc.dei.banque.lognavigator.bean.TableCell;
 import fr.icdc.dei.banque.lognavigator.exception.LogAccessException;
 import fr.icdc.dei.banque.lognavigator.service.LogAccessService;
+import fr.icdc.dei.banque.lognavigator.util.FileInfoFactory;
 import fr.icdc.dei.banque.lognavigator.util.TableCellFactory;
 
 @Controller
@@ -41,14 +42,7 @@ public class ListController {
 
 		// Add link to parent folder
 		if (subPath != null) {
-			FileInfo parentFolderLink = new FileInfo();
-			parentFolderLink.setDirectory(true);
-			parentFolderLink.setFileName("..");
-			parentFolderLink.setFileSize(0L);
-			int parentFolderEndIndex = subPath.lastIndexOf('/');
-			if (parentFolderEndIndex != -1) {
-				parentFolderLink.setRelativePath(subPath.substring(0, parentFolderEndIndex));
-			}
+			FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(subPath);
 			fileInfos.add(parentFolderLink);
 		}
 		

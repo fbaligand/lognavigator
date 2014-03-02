@@ -24,6 +24,7 @@ import fr.icdc.dei.banque.lognavigator.bean.FileInfo;
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig;
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig.LogAccessType;
 import fr.icdc.dei.banque.lognavigator.exception.LogAccessException;
+import fr.icdc.dei.banque.lognavigator.util.Constants;
 
 /**
  * Service which manages HTTP connections and commands to remote hosts
@@ -53,9 +54,9 @@ public class LogAccessServiceHttpd implements LogAccessService {
 		// Get the LogAccessConfig
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
 		
-		// Replace "curl <file>" occurences by "curl <full url>"
+		// Replace "curl -s <file>" occurences by "curl -s <full url>"
 		String urlPrefix = logAccessConfig.getUrl();
-		String fullUrlShellCommand = shellCommand.replaceAll("curl( +)", "curl " + urlPrefix);
+		String fullUrlShellCommand = shellCommand.replaceFirst(Constants.HTTPD_FILE_VIEW_COMMAND_START, Constants.HTTPD_FILE_VIEW_COMMAND_START + urlPrefix);
 		
 		try {
 			// Prepare shellCommand array (depending OS)

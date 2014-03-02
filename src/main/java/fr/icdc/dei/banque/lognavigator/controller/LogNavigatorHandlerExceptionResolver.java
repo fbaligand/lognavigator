@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import fr.icdc.dei.banque.lognavigator.util.WebConstants;
+import fr.icdc.dei.banque.lognavigator.util.Constants;
 
 /**
  * Component which process all errors that controllers throw
@@ -23,8 +23,8 @@ public class LogNavigatorHandlerExceptionResolver implements HandlerExceptionRes
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 		LOGGER.error("Error when calling web action", ex);
 		
-		ModelAndView modelAndView = new ModelAndView(WebConstants.PREPARE_MAIN_VIEW);
-		modelAndView.addObject(WebConstants.ERROR_MESSAGE_KEY, ex.toString());
+		ModelAndView modelAndView = new ModelAndView(Constants.PREPARE_MAIN_VIEW);
+		modelAndView.addObject(Constants.ERROR_MESSAGE_KEY, ex.toString());
 		return modelAndView;
 	}
 

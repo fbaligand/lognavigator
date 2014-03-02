@@ -1,6 +1,6 @@
 package fr.icdc.dei.banque.lognavigator.util;
 
-import static fr.icdc.dei.banque.lognavigator.util.WebConstants.*;
+import static fr.icdc.dei.banque.lognavigator.util.Constants.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -46,20 +46,39 @@ public class TableCellFactory {
 		// File name
 		try {
 			if (!isDirectory) {
+				
+				// Compute command pattern
 				String commandPattern = DEFAULT_FILE_VIEW_COMMAND;
+				String commandArg = relativePath;
 				if (fileName.endsWith(".tar.gz") || fileName.endsWith(".tgz")) {
 					commandPattern = TAR_GZ_FILE_VIEW_COMMAND;
 				}
 				else if (fileName.endsWith(".gz")) {
 					commandPattern = GZ_FILE_VIEW_COMMAND;
 				}
+
+				// Process special case of tar.gz contents
+				if (relativePath.contains(TAR_GZ_CONTENT_SPLIT)) {
+					String targzFileName = relativePath.split("!")[0];
+					commandPattern = commandPattern.replace(" {0}", "");
+					commandPattern = MessageFormat.format(TAR_GZ_CONTENT_FILE_VIEW_COMMAND, "{0}", fileName, commandPattern);
+					commandArg = targzFileName;
+				}
+
+				// Process special case of log access type HTTP
 				if (logAccessType == LogAccessType.HTTPD) {
+					if (commandPattern.startsWith("tar ")) {
+						commandPattern = commandPattern.replaceFirst("f", "");
+					}
 					commandPattern = commandPattern.replace(" {0}", "");
 					commandPattern = HTTPD_FILE_VIEW_COMMAND_PREFIX + commandPattern;
 				}
-				String command = MessageFormat.format(commandPattern, relativePath);
+				
+				// Compute view command
+				String command = MessageFormat.format(commandPattern, commandArg);
 				lineCells.add(new TableCell(fileName, FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING)));
 			}
+			// Directory
 			else {
 				String link = relativePath != null ? FOLDER_VIEW_URL_PREFIX + URLEncoder.encode(relativePath, URL_ENCODING) : LOGS_LIST_URL;
 				lineCells.add(new TableCell(fileName, link, null, "text-warning"));

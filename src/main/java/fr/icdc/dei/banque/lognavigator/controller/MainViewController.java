@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig;
 import fr.icdc.dei.banque.lognavigator.exception.ConfigException;
 import fr.icdc.dei.banque.lognavigator.service.ConfigService;
-import fr.icdc.dei.banque.lognavigator.util.WebConstants;
+import fr.icdc.dei.banque.lognavigator.util.Constants;
 
 @Controller
 public class MainViewController {
@@ -35,6 +35,6 @@ public class MainViewController {
 		}
 		
 		// Launch main view
-		return WebConstants.MAIN_VIEW;
+		return Constants.MAIN_VIEW;
 	}
 }

@@ -4,7 +4,7 @@ package fr.icdc.dei.banque.lognavigator.util;
 /**
  * Constants for the web tiers
  */
-public class WebConstants {
+public class Constants {
 	
 	///////////////////////////////
 	// CONTROLLER AND VIEW NAMES //
@@ -49,8 +49,11 @@ public class WebConstants {
 	public static final String DEFAULT_LIST_COMMAND = "ls -l";
 	public static final String DEFAULT_FILE_VIEW_COMMAND = "tail -1000 {0}";
 	public static final String GZ_FILE_VIEW_COMMAND = "gzip -dc {0} | tail -1000";
-	public static final String TAR_GZ_FILE_VIEW_COMMAND = "tar -O -xf {0} | gzip -dc | tail -1000";
-	public static final String HTTPD_FILE_VIEW_COMMAND_PREFIX = "curl {0} | ";
+	public static final String TAR_GZ_FILE_VIEW_COMMAND = "tar -ztvf {0}";
+	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND = "tar -O -zxvf {0} {1} | {2}";
+
+	public static final String HTTPD_FILE_VIEW_COMMAND_START = "curl -s ";
+	public static final String HTTPD_FILE_VIEW_COMMAND_PREFIX = HTTPD_FILE_VIEW_COMMAND_START + "{0} | ";
 	
 	////////////
 	// OTHERS //
@@ -65,6 +68,7 @@ public class WebConstants {
 	public static final String DEFAULT_DISPLAY_TYPE_OPTION = "RAW";
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String URL_ENCODING = "UTF-8";
+	public static final String TAR_GZ_CONTENT_SPLIT = ".tar.gz!";
 
 	public static final String TABLE_LAYOUT_FULL_WIDTH = "span12";
 	public static final String TABLE_LAYOUT_CENTERED = "offset2 span8";

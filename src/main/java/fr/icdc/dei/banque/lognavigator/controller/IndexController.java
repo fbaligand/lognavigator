@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig;
 import fr.icdc.dei.banque.lognavigator.service.ConfigService;
-import fr.icdc.dei.banque.lognavigator.util.WebConstants;
+import fr.icdc.dei.banque.lognavigator.util.Constants;
 
 @Controller
 public class IndexController {
@@ -24,6 +24,6 @@ public class IndexController {
 		Set<LogAccessConfig> logAccessConfigList = configService.getLogAccessConfigs();
 		String logAccessConfigId = logAccessConfigList.iterator().next().getId();
 		
-		return MessageFormat.format(WebConstants.REDIRECT_LOGS_LIST_CONTROLLER, logAccessConfigId);
+		return MessageFormat.format(Constants.REDIRECT_LOGS_LIST_CONTROLLER, logAccessConfigId);
 	}
 }
