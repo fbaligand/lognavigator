@@ -7,7 +7,7 @@
 >
 
     <!-- Enable Spring configuration by annotation -->
-	<context:component-scan base-package="fr.icdc.dei.banque.lognavigator" />
+	<context:component-scan base-package="org.lognavigator" />
 	
 	<!-- Enable System Properties and JNDI PlaceHolders -->
 	<context:property-placeholder/>
