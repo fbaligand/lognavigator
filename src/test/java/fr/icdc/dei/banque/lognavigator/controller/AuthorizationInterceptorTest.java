@@ -1,9 +1,8 @@
 package fr.icdc.dei.banque.lognavigator.controller;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import java.security.Principal;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +13,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig;
 import fr.icdc.dei.banque.lognavigator.bean.LogAccessConfig.LogAccessType;
 import fr.icdc.dei.banque.lognavigator.exception.AuthorizationException;
+import fr.icdc.dei.banque.lognavigator.service.AuthorizationServiceImpl;
 import fr.icdc.dei.banque.lognavigator.service.ConfigService;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,14 +30,16 @@ public class AuthorizationInterceptorTest {
 	
 	@Mock
 	private HttpServletRequest httpRequestMock;
-	@Mock
-	private Principal userPrincipalMock;
 	
 	@InjectMocks
 	private AuthorizationInterceptor authorizationInterceptor;
 
 	@Before
 	public void setUp() throws Exception {
+		
+		// Inject authorization service
+		authorizationInterceptor.authorizationService = new AuthorizationServiceImpl();
+		
 		// Mock context path
 		when(httpRequestMock.getContextPath()).thenReturn("/LogNavigator");
 		
@@ -51,6 +55,13 @@ public class AuthorizationInterceptorTest {
 		logAccessConfig.setAuthorizedRoles(Arrays.asList("onerole"));
 		when(configServiceMock.getLogAccessConfig("log-with-onerole-authorized")).thenReturn(logAccessConfig);
 		
+		logAccessConfig = new LogAccessConfig("log-with-onerole-and-oneuser-authorized", LogAccessType.LOCAL, "localhost", "/log");
+		logAccessConfig.setAuthorizedRoles(Arrays.asList("onerole"));
+		logAccessConfig.setAuthorizedUsers(Arrays.asList("oneuser"));
+		when(configServiceMock.getLogAccessConfig("log-with-onerole-and-oneuser-authorized")).thenReturn(logAccessConfig);
+		
+		// Force no authenticated user
+		SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
 	@Test
@@ -85,8 +96,8 @@ public class AuthorizationInterceptorTest {
 	public void testPreHandle_UserAuthorized() throws Exception {
 		
 		when(httpRequestMock.getRequestURI()).thenReturn("/LogNavigator/logs/log-with-oneuser-authorized/list");
-		when(httpRequestMock.getUserPrincipal()).thenReturn(userPrincipalMock);
-		when(userPrincipalMock.getName()).thenReturn("oneuser");
+		TestingAuthenticationToken authenticatedUser = new TestingAuthenticationToken("oneuser", null);
+		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 		
 		boolean isAccessAuthorized = authorizationInterceptor.preHandle(httpRequestMock, null, null);
 		
@@ -97,8 +108,8 @@ public class AuthorizationInterceptorTest {
 	public void testPreHandle_UserNotAuthorized() throws Exception {
 		
 		when(httpRequestMock.getRequestURI()).thenReturn("/LogNavigator/logs/log-with-oneuser-authorized/list");
-		when(httpRequestMock.getUserPrincipal()).thenReturn(userPrincipalMock);
-		when(userPrincipalMock.getName()).thenReturn("not-authorized-user");
+		TestingAuthenticationToken authenticatedUser = new TestingAuthenticationToken("not-authorized-user", null);
+		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 		
 		authorizationInterceptor.preHandle(httpRequestMock, null, null);
 	}
@@ -106,8 +117,10 @@ public class AuthorizationInterceptorTest {
 	@Test
 	public void testPreHandle_RoleAuthorized() throws Exception {
 		
+		// given
 		when(httpRequestMock.getRequestURI()).thenReturn("/LogNavigator/logs/log-with-onerole-authorized/list");
-		when(httpRequestMock.isUserInRole("onerole")).thenReturn(true);
+		TestingAuthenticationToken authenticatedUser = new TestingAuthenticationToken("anyuser", null, "onerole");
+		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 		
 		boolean isAccessAuthorized = authorizationInterceptor.preHandle(httpRequestMock, null, null);
 		
@@ -122,4 +135,16 @@ public class AuthorizationInterceptorTest {
 		authorizationInterceptor.preHandle(httpRequestMock, null, null);
 	}
 	
+	@Test
+	public void testPreHandle_UserNotAuthorizedButRoleAuthorized() throws Exception {
+		
+		when(httpRequestMock.getRequestURI()).thenReturn("/LogNavigator/logs/log-with-onerole-and-oneuser-authorized/list");
+		TestingAuthenticationToken authenticatedUser = new TestingAuthenticationToken("anyuser", null, "onerole");
+		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+		
+		boolean isAccessAuthorized = authorizationInterceptor.preHandle(httpRequestMock, null, null);
+		
+		assertTrue(isAccessAuthorized);
+	}
+
 }

@@ -20,6 +20,7 @@ public class Constants {
 	// MODEL MAP KEYS //
 	////////////////////
 
+	public static final String LOG_ACCESS_CONFIG_ID_KEY = "logAccessConfigId";
 	public static final String ERROR_MESSAGE_KEY = "errorMessage";
 	public static final String SHOW_OPTIONS_KEY = "showOptions";
 	public static final String ENCODING_KEY = "encoding";

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	   xmlns="http://www.springframework.org/schema/security"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
+>
+
+	<!-- Profile which disables Spring-Security -->
+	<beans:beans profile="security-disabled">
+		<http security="none" />
+	</beans:beans>
+
+	<!-- Profile which enables Spring-Security -->
+	<beans:beans profile="security-enabled">
+		<http realm="LogNavigator Authentication" use-expressions="true">
+			<intercept-url pattern="/**" access="authenticated"/>
+			<http-basic />
+		</http>
+		
+	
+		<!-- Reference to external spring-security authentication-manager configuration -->	
+		<beans:import resource="${lognavigator/authentication/config:classpath:lognavigator-authentication-context.xml}"/>
+	</beans:beans>
+	
+</beans:beans>

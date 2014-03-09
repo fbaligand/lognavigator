@@ -6,13 +6,28 @@
 
 	<display-name>LogNavigator</display-name>
 
+	<!-- Spring Root Configuration -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:lognavigator-context.xml</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Spring Default Profile-->
+	<context-param>
+		<param-name>spring.profiles.default</param-name>
+		<param-value>security-disabled</param-value>
+	</context-param>
+
 	<!-- Spring MVC Servlet -->
 	<servlet>
 		<servlet-name>lognavigator</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath:lognavigator-context.xml</param-value>
+			<param-value>classpath:lognavigator-context.xml,classpath:lognavigator-mvc-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -24,23 +39,19 @@
 		<url-pattern>/logs/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Spring Security Filter -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<servlet-name>lognavigator</servlet-name>
+	</filter-mapping>
+
 	<!-- Welcome Page -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
-	<!-- Protected Access Configuration -->	
-	 <security-constraint>
-        <web-resource-collection>
-             <web-resource-name>LogNavigator-Protected-Resources</web-resource-name>
-            <url-pattern>/logs/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>lognavigator</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>lognavigator-authentication</realm-name>
-    </login-config>
 </web-app>
