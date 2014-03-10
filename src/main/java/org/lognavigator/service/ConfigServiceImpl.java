@@ -1,5 +1,6 @@
 package org.lognavigator.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -130,6 +131,10 @@ public class ConfigServiceImpl implements ConfigService {
 			case LOCAL:
 				if (StringUtils.isEmpty(logAccessConfig.getDirectory())) {
 					throw new ConfigException("'directory' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
+				}
+				File directoryFile = new File(logAccessConfig.getDirectory());
+				if (!directoryFile.isAbsolute()) {
+					logAccessConfig.setDirectory(directoryFile.getAbsolutePath());
 				}
 				break;
 			case HTTPD:
