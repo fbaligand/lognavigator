@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 	<Environment name="fake" value="false" type="java.lang.Boolean" />
+
+<!-- 	<Environment name="lognavigator/config" value="file:/path/to/lognavigator.xml" type="java.lang.String" /> -->
+
 <!-- 	<Environment name="spring.profiles.active" value="security-enabled" type="java.lang.String" /> -->
+<!-- 	<Environment name="lognavigator/authentication/config" value="file:/path/to/lognavigator-authentication-context.xml" type="java.lang.String" /> -->
 </Context>
