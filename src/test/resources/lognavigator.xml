@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lognavigator-config>
-    <log-access-config id="a-localhost" type="LOCAL" directory="src/test/resources/files"/>
-    <log-access-config id="b-localhost-ssh" type="SSH" user="lognavigator" host="localhost" directory="."/>
-    <log-access-config id="c-tomcat-httpd" type="HTTPD" url="http://archive.apache.org/dist/tomcat/"/>
-    <log-access-config id="d-invalid-config" type="LOCAL" directory="/that/path/does/not/exist"/>
-    <log-access-config id="e-protected-access" type="LOCAL" directory="src/test/resources/files" authorized-roles="lognavigator-protected" authorized-users="user2"/>
+    <log-access-config id="a-localhost" type="LOCAL" directory="src/test/resources/files" display-group="unprotected" />
+    <log-access-config id="b-localhost-ssh" type="SSH" user="lognavigator" host="localhost" directory="." display-group="unprotected" />
+    <log-access-config id="c-tomcat-httpd" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" display-group="unprotected" />
+    <log-access-config id="d-invalid-config" type="LOCAL" directory="/that/path/does/not/exist" display-group="unprotected" />
+    <log-access-config id="e-protected-access" type="LOCAL" directory="src/test/resources/files" authorized-roles="lognavigator-protected" authorized-users="user2" display-group="protected" />
 </lognavigator-config>

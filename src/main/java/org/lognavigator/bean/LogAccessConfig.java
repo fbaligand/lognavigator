@@ -47,6 +47,9 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	@XmlAttribute(name="authorized-roles")
 	private List<String> authorizedRoles;
 	
+	@XmlAttribute(name="display-group")
+	private String displayGroup;
+	
 	
 	//////////////////
 	// CONSTRUCTORS //
@@ -149,10 +152,18 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 		this.authorizedRoles = authorizedRoles;
 	}
 
+	public String getDisplayGroup() {
+		return displayGroup;
+	}
+
+	public void setDisplayGroup(String displayGroup) {
+		this.displayGroup = displayGroup;
+	}
+
 	
-	//////////////////////////
-	// TOSTRING / COMPARETO // 
-	//////////////////////////
+	//////////////////////////////////////////////
+	// TOSTRING / COMPARETO / EQUALS / HASHCODE // 
+	//////////////////////////////////////////////
 	
 	@Override
 	public String toString() {
@@ -162,5 +173,30 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	@Override
 	public int compareTo(LogAccessConfig other) {
 		return this.id.compareTo(other.getId());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LogAccessConfig other = (LogAccessConfig) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
 }

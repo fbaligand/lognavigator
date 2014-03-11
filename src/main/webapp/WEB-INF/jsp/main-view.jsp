@@ -50,9 +50,17 @@
 					
 					<form class="navbar-form pull-right">
 						<select name="logAccessConfigId" id="logAccessConfigId">
-							<c:forEach var="logAccessConfig" items="${logAccessConfigList}" >
-								<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if>>${logAccessConfig.id}</option>
+<%-- 							<c:forEach var="logAccessConfig" items="${logAccessConfigList}" > --%>
+<%-- 								<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if>>${logAccessConfig.id}</option> --%>
+<%-- 							</c:forEach> --%>
+							<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}" >
+								<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
+									<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}" >
+										<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if>>${logAccessConfig.id}</option>
+									</c:forEach>
+								</optgroup>
 							</c:forEach>
+
 						</select>
 					</form>
 				</div>
