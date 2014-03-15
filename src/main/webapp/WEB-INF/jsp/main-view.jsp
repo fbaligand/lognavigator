@@ -22,6 +22,7 @@
 	</style>
 	<link href="<c:url value="/css/bootstrap/css/bootstrap-responsive-2.3.1.css"/>" rel="stylesheet">
 	<link href="<c:url value="/css/datatables/DT_bootstrap.css"/>" rel="stylesheet">
+	<link href="<c:url value="/css/lognavigator.css"/>" rel="stylesheet">
 	<%-- /STYLES --%>
 
 	<%-- HTML5 shiv, for IE6-8 support of HTML5 elements --%>
