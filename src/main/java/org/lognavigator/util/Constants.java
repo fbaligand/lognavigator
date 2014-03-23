@@ -11,7 +11,12 @@ public class Constants {
 	///////////////////////////////
 	
 	public static final String REDIRECT_LOGS_LIST_CONTROLLER = "redirect:/logs/{0}/list";
+	public static final String FOLDER_VIEW_URL_PREFIX = "list?subPath=";
+	public static final String LOGS_LIST_URL = "list";
+	
 	public static final String FORWARD_COMMAND_CONTROLLER = "forward:command";
+	public static final String FILE_VIEW_URL_PREFIX = "command?cmd=";
+
 	public static final String MAIN_VIEW = "main-view";
 	public static final String PREPARE_MAIN_VIEW = "forward:prepare-main-view";
 
@@ -22,6 +27,7 @@ public class Constants {
 
 	public static final String LOG_ACCESS_CONFIG_ID_KEY = "logAccessConfigId";
 	public static final String LOG_ACCESS_CONFIG_IDS_BY_DISPLAY_GROUP_KEY = "logAccessConfigIdsByDisplayGroup";
+	public static final String ERROR_TITLE_KEY = "errorTitle";
 	public static final String ERROR_MESSAGE_KEY = "errorMessage";
 	public static final String SHOW_OPTIONS_KEY = "showOptions";
 	public static final String ENCODING_KEY = "encoding";
@@ -30,7 +36,7 @@ public class Constants {
 	public static final String TABLE_LINES_KEY = "tableLines";
 	public static final String RAW_CONTENT_KEY = "rawContent";
 	public static final String TABLE_LAYOUT_CLASS_KEY = "tableLayoutClass";
-	public static final String IS_ROOT_LIST_VIEW_KEY = "isRootListView";
+	public static final String BREADCRUMBS_KEY = "breadcrumbs";
 
 	
 	///////////////////
@@ -48,23 +54,28 @@ public class Constants {
 	// COMMANDS //
 	//////////////
 
-	public static final String DEFAULT_LIST_COMMAND = "ls -l";
+	public static final String LIST_COMMAND_START = "ls ";
+	public static final String DEFAULT_LIST_COMMAND = LIST_COMMAND_START + "-l";
 	public static final String DEFAULT_FILE_VIEW_COMMAND = "tail -1000 {0}";
+	
 	public static final String GZ_FILE_VIEW_COMMAND = "gzip -dc {0} | tail -1000";
-	public static final String TAR_GZ_FILE_VIEW_COMMAND = "tar -ztvf {0}";
-	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND = "tar -O -zxvf {0} {1} | {2}";
+	public static final String TAR_GZ_FILE_VIEW_COMMAND_START = "tar -ztvf ";
+	public static final String TAR_GZ_FILE_VIEW_COMMAND = TAR_GZ_FILE_VIEW_COMMAND_START + "{0}";
+	public static final String TAR_GZ_FILE_VIEW_COMMAND_END = "| tar -ztv";
+
+	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START = "tar -O -zxvf ";
+	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND = TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START + "{0} {1} | {2}";
 
 	public static final String HTTPD_FILE_VIEW_COMMAND_START = "curl -s ";
 	public static final String HTTPD_FILE_VIEW_COMMAND_PREFIX = HTTPD_FILE_VIEW_COMMAND_START + "{0} | ";
+	
+	public static final String GREP_COMMAND_START = "grep ";
+
 	
 	////////////
 	// OTHERS //
 	////////////
 
-	public static final String FILE_VIEW_URL_PREFIX = "command?cmd=";
-	public static final String FOLDER_VIEW_URL_PREFIX = "list?subPath=";
-	public static final String LOGS_LIST_URL = "list";
-	
 	public static final String DIRECTORY_RIGHT = "d";
 	public static final String DEFAULT_ENCODING_OPTION = "UTF-8";
 	public static final String DEFAULT_DISPLAY_TYPE_OPTION = "RAW";
@@ -72,7 +83,7 @@ public class Constants {
 	public static final String URL_ENCODING = "UTF-8";
 	public static final String TAR_GZ_CONTENT_SPLIT = ".tar.gz!";
 
-	public static final String TABLE_LAYOUT_FULL_WIDTH = "span12";
-	public static final String TABLE_LAYOUT_CENTERED = "offset2 span8";
+	public static final String TABLE_LAYOUT_FULL_WIDTH = "col-md-13";
+	public static final String TABLE_LAYOUT_CENTERED = "col-md-offset-2 col-md-8";
 
 }

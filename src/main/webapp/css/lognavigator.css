@@ -1,4 +1,40 @@
+body {
+	padding-top: 70px;
+	padding-bottom: 30px;
+}
+
 pre {
 	white-space: pre;
-	float: left;	
+	float: left;
+}
+
+.navbar-header .breadcrumb {
+	padding-bottom: 8px; 
+	margin-bottom: 0px; 
+	margin-top: 8px; 
+	background-color: #F8F8F8;	
+}
+
+.navbar-header .breadcrumb li {
+	margin-left: -10px;
+}
+
+.rounded-right {
+	border-radius: 0 14px 14px 0;
+}
+
+.rounded-left {
+	border-radius: 14px 0 0 14px;
+}
+
+.fa-4 {
+	font-size: 4em;
+}
+
+.nofloat {
+	float: none;
+}
+
+.dataTables_filter .form-control {
+	width: 16em;
 }

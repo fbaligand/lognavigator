@@ -3,31 +3,27 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <%-- HEADER PART --%>
 <head>
-	<meta charset="utf-8">
-	<title>LogNavigator</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Log Navigator">
+	<title>LogNavigator</title>
 
 	<%-- STYLES --%>
-	<link href="<c:url value="/css/bootstrap/css/bootstrap-2.3.1.css"/>" rel="stylesheet">
-	<style type="text/css">
- 	body {
- 		padding-top: 60px;
- 		padding-bottom: 40px;
- 	}
-	</style>
-	<link href="<c:url value="/css/bootstrap/css/bootstrap-responsive-2.3.1.css"/>" rel="stylesheet">
-	<link href="<c:url value="/css/datatables/DT_bootstrap.css"/>" rel="stylesheet">
-	<link href="<c:url value="/css/lognavigator.css"/>" rel="stylesheet">
+    <link rel="stylesheet" href="<c:url value="/css/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/font-awesome/css/font-awesome.css"/>">
+	<link rel="stylesheet" href="<c:url value="/css/datatables/css/dataTables.bootstrap.css"/>">
+	<link rel="stylesheet" href="<c:url value="/css/lognavigator.css"/>">
 	<%-- /STYLES --%>
 
-	<%-- HTML5 shiv, for IE6-8 support of HTML5 elements --%>
-	<!--[if lt IE 9]>
+    <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
       <script src="<c:url value="/js/html5shiv.js"/>"></script>
+      <script src="<c:url value="/js/respond.min.js"/>"></script>
     <![endif]-->
 
 </head>
@@ -36,53 +32,62 @@
 <body>
 
 	<%-- NAVBAR --%>
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-				</button>
-				<a class="brand" href="<c:url value="/"/>">LogNavigator</a>
-				
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-						<li class="<c:if test="${isRootListView}">active</c:if>"><a href="list">Logs List</a></li>
-					</ul>
-					
-					<form class="navbar-form pull-right">
-						<select name="logAccessConfigId" id="logAccessConfigId">
-<%-- 							<c:forEach var="logAccessConfig" items="${logAccessConfigList}" > --%>
-<%-- 								<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if>>${logAccessConfig.id}</option> --%>
-<%-- 							</c:forEach> --%>
-							<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}" >
-								<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
-									<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}" >
-										<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if>>${logAccessConfig.id}</option>
-									</c:forEach>
-								</optgroup>
-							</c:forEach>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
 
-						</select>
-					</form>
-				</div>
+			<div class="navbar-header">
+				<a href="<c:url value="/"/>" class="navbar-brand">LogNavigator</a>
 			</div>
+
+			<c:if test="${breadcrumbs != null}">
+				<div class="navbar-header">
+					<ul class="breadcrumb list-inline">
+						<c:forEach var="breadcrumb" items="${breadcrumbs}">
+							<c:if test="${breadcrumb.link != null}">
+								<li><a href="${breadcrumb.link}">${breadcrumb.label}</a></li>
+							</c:if>
+							<c:if test="${breadcrumb.link == null}">
+								<li class="active">${breadcrumb.label}</li>
+							</c:if>
+						</c:forEach>
+					</ul>
+				</div>
+			</c:if>
+
+			<div class="navbar-collapse collapse">
+				<form class="navbar-form navbar-right">
+					<select name="logAccessConfigId" id="logAccessConfigId" class="form-control">
+						<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
+							<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
+								<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
+									<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if> >${logAccessConfig.id}</option>
+								</c:forEach>
+							</optgroup>
+						</c:forEach>
+					</select>
+				</form>
+			</div>
+			
 		</div>
-	</div>
-	<%-- /NAVBAR --%>
+	</nav>
+   	<%-- /NAVBAR --%>
 
-	<%-- MAIN CONTAINER --%>
-	<div class="container-full">
 
-		<%-- COMMAND FORM --%>
-		<div class="row-fluid">
-			<div class="offset2 span8">
-				<form class="form-search text-center well" method="get" action="command">
+	<%-- COMMAND FORM --%>
+	<section class="container-fluid" role="command-form">
+		<div class="row">
+			<div class="col-md-offset-2 col-md-8">
+				<form class="text-center well" method="get" action="command" id="commandForm">
 
 					<%-- COMMAND --%>
 					<div class="row-fluid">
-						<div class="span12 input-append">
-							<input type="text" name="cmd" value="<c:out value="${param.cmd}"/>" class="span8 search-query" placeholder="Type command..."/>
-							<button type="submit" class="btn btn-primary"><i class="icon-play icon-white"></i></button>
+						<div class="col-md-12">
+							 <div class="input-group">
+								<input type="text" name="cmd" value="<c:out value="${param.cmd}"/>" class="form-control rounded-left" placeholder="Type command..."/>
+								<span class="input-group-btn">
+									<button class="btn btn-primary rounded-right" type="button"><span class="glyphicon glyphicon-play"></span></button>
+								</span>
+							</div>
 						</div>
 					</div>
 
@@ -92,43 +97,61 @@
 						<div class="row-fluid">
 
 							<%-- ENCODING OPTION --%>
-							<div class="span3 offset3">
-								<div class="btn-group" data-toggle="buttons-radio" id="encoding-btn-group">
-									<button class="btn" data-value="UTF-8">UTF8</button>
-									<button class="btn" data-value="ISO-8859-1">ISO</button>
+							<div class="col-md-3 col-md-offset-3">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-default" for="encodingUTF8">
+										<input type="radio" name="encoding" id="encodingUTF8" value="UTF-8" <c:if test="${encoding == 'UTF-8'}">checked="checked"</c:if> > UTF8
+									</label>
+									<label class="btn btn-default" for="encodingISO">
+										<input type="radio" name="encoding" id="encodingISO" value="ISO-8859-1" <c:if test="${encoding == 'ISO-8859-1'}">checked="checked"</c:if> > ISO
+									</label>
 								</div>
-								<input type="hidden" id="encoding" name="encoding" value="${encoding}"/>
 							</div>
 
 							<%-- DISPLAY TYPE OPTION --%>
-							<div class="span3">
-								<div class="btn-group" data-toggle="buttons-radio" id="displaytype-btn-group">
-									<button class="btn" data-value="TABLE">TABLE</button>
-									<button class="btn" data-value="RAW">RAW</button>
+							<div class="col-md-3">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-default" for="displayTypeTABLE">
+										<input type="radio" name="displayType" id="displayTypeTABLE" value="TABLE" <c:if test="${displayType == 'TABLE'}">checked="checked"</c:if> > TABLE
+									</label>
+									<label class="btn btn-default" for="displayTypeRAW">
+										<input type="radio" name="displayType" id="displayTypeRAW" value="RAW" <c:if test="${displayType == 'RAW'}">checked="checked"</c:if> > RAW
+									</label>
 								</div>
-								<input type="hidden" id="displayType" name="displayType" value="${displayType}"/>
 							</div>
 
-							<div class="span3"></div>
 						</div>
 					</c:if>
+
+					<br clear="all"/>
 
 				</form>
 			</div>
 		</div>
-		<%-- /COMMAND FORM --%>
+	</section>
+	<%-- /COMMAND FORM --%>
 
-		<br/>&nbsp;
 
+	<%-- RESULTS --%>
+	<section class="container-fluid" role="results">
+	
 		<c:choose>
 
 			<%-- ERROR MESSAGE --%>
 			<c:when test="${errorMessage != null}">
+				<div class="row">&nbsp;</div>
 				<div class="row-fluid">
-					<div class="offset2 span8">
-						<div class="alert alert-error alert-block">
-							<h4>Error!</h4>
-							${errorMessage}
+					<div class="col-md-offset-2 col-md-8">
+						<div class="alert alert-danger">
+							<div class="row">
+								<div class="col-md-1">
+									<i class="fa fa-exclamation-triangle fa-4"></i>
+								</div>
+								<div class="col-md-11">
+									<div><h4>${errorTitle}</h4></div>
+									<div>${errorMessage}</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -136,8 +159,8 @@
 
 			<%-- RESULTS RAW --%>
 			<c:when test="${rawContent != null}">
-				<div class="row-fluid">
-					<div class="span12">
+				<div class="row">
+					<div class="col-md-13">
 						<pre><c:out value="${rawContent}"/></pre>
 					</div>
 				</div>
@@ -145,6 +168,7 @@
 
 			<%-- RESULTS TABLE --%>
 			<c:otherwise>
+				<div class="row">&nbsp;</div>
 				<div class="row-fluid">
 					<div class="${tableLayoutClass}">
 						<table class="table table-hover table-condensed" id="resultsTable">
@@ -163,7 +187,7 @@
 										<c:forEach var="tableCell" items="${tableLine}">
 											<c:choose>
 												<c:when test="${tableCell.link != null and tableCell.linkIcon != null}">
-													<td align="center"><a class="text-center ${tableCell.cssClass}" href="${tableCell.link}" title="${tableCell.content}"><i class="${tableCell.linkIcon}"></i></a></td>
+													<td><a class="${tableCell.cssClass}" href="${tableCell.link}" title="${tableCell.content}"><span class="${tableCell.linkIcon}"></span></a></td>
 												</c:when>
 												<c:when test="${tableCell.link != null}">
 													<td><a class="${tableCell.cssClass}" href="${tableCell.link}">${tableCell.content}</a></td>
@@ -183,15 +207,18 @@
 			</c:otherwise>
 		</c:choose>
 
-	</div>
-	<%-- /MAIN CONTAINER --%>
-
+	</section>
+	<%-- /RESULTS --%>
+		
+        
 	<%-- SCRIPTS --%>
-	<script src="<c:url value="/js/jquery-1.9.1.min.js"/>"></script>
-	<script src="<c:url value="/js/bootstrap-2.3.1.min.js"/>"></script>
-	<script src="<c:url value="/js/jquery.dataTables.min.js"/>"></script>
-	<script src="<c:url value="/js/DT_bootstrap.js"/>"></script>
-	<script src="<c:url value="/js/lognavigator.js"/>"></script>
+    <script src="<c:url value="/js/jquery-1.10.2.js"/>"></script>
+    <script src="<c:url value="/js/bootstrap.min.js"/>"></script>
+    <script src="<c:url value="/js/jquery.dataTables.js"/>"></script>
+    <script src="<c:url value="/js/dataTables.bootstrap.js"/>"></script>
+   	<script src="<c:url value="/js/lognavigator.js"/>"></script>
 	<%-- /SCRIPTS --%>
+
 </body>
+
 </html>

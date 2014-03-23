@@ -90,7 +90,7 @@ public class TableCellFactory {
 
 		// File size
 		if (fileSize != null) {
-			lineCells.add(new TableCell(String.valueOf(fileSize)));
+			lineCells.add(new TableCell(fileSize));
 		}
 
 		// File date
@@ -100,7 +100,7 @@ public class TableCellFactory {
 
 		// File actions
 		if (!isDirectory) {
-			lineCells.add(new TableCell("download", "download?fileName=" + relativePath, "icon-download-alt"));
+			lineCells.add(new TableCell("download", "download?fileName=" + relativePath, "glyphicon glyphicon-download"));
 		}
 		else {
 			lineCells.add(new TableCell(null));

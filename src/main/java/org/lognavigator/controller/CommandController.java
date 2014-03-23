@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,12 +16,14 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.DisplayType;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.TableCell;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.service.LogAccessService;
+import org.lognavigator.util.BreadcrumbFactory;
 import org.lognavigator.util.FileInfoFactory;
 import org.lognavigator.util.TableCellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +53,7 @@ public class CommandController {
 		
 		// Define displayType when not given by client
 		if (displayType == null) { 
-			if (cmd.startsWith("ls ") || cmd.startsWith("tar -ztvf ") || cmd.endsWith("| tar -ztv")) {
+			if (cmd.startsWith(LIST_COMMAND_START) || cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
 				displayType = DisplayType.TABLE;
 			}
 			else {
@@ -74,10 +79,10 @@ public class CommandController {
 		// Process the result lines for html table display
 		else {
 			try {
-				if (cmd.startsWith("ls ")) {
+				if (cmd.startsWith(LIST_COMMAND_START)) {
 					processLs(resultReader, model);
 				}
-				else if (cmd.startsWith("tar -ztvf ") || cmd.endsWith("| tar -ztv")) {
+				else if (cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
 					processTarGzList(resultReader, model, cmd);
 				}
 				else {
@@ -91,6 +96,9 @@ public class CommandController {
 				catch (IOException e) {}
 			}
 		}
+		
+		// Generate Breadcrumbs
+		generateBreadcrumbs(logAccessConfigId, cmd, model);
 		
 		// Define view to display
 		return PREPARE_MAIN_VIEW;
@@ -215,5 +223,96 @@ public class CommandController {
 		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(LINE_CONTENT_TABLE_HEADER));
 		model.addAttribute(TABLE_LINES_KEY, tableLines);
 		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_FULL_WIDTH);
+	}
+
+	/**
+	 * Generate Breadcrumbs containing path to current file (for navigation)
+	 * @param logAccessConfigId current logAccessConfigId 
+	 * @param cmd current executed command
+	 * @param model model where to add breadcrumbs
+	 */
+	private void generateBreadcrumbs(String logAccessConfigId, String cmd, Model model) {
+		
+		List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
+		
+		StringTokenizer stCmd = new StringTokenizer(cmd, " |");
+		boolean isCommandPassed = false;
+		boolean isFirstArgumentPassed = false;
+		String quotedString = null;
+		String filePath = null;
+		boolean lastElementIsLink = false;
+		String targzFilePath = null;
+		String targzSubFilename = null;
+		
+		while (stCmd.hasMoreTokens()) {
+			String token = stCmd.nextToken();
+			if (!isCommandPassed) {
+				isCommandPassed = true;
+			}
+			else if (!token.startsWith("-")) {
+				if (token.startsWith("\"") && token.endsWith("\"")) {
+					token = token.substring(1, token.length()-1);
+				}
+				else if (token.startsWith("\"")) {
+					quotedString = token.substring(1);
+					continue;
+				}
+				else if (quotedString != null) {
+					if (token.endsWith("\"")) {
+						quotedString += " " + token.substring(0, token.length()-1);
+						token = quotedString;
+						quotedString = null;
+					}
+					else {
+						quotedString += " " + token;
+						continue;
+					}
+				}
+				// first argument
+				if (!isFirstArgumentPassed) {
+					isFirstArgumentPassed = true;
+					if (cmd.startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
+						filePath = token.contains("/") ? token.substring(0, token.lastIndexOf('/')) : null;
+						lastElementIsLink = true;
+						targzFilePath = token;
+						continue;
+					}
+					else if (!cmd.startsWith(GREP_COMMAND_START)) {
+						filePath = token;
+						break;
+					}
+				}
+				// second argument
+				else {
+					if (!cmd.startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
+						filePath = token;
+						break;
+					}
+					else {
+						targzSubFilename = token;
+						break;
+					}
+				}
+			}
+		}
+		
+		if (filePath != null) {
+			BreadcrumbFactory.addSubPath(breadcrumbs, filePath, lastElementIsLink);
+		}
+		if (targzFilePath != null) {
+			try {
+				int filenameIndex = targzFilePath.indexOf("/") + 1;
+				String targzFilename = filenameIndex > 0 ? targzFilePath.substring(filenameIndex) : targzFilePath;
+				String command = TAR_GZ_FILE_VIEW_COMMAND_START + targzFilePath;
+				String link = FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING);
+				breadcrumbs.add(new Breadcrumb(targzFilename, link));
+				breadcrumbs.add(new Breadcrumb(targzSubFilename));
+			}
+			catch (UnsupportedEncodingException e) {
+				throw new UnsupportedCharsetException(URL_ENCODING);
+			}
+		}
+		
+		model.addAttribute(BREADCRUMBS_KEY, breadcrumbs);
 	}
 }

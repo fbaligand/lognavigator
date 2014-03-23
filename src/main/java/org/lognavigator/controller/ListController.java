@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.TableCell;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.service.LogAccessService;
+import org.lognavigator.util.BreadcrumbFactory;
 import org.lognavigator.util.FileInfoFactory;
 import org.lognavigator.util.TableCellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,8 @@ public class ListController {
 		// Prepare the table lines for HTML presentation
 		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
 
+		// Construct cells for files and folders
 		for (FileInfo fileInfo : fileInfos) {
-			// Construct cells for one file/folder
 			List<TableCell> lineCells = TableCellFactory.createTableCellList(fileInfo);
 			tableLines.add(lineCells);
 		}
@@ -58,8 +60,12 @@ public class ListController {
 		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, SIZE_TABLE_HEADER, DATE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
 		model.addAttribute(TABLE_LINES_KEY, tableLines);
 		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
-		if (subPath == null) {
-			model.addAttribute(IS_ROOT_LIST_VIEW_KEY, Boolean.TRUE);
+
+		// Construct breadcrumbs
+		if (subPath != null) {
+			List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
+			BreadcrumbFactory.addSubPath(breadcrumbs, subPath, false);
+			model.addAttribute(BREADCRUMBS_KEY, breadcrumbs);
 		}
 
 		// Return view to display
