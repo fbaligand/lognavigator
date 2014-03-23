@@ -20,11 +20,16 @@ public class LogNavigatorHandlerExceptionResolver implements HandlerExceptionRes
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogNavigatorHandlerExceptionResolver.class);
 
 	@Override
-	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-		LOGGER.error("Error when calling web action", ex);
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
+		LOGGER.error("Error when calling web action", exception);
+		
+		// Compute error message to display
+		String errorTitle = exception.getClass().getSimpleName().replaceFirst("(Error|Exception)", " Error");
+		String errorMessage = exception.getMessage();
 		
 		ModelAndView modelAndView = new ModelAndView(Constants.PREPARE_MAIN_VIEW);
-		modelAndView.addObject(Constants.ERROR_MESSAGE_KEY, ex.toString());
+		modelAndView.addObject(Constants.ERROR_TITLE_KEY, errorTitle);
+		modelAndView.addObject(Constants.ERROR_MESSAGE_KEY, errorMessage);
 		return modelAndView;
 	}
 
