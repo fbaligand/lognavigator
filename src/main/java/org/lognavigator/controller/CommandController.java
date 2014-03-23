@@ -284,12 +284,12 @@ public class CommandController {
 				}
 				// second argument
 				else {
-					if (!cmd.startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
-						filePath = token;
+					if (cmd.startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
+						targzSubFilename = token.contains("/") ? token.substring(token.lastIndexOf('/') + 1) : token;
 						break;
 					}
 					else {
-						targzSubFilename = token;
+						filePath = token;
 						break;
 					}
 				}
