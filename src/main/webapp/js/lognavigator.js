@@ -10,6 +10,9 @@ function initPage() {
 		window.location = "../" + $(this).val() + "/list";
 	});
 	
+	// Placeholder in 'cmd' input
+	$("#cmd").placeholder();
+	
 	// Encoding buttons
 	var checkedEncodingId = $("input[name=encoding][checked]").attr("id");
 	$("label[for=" + checkedEncodingId + "]").addClass("active");
@@ -46,7 +49,11 @@ function submitCommandForm() {
 
 function downloadCommandResult() {
 	$(this).blur();
-	window.location = "download?" + $("#cmd").serialize();
+	if ($("#cmd").val() != "") {
+		var fileName = $("ul.breadcrumb li.active").text();
+		fileName = fileName.replace(/\.tar\.gz$|\.gz$/, ".log").replace(/\.log\.log/, ".log");
+		window.location = "download?" + $("#cmd").serialize() + "&fileName=" + escape(fileName);
+	}
 }
 
 $(initPage);

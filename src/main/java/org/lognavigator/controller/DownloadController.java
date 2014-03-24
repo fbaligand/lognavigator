@@ -29,21 +29,15 @@ public class DownloadController {
 	@RequestMapping("/{logAccessConfigId}/download")
 	public void download(Model model, 
 					  @PathVariable String logAccessConfigId, 
-					  @RequestParam(value="fileName", required=false) String fileName,
+					  @RequestParam(value="fileName") String fileName,
 					  @RequestParam(value="cmd", required=false) String cmd,
 					  HttpServletResponse response
 	) throws LogAccessException, IOException {
 		
-		// Validate input
-		if (fileName == null && cmd == null) {
-			throw new LogAccessException("You must specify 'fileName' or 'cmd' parameter");
-		}
-
 		InputStream resultContentStream = null;
 		
 		// Special case : Content to download is the result of 'command'
 		if (cmd != null) {
-			fileName = "result.log";
 			resultContentStream = logAccessService.executeCommand(logAccessConfigId, cmd);
 		}
 		
