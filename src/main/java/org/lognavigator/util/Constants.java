@@ -63,7 +63,7 @@ public class Constants {
 	public static final String TAR_GZ_FILE_VIEW_COMMAND = TAR_GZ_FILE_VIEW_COMMAND_START + "{0}";
 	public static final String TAR_GZ_FILE_VIEW_COMMAND_END = "| tar -ztv";
 
-	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START = "tar -O -zxvf ";
+	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START = "tar -O -zxf ";
 	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND = TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START + "{0} {1} | {2}";
 
 	public static final String HTTPD_FILE_VIEW_COMMAND_START = "curl -s ";
