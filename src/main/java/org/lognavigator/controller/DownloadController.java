@@ -29,14 +29,26 @@ public class DownloadController {
 	@RequestMapping("/{logAccessConfigId}/download")
 	public void download(Model model, 
 					  @PathVariable String logAccessConfigId, 
-					  @RequestParam(value="fileName") String fileName,
+					  @RequestParam(value="fileName", required=false) String fileName,
+					  @RequestParam(value="cmd", required=false) String cmd,
 					  HttpServletResponse response
 	) throws LogAccessException, IOException {
+		
+		// Validate input
+		if (fileName == null && cmd == null) {
+			throw new LogAccessException("You must specify 'fileName' or 'cmd' parameter");
+		}
 
-		// Special case : .tar.gz sub file
 		InputStream resultContentStream = null;
 		
-		if (fileName.contains(TAR_GZ_CONTENT_SPLIT)) {
+		// Special case : Content to download is the result of 'command'
+		if (cmd != null) {
+			fileName = "result.log";
+			resultContentStream = logAccessService.executeCommand(logAccessConfigId, cmd);
+		}
+		
+		// Special case : Content to download is a .tar.gz file entry
+		else if (fileName.contains(TAR_GZ_CONTENT_SPLIT)) {
 			
 			// Compute tar.gz sub file download command
 			String[] fileNameSplit = fileName.split("!");

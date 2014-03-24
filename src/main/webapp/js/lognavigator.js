@@ -19,7 +19,8 @@ function initPage() {
 	$("label[for=" + checkedDisplayTypeId + "]").addClass("active");
 
 	// Auto-Submit command form 
-	$("#commandForm button.btn-primary").click(submitCommandForm);
+	$("#downloadButton").click(downloadCommandResult);
+	$("#executeButton").click(submitCommandForm);
 	$("#commandForm input:radio").change(submitCommandForm);
 	
 	// Auto-adapt RAW content width
@@ -30,43 +31,22 @@ function initPage() {
 	// Render results table
 	$("#resultsTable").dataTable({
 		bPaginate: false
-//		sPaginationType: "bootstrap",
-//		sDom: "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
 	});
 
 }
 
 function submitCommandForm() {
-	$("#commandForm").submit();
+	if ($("#cmd").val() != "") {
+		$("#commandForm").submit();
+	}
+	else {
+		$("#executeButton").blur();
+	}
 }
 
-function oldInitPage() {
-	
-	// Process logAccessConfigId change
-	$("#logAccessConfigId").change(function(){
-		window.location = "../" + $(this).val() + "/list";
-	});
-	
-	// Render results table
-	$("#resultsTable").dataTable({
-		bPaginate: false,
-		sPaginationType: "bootstrap",
-		sDom: "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
-	});
-
-	// Encoding buttons
-	var encoding = $("#encoding").val();
-	$("#encoding-btn-group button[data-value='"+encoding+"']").addClass("active");
-	$("#encoding-btn-group button").click(function(){
-		$("#encoding").val($(this).attr("data-value"));
-	});
-
-	// DisplayType buttons
-	var displayType = $("#displayType").val();
-	$("#displaytype-btn-group button[data-value='"+displayType+"']").addClass("active");
-	$("#displaytype-btn-group button").click(function(){
-		$("#displayType").val($(this).attr("data-value"));
-	});
+function downloadCommandResult() {
+	$(this).blur();
+	window.location = "download?" + $("#cmd").serialize();
 }
 
 $(initPage);

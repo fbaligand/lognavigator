@@ -83,9 +83,10 @@
 					<div class="row-fluid">
 						<div class="col-md-12">
 							 <div class="input-group">
-								<input type="text" name="cmd" value="<c:out value="${param.cmd}"/>" class="form-control rounded-left" placeholder="Type command..."/>
+								<input type="text" id="cmd" name="cmd" value="<c:out value="${param.cmd}"/>" class="form-control rounded-left" placeholder="Type command..."/>
 								<span class="input-group-btn">
-									<button class="btn btn-primary rounded-right" type="button"><span class="glyphicon glyphicon-play"></span></button>
+									<button id="executeButton" class="btn btn-primary" type="button" title="Execute"><span class="glyphicon glyphicon-play"></span></button>
+									<button id="downloadButton" class="btn btn-primary rounded-right" type="button" title="Download"><span class="glyphicon glyphicon-download"></span></button>
 								</span>
 							</div>
 						</div>
