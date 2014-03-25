@@ -21,6 +21,7 @@ import org.lognavigator.bean.DisplayType;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.TableCell;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
+import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.service.LogAccessService;
 import org.lognavigator.util.BreadcrumbFactory;
@@ -49,9 +50,14 @@ public class CommandController {
 					  @RequestParam(value="cmd", required=false, defaultValue=DEFAULT_LIST_COMMAND) String cmd,
 					  @RequestParam(value="encoding", required=false, defaultValue=DEFAULT_ENCODING_OPTION) String encoding,
 					  @RequestParam(value="displayType", required=false) DisplayType displayType
-	) throws LogAccessException, IOException {
+	) throws AuthorizationException, LogAccessException, IOException {
 		
-		// Define displayType when not given by client
+		// Is command authorized ?
+		if (cmd.matches(FORBIDDEN_COMMANDS_REGEX)) {
+			throw new AuthorizationException("This command is forbidden");
+		}
+		
+		// Define default displayType when not given by client
 		if (displayType == null) { 
 			if (cmd.startsWith(LIST_COMMAND_START) || cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
 				displayType = DisplayType.TABLE;

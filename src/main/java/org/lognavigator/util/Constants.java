@@ -71,6 +71,9 @@ public class Constants {
 	
 	public static final String GREP_COMMAND_START = "grep ";
 
+	public static final String FORBIDDEN_COMMANDS = "(rm|rmdir|kill)";
+	public static final String FORBIDDEN_COMMANDS_REGEX = "\\s*" + FORBIDDEN_COMMANDS + "\\s+.*|.*[\\|;`]\\s*" + FORBIDDEN_COMMANDS + "(\\s+.*)?";
+
 	
 	////////////
 	// OTHERS //
