@@ -4,9 +4,9 @@ import static org.lognavigator.util.Constants.LOG_ACCESS_CONFIG_IDS_BY_DISPLAY_G
 import static org.lognavigator.util.Constants.LOG_ACCESS_CONFIG_ID_KEY;
 import static org.lognavigator.util.Constants.MAIN_VIEW;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.lognavigator.bean.LogAccessConfig;
@@ -47,7 +47,7 @@ public class MainViewController {
 			model.addAttribute(authorizedLogAccessConfigs);
 			
 			// Create map <displayGroup> -> <logAccessConfig>
-			Map<String, Set<LogAccessConfig>> logAccessConfigsMap = new HashMap<String, Set<LogAccessConfig>>();
+			Map<String, Set<LogAccessConfig>> logAccessConfigsMap = new TreeMap<String, Set<LogAccessConfig>>();
 			for (LogAccessConfig logAccessConfig : authorizedLogAccessConfigs) {
 				String displayGroup = logAccessConfig.getDisplayGroup() != null ? logAccessConfig.getDisplayGroup() : "";
 				Set<LogAccessConfig> logAccessConfigIds = logAccessConfigsMap.get(displayGroup);
