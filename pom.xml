@@ -1,11 +1,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>org.lognavigator</groupId>
 	<artifactId>lognavigator</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
+	
+	<name>LogNavigator</name>
+	<url>https://github.com/fbaligand/lognavigator/</url>
 
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>fbaligand</id>
+			<name>Fabien Baligand</name>
+			<email>fbaligand@gmail.com</email>
+			<url>https://github.com/fbaligand</url>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/fbaligand/lognavigator.git</connection>
+		<developerConnection>scm:git:https://github.com/fbaligand/lognavigator.git</developerConnection>
+		<url>https://github.com/fbaligand/lognavigator</url>
+	</scm>
+   
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/fbaligand/lognavigator/issues</url>
+	</issueManagement>
+  
 	<properties>
 		<spring.version>3.2.8.RELEASE</spring.version>
 		<spring.security.version>3.2.1.RELEASE</spring.security.version>
