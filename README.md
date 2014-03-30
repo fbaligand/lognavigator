@@ -37,7 +37,7 @@ Key points :
 ## How to use it 
 
 - Once you have installed LogNavigator, open your favorite browser and go to :
-[http://localhost:your-appserver-port/lognavigator/]
+[](http://localhost:your-appserver-port/lognavigator/)
 - You see screenshot #1, the first log access configuration is selected in combobox at top right, and a table lists all log files and folders
 - You can then change current log access configuration using combobox
 - You can filter logs list using "Search" filter
