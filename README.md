@@ -17,8 +17,8 @@ Key points :
 
 # How to install it
 
-- Firstable, [go to the last release](https://github.com/fbaligand/lognavigator/releases/latest) and download `WAR` file
-- Then, deploy the `WAR` file on your favorite java app server (tomcat, jettty, glassfish, ...)
+- [Go to the last release](https://github.com/fbaligand/lognavigator/releases/latest) and download `WAR` file
+- Deploy the `WAR` file on your favorite java app server (tomcat, jettty, glassfish, ...)
 - Create a new file named `lognavigator.xml` at the root of your app server classpath
 - Define your log access configurations inside `lognavigator.xml`. For example :
 ```xml
