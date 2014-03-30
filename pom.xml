@@ -3,10 +3,11 @@
 	
 	<groupId>org.lognavigator</groupId>
 	<artifactId>lognavigator</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	
 	<name>LogNavigator</name>
+	<description>Navigate into your logs with the comfort of a web interface</description>
 	<url>https://github.com/fbaligand/lognavigator/</url>
 
 	<licenses>
@@ -130,7 +131,7 @@
 	<build>
 		<plugins>
 
-			<!-- Plugin de definition de la version du compilateur java utilise -->
+			<!-- Plugin which defines java version used for compilation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -141,7 +142,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Plugin Eclipse pour la configuration IDE -->
+			<!-- Plugin which generates Eclipse IDE configuration -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -152,7 +153,47 @@
 				</configuration>
 			</plugin>
 
+			<!-- Plugin which releases project -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<goals>install</goals>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
+	<profiles>
+		<!-- Profil which uploads the WAR file to github release, when performing maven release -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-war-to-github-release</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>github-release</executable>
+									<commandlineArgs>upload -s ${github.token} -u ${github.username} -r lognavigator -t ${project.artifactId}-${project.version} -n ${project.artifactId}-${project.version}.${project.packaging} -f target/${project.artifactId}-${project.version}.${project.packaging}</commandlineArgs>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
