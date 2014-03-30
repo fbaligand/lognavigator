@@ -52,10 +52,10 @@ and click the `Execute` button
 
 ## Screeshots
 
-**logs list**
+**1. logs list**
 ![](src/site/logs-list.png)
 
-**log content**
+**2. log content**
 ![](src/site/log-content.png)
 
 
