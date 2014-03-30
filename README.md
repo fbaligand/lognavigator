@@ -1,4 +1,4 @@
-# LogNavigator
+## LogNavigator
 
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
@@ -15,7 +15,7 @@ Key points :
 * Optionally securise log access with user authentication and role-based authorization
 
 
-# How to install it
+## How to install it
 
 - [Go to the last release](https://github.com/fbaligand/lognavigator/releases/latest) and download `WAR` file
 - Deploy the `WAR` file on your favorite java app server (tomcat, jettty, glassfish, ...)
@@ -42,12 +42,15 @@ Key points :
 - You can then change current log access configuration using combobox
 - You can filter logs list using "Search" filter
 - And finally you can of course click on a log file to watch its content
+- You see screenshot #2
 - By default, you see the 1000 last lines of the file (to avoid browser freeze due to too much content), using this command : `tail -1000 yourlog.log`
 - You can then filter log content using powerful linux commands like `grep`
 For example, type in `Command` field : `grep "GET" yourlog.log`
 and click the `Execute` button
 - You can finally download filtered content by clicking `Download` button
 
+
+## Screeshots
 
 ## Behind the scene: 
 
