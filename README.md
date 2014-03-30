@@ -34,11 +34,6 @@ Key points :
 - That's all !
 
 
-## How to use it 
-
-- Once you have installed LogNavigator, open your favorite browser and go to : 
-http://localhost:your-appserver-port/lognavigator/
-- you will see screenshot #1
 
 ## Behind the scene: 
 
