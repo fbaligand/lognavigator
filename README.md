@@ -52,6 +52,13 @@ and click the `Execute` button
 
 ## Screeshots
 
+**logs list**
+![](//logs-list.png)
+
+**log content**
+![](//log-content.png)
+
+
 ## Behind the scene: 
 
 Technologies behind LogNavigator :
