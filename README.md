@@ -59,7 +59,7 @@ and click the `Execute` button
 ![](//log-content.png)
 
 
-## Behind the scene: 
+## Behind the scene
 
 Technologies behind LogNavigator :
 - Twitter Bootstrap 3.1
