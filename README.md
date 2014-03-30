@@ -34,18 +34,27 @@ Key points :
 - That's all !
 
 
+## How to use it 
+
+- Once you have installed LogNavigator, open your favorite browser and go to : 
+http://localhost:your-appserver-port/lognavigator/
+- You see screenshot #1, the first log access configuration is selected in combobox at top right, and a table lists all log files and folders
+- You can then change current log access configuration using combobox
+- You can filter logs list using "Search" filter
+- And finally you can of course click on a log file to watch its content
+- By default, you see the 1000 last lines of the file (to avoid browser freeze due to too much content), using this command : `tail -1000 yourlog.log`
+- You can then filter log content using powerful linux commands like `grep`
+For example, type in `Command` field : `grep "GET" yourlog.log`
+and click the `Execute` button
+- You can finally download filtered content by clicking `Download` button
+
 
 ## Behind the scene: 
 
+Technologies behind LogNavigator :
 - Twitter Bootstrap 3.1
 - Datatables
 - jQuery
 - Spring MVC
 - Spring Security
-- sshj
-
-
-Compatibility :
----------------
-
-Firefox, Chrome, IE8+
+- sshj (for remote SSH connections)
