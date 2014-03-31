@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-	<Environment name="fake" value="false" type="java.lang.Boolean" />
+		<!-- If enabled, every result in LogNavigator is fake result (provided by LogAccessServiceFake) -->
+<!-- 	<Environment name="fake" value="true" type="java.lang.Boolean" /> -->
 
+		<!-- Custom here the location of lognavigator config file : file:path or classpath:path -->
 <!-- 	<Environment name="lognavigator/config" value="file:/path/to/lognavigator.xml" type="java.lang.String" /> -->
 
+		<!-- Enable here spring-security so that log access is protected by login/password and role-based authorization -->
 <!-- 	<Environment name="spring.profiles.active" value="security-enabled" type="java.lang.String" /> -->
+
+		<!-- Custom here the location of lognavigator authentication config file : file:path or classpath:path -->
 <!-- 	<Environment name="lognavigator/authentication/config" value="file:/path/to/lognavigator-authentication-context.xml" type="java.lang.String" /> -->
 </Context>
