@@ -59,6 +59,12 @@ and click the `Execute` button
 ![](src/site/log-content.png)
 
 
+## Requirements
+
+- Java SE 6+
+- Java Server compatible with Servlet 3.0 (Tomcat 7 , Jetty 8, Glassfish 3, JBoss AS 6, ...)
+
+
 ## Behind the scene
 
 Technologies behind LogNavigator :
