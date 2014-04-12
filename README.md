@@ -65,6 +65,14 @@ and click the `Execute` button
 - Java Server compatible with Servlet 3.0 (Tomcat 7 , Jetty 8, Glassfish 3, JBoss AS 6, ...)
 
 
+## Browser Compatibility
+
+- Firefox
+- Chrome
+- IE8+
+- Probably some others, but I have not tested
+
+
 ## Behind the scene
 
 Technologies behind LogNavigator :
