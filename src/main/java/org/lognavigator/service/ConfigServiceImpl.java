@@ -32,7 +32,7 @@ public class ConfigServiceImpl implements ConfigService {
 	Set<LogAccessConfig> logAccessConfigs;
 	long logNavigatorConfigLastModified;
 
-	@Value("${lognavigator/config:" + DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION + "}")
+	@Value("${lognavigator.config:" + DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION + "}")
 	Resource logNavigatorConfigResource;
 	JAXBContext logNavigatorConfigJaxbContext;
 

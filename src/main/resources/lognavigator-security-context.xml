@@ -18,9 +18,8 @@
 			<http-basic />
 		</http>
 		
-	
 		<!-- Reference to external spring-security authentication-manager configuration -->	
-		<beans:import resource="${lognavigator/authentication/config:classpath:lognavigator-authentication-context.xml}"/>
+		<beans:import resource="${lognavigator.authentication.config:classpath:lognavigator-authentication-context.xml}"/>
 	</beans:beans>
 	
 </beans:beans>
