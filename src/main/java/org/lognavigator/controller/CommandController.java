@@ -283,7 +283,7 @@ public class CommandController {
 						targzFilePath = token;
 						continue;
 					}
-					else if (!cmd.startsWith(GREP_COMMAND_START)) {
+					else if (!cmd.matches(TWO_PARAMS_COMMAND_REGEX)) {
 						filePath = token;
 						break;
 					}
