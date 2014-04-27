@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -60,7 +61,7 @@
 						<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
 							<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
 								<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
-									<option <c:if test="${logAccessConfig.id.equals(logAccessConfigId)}">selected="selected"</c:if> >${logAccessConfig.id}</option>
+									<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
 								</c:forEach>
 							</optgroup>
 						</c:forEach>
@@ -204,6 +205,7 @@
 						</table>
 					</div>
 				</div>
+				<input type="hidden" id="resultsSize" value="${fn:length(tableLines)}"/>
 				<%-- /RESULTS TABLE --%>
 			</c:otherwise>
 		</c:choose>

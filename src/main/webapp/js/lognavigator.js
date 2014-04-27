@@ -32,10 +32,16 @@ function initPage() {
 	}
 	
 	// Render results table
-	$("#resultsTable").dataTable({
-		bPaginate: false
-	});
-
+	var resultsSize = $("#resultsSize").val();
+	if (resultsSize && resultsSize < 1500) {
+		$("#resultsTable").dataTable({
+			bPaginate: false,
+			bStateSave: true,
+			fnStateSaveParams: function (oSettings, oData) {
+				oData.oSearch.sSearch = "";
+			}
+		});
+	}
 }
 
 function submitCommandForm() {
