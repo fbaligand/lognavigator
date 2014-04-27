@@ -3,7 +3,7 @@
 	
 	<groupId>org.lognavigator</groupId>
 	<artifactId>lognavigator</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>war</packaging>
 	
 	<name>LogNavigator</name>
@@ -31,7 +31,8 @@
 		<connection>scm:git:https://github.com/fbaligand/lognavigator.git</connection>
 		<developerConnection>scm:git:https://github.com/fbaligand/lognavigator.git</developerConnection>
 		<url>https://github.com/fbaligand/lognavigator</url>
-	</scm>
+	  <tag>lognavigator-1.0.1</tag>
+  </scm>
    
 	<issueManagement>
 		<system>GitHub</system>
