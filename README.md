@@ -62,7 +62,7 @@ and click the `Execute` button
 ## Requirements
 
 - Java SE 6+
-- Java Server compatible with Servlet 3.0 (Tomcat 7 , Jetty 8, Glassfish 3, JBoss AS 6, ...)
+- Java Server compatible with Servlet API 2.5 (Tomcat 6+ , Jetty 7+, Glassfish 2+, JBoss AS 5+, ...)
 
 
 ## Browser Compatibility
