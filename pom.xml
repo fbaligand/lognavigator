@@ -180,6 +180,17 @@
 						<version>1.2.1</version>
 						<executions>
 							<execution>
+								<id>create-github-release</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>github-release</executable>
+									<commandlineArgs>release -s ${github.token} -u ${github.username} -r lognavigator -t ${project.artifactId}-${project.version}</commandlineArgs>
+								</configuration>
+							</execution>
+							<execution>
 								<id>attach-war-to-github-release</id>
 								<phase>install</phase>
 								<goals>
@@ -188,17 +199,6 @@
 								<configuration>
 									<executable>github-release</executable>
 									<commandlineArgs>upload -s ${github.token} -u ${github.username} -r lognavigator -t ${project.artifactId}-${project.version} -n ${project.artifactId}-${project.version}.${project.packaging} -f target/${project.artifactId}-${project.version}.${project.packaging}</commandlineArgs>
-								</configuration>
-							</execution>
-							<execution>
-								<id>update-github-release-title</id>
-								<phase>install</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<executable>github-release</executable>
-									<commandlineArgs>edit -s ${github.token} -u ${github.username} -r lognavigator -t ${project.artifactId}-${project.version}</commandlineArgs>
 								</configuration>
 							</execution>
 						</executions>
