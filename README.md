@@ -56,7 +56,7 @@ and click the `Execute` button
 - You can finally download filtered content by clicking `Download` button
 
 
-## Screenshots
+# Screenshots
 
 **1. logs list**
 ![](src/site/logs-list.png)
@@ -65,13 +65,13 @@ and click the `Execute` button
 ![](src/site/log-content.png)
 
 
-## Requirements
+# Requirements
 
 - Java SE 6+
 - Java Server compatible with Servlet API 2.5 (Tomcat 6+ , Jetty 6+, Glassfish 1+, JBoss AS 5+, ...)
 
 
-## Browser Compatibility
+# Browser Compatibility
 
 - Firefox
 - Chrome
@@ -79,7 +79,7 @@ and click the `Execute` button
 - Probably some others, but I have not tested
 
 
-## Behind the scene
+# Behind the scene
 
 Technologies behind LogNavigator :
 - Twitter Bootstrap 3.1
@@ -90,6 +90,6 @@ Technologies behind LogNavigator :
 - sshj (for remote SSH connections)
 
 
-## License
+# License
 
 LogNavigator is released under version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
