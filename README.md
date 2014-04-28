@@ -1,4 +1,4 @@
-## LogNavigator
+# LogNavigator
 
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
@@ -15,11 +15,13 @@ Key points :
 * Optionally securise log access with user authentication and role-based authorization
 
 
-## How to install it
+# Getting Started
+
+## Installation
 
 - [Go to the last release](https://github.com/fbaligand/lognavigator/releases/latest) and download `WAR` file
 - Deploy the `WAR` file on your favorite java app server (tomcat, jettty, glassfish, ...)
-- Create a new file named `lognavigator.xml` at the root of your app server classpath
+- Create a new file named `lognavigator.xml` wherever you want
 - Define your log access configurations inside `lognavigator.xml`. For example :
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -30,14 +32,18 @@ Key points :
 </lognavigator-config>
 ```
 - _Important note :_ if you define a `SSH` configuration, your local user hosting lognavigator server must have its ssh private key authorized to access remote host using remote user.
+- Link `lognavigator.xml` to your java app server, using one of these 3 means : 
+** Add system property `-Dlognavigator.config=file:/path/to/lognavigator.xml` to your server startup script
+** Add JNDI key/value `lognavigator.config=file:/path/to/lognavigator.xml` to your server JNDI configuration
+** Add `lognavigator.xml` directory to your server classpath
 - Start your java app server
 - That's all !
 
 
-## How to use it 
+## First Use
 
 - Once you have installed LogNavigator, open your favorite browser and go to :
-[http://localhost:your-appserver-port/lognavigator/](http://localhost:your-appserver-port/lognavigator/)
+[http://localhost:your-appserver-port/lognavigator/](http://host:port/lognavigator/)
 - You see screenshot #1, the first log access configuration is selected in combobox at top right, and a table lists all log files and folders
 - You can then change current log access configuration using combobox
 - You can filter logs list using "Search" filter
