@@ -50,9 +50,8 @@ Key points :
 - And finally you can of course click on a log file to watch its content
 - You see screenshot #2
 - By default, you see the 1000 last lines of the file (to avoid browser freeze due to too much content), using this command : `tail -1000 yourlog.log`
-- You can then filter log content using powerful linux commands like `grep`
-For example, type in `Command` field : `grep "GET" yourlog.log`
-and click the `Execute` button
+- You can then filter log content using powerful linux commands like `grep`.
+- For example, type in `Command` field : `grep "GET" yourlog.log` and click the `Execute` button
 - You can finally download filtered content by clicking `Download` button
 
 
