@@ -71,7 +71,7 @@ Because LogNavigator is strongly based on linux commands, LogNavigator doesn't w
 - Add following system properties :
     - CYGWIN=mintty
     - CYGWIN_HOME=`cygwin install directory`
-    - PATH=`current value`;%CYGWIN_HOME%\bin
+    - PATH=`previous value`;%CYGWIN_HOME%\bin
 
 
 # Requirements
