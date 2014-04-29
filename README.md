@@ -68,7 +68,7 @@ Key points :
 
 Because LogNavigator is based on linux commands, LogNavigator doesn't work out-of-the-box on windows. But few steps make it work on windows :
 - Download and install [Cygwin](http://cygwin.com/install.html)
-- Add following system properties :
+- Add following environment variables :
     - CYGWIN=mintty
     - CYGWIN_HOME=`cygwin install directory`
     - PATH=`previous value`;%CYGWIN_HOME%\bin
