@@ -3,16 +3,16 @@
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
 Key points :
-* Navigate into your logs with the comfort of a web interface
-* All your logs from different servers centralized in one entry point
+- Navigate into your logs with the comfort of a web interface
+- All your logs from different servers centralized in one entry point
 - Configure log access from different sources : 
     - local directory
     - directory on a remote server (using SSH)
     - remote logs exposed by Apache Httpd DirectoryIndex (using HTTP)
-* List logs, watch log content, filter log content, download log content
-* Take advantage of powerful linux commands to get filtered log content
-* Easily watch log content even if log file is archived in a `GZ` or `TAR.GZ` archive
-* Optionally securise log access with user authentication and role-based authorization
+- List logs, watch log content, filter log content, download log content
+- Take advantage of powerful linux commands to get filtered log content
+- Easily watch log content even if log file is archived in a `GZ` or `TAR.GZ` archive
+- Optionally securise log access with user authentication and role-based authorization
 
 
 # Getting Started
@@ -69,9 +69,9 @@ Key points :
 Because LogNavigator is strongly based on linux commands, LogNavigator doesn't work out-of-the-box on windows. But few steps make it work on windows :
 - Download and install [Cygwin](http://cygwin.com/install.html)
 - Add following system properties :
-** CYGWIN=mintty
-** CYGWIN_HOME=<cygwin install directory>
-** PATH=<current value>;%CYGWIN_HOME%\bin
+    - CYGWIN=mintty
+    - CYGWIN_HOME=<cygwin install directory>
+    - PATH=<current value>;%CYGWIN_HOME%\bin
 
 
 # Requirements
