@@ -66,7 +66,7 @@ Key points :
 
 # Make it work on windows
 
-Because LogNavigator is strongly based on linux commands, LogNavigator doesn't work out-of-the-box on windows. But few steps make it work on windows :
+Because LogNavigator is based on linux commands, LogNavigator doesn't work out-of-the-box on windows. But few steps make it work on windows :
 - Download and install [Cygwin](http://cygwin.com/install.html)
 - Add following system properties :
     - CYGWIN=mintty
