@@ -43,7 +43,7 @@ Key points :
 ## First Use
 
 - Once you have installed LogNavigator, open your favorite browser and go to :
-[http://localhost:your-appserver-port/lognavigator/](http://host:port/lognavigator/)
+[http://host:port/lognavigator/](http://host:port/lognavigator/)
 - You see screenshot #1, the first log access configuration is selected in combobox at top right, and a table lists all log files and folders
 - You can then change current log access configuration using combobox
 - You can filter logs list using "Search" filter
@@ -62,6 +62,16 @@ Key points :
 
 **2. log content**
 ![](src/site/log-content.png)
+
+
+# Make it work on windows
+
+Because LogNavigator is strongly based on linux commands, LogNavigator doesn't work out-of-the-box on windows. But few steps make it work on windows :
+- Download and install [Cygwin](http://cygwin.com/install.html)
+- Add following system properties :
+** CYGWIN=mintty
+** CYGWIN_HOME=<cygwin install directory>
+** PATH=<current value>;%CYGWIN_HOME%\bin
 
 
 # Requirements
