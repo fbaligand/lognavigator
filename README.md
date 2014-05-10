@@ -80,6 +80,11 @@ Because LogNavigator is based on linux commands, LogNavigator doesn't work out-o
 - Java Server compatible with Servlet API 2.5 (Tomcat 6+ , Jetty 6+, Glassfish 1+, JBoss AS 5+, ...)
 
 
+# Change Log
+
+Versions and Release Notes are listed in [Releases](https://github.com/fbaligand/lognavigator/releases) page
+
+
 # Browser Compatibility
 
 - Firefox
