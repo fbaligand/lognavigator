@@ -68,6 +68,7 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 
 Because LogNavigator is based on linux commands, LogNavigator doesn't work out-of-the-box on windows. But few steps make it work on windows :
 - Download and install [Cygwin](http://cygwin.com/install.html)
+- During install process, check option **_Net > curl_**
 - Add following environment variables :
 ```dos
 CYGWIN=mintty
