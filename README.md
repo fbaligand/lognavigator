@@ -2,7 +2,7 @@
 
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
-Key points :
+**Key points :**
 - Navigate into your logs with the comfort of a web interface
 - All your logs from different servers centralized in one entry point
 - Configure log access from different sources : 
