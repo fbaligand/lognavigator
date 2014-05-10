@@ -39,7 +39,12 @@ function initPage() {
 			bStateSave: true,
 			fnStateSaveParams: function (oSettings, oData) {
 				oData.oSearch.sSearch = "";
-			}
+			},
+			language: {
+			    info: "Showing _TOTAL_ entries",
+			    infoEmpty: "Showing 0 entries",
+			    sEmptyTable: "No entries to show"
+			  }
 		});
 	}
 }
