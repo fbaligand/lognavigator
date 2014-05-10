@@ -1,5 +1,5 @@
 body {
-	padding-top: 70px;
+	padding-top: 220px;
 	padding-bottom: 30px;
 }
 
@@ -37,4 +37,15 @@ pre {
 
 .dataTables_filter .form-control {
 	width: 16em;
+}
+
+.command-fixed-top {
+    position: fixed;
+	top: 51px;
+    padding-top: 20px;
+	left: 0;
+    right: 0;
+    z-index: 1030;
+    width: 100%;
+    background-color: white;
 }
