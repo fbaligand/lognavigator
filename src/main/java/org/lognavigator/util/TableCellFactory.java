@@ -77,7 +77,8 @@ public class TableCellFactory {
 				
 				// Compute view command
 				String command = MessageFormat.format(commandPattern, commandArg);
-				lineCells.add(new TableCell(fileName, FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING)));
+				String simpleFileName = fileName.replaceAll(".*/", "");
+				lineCells.add(new TableCell(simpleFileName, FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING)));
 			}
 			// Directory
 			else {
