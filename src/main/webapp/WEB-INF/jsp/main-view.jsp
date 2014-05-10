@@ -2,6 +2,7 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="lognavigator" uri="https://github.com/fbaligand/lognavigator/taglib" %>
 
 <!DOCTYPE html>
 <html>
@@ -75,7 +76,8 @@
 
 
 	<%-- COMMAND FORM --%>
-	<section class="container-fluid" role="command-form">
+	<section class="command-fixed-top" role="command-form">
+		<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-offset-2 col-md-8">
 				<form class="text-center well" method="get" action="command" id="commandForm">
@@ -130,6 +132,7 @@
 				</form>
 			</div>
 		</div>
+		</div>
 	</section>
 	<%-- /COMMAND FORM --%>
 
@@ -163,7 +166,7 @@
 			<c:when test="${rawContent != null}">
 				<div class="row">
 					<div class="col-md-13">
-						<pre><c:out value="${rawContent}"/></pre>
+						<pre><lognavigator:rawContent/></pre>
 					</div>
 				</div>
 			</c:when>

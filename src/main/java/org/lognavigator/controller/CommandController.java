@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.DisplayType;
 import org.lognavigator.bean.FileInfo;
-import org.lognavigator.bean.TableCell;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
+import org.lognavigator.bean.TableCell;
 import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.service.LogAccessService;
@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,8 +77,7 @@ public class CommandController {
 		
 		// Process the result lines for raw display
 		if (displayType == DisplayType.RAW) {
-			String rawContent = FileCopyUtils.copyToString(resultReader);
-			model.addAttribute(RAW_CONTENT_KEY, rawContent);
+			model.addAttribute(RAW_CONTENT_KEY, resultReader);
 		}
 		
 		// Process the result lines for html table display
