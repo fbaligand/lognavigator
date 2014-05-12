@@ -3,7 +3,7 @@
 	
 	<groupId>org.lognavigator</groupId>
 	<artifactId>lognavigator</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 	
 	<name>LogNavigator</name>
