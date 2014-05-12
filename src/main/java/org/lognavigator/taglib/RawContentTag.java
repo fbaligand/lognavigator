@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.lognavigator.util.Constants;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.util.HtmlUtils;
 
 /**
  * Taglib which writes to JSP output, a raw content inputstream.
@@ -31,7 +32,9 @@ public class RawContentTag extends TagSupport {
 			char[] buffer = new char[StreamUtils.BUFFER_SIZE];
 			int bytesRead = -1;
 			while ((bytesRead = rawContent.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
+				String stringToWrite = new String(buffer, 0, bytesRead);
+				stringToWrite = HtmlUtils.htmlEscape(stringToWrite);
+				out.write(stringToWrite);
 			}
 			out.flush();
 
