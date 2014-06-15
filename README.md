@@ -33,9 +33,9 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 ```
 - _Important note :_ if you define a `SSH` configuration, your local user hosting lognavigator server must have its ssh private key authorized to access remote host using remote user.
 - Link `lognavigator.xml` to your java app server, using one of these 3 means : 
-** Add system property `-Dlognavigator.config=file:/path/to/lognavigator.xml` to your server startup script
-** Add JNDI key/value `lognavigator.config=file:/path/to/lognavigator.xml` to your server JNDI configuration
-** Add `lognavigator.xml` directory to your server classpath
+    - Add system property `-Dlognavigator.config=file:/path/to/lognavigator.xml` to your server startup script
+    - Add JNDI key/value `lognavigator.config=file:/path/to/lognavigator.xml` to your server JNDI configuration
+    - Add `lognavigator.xml` directory to your server classpath
 - Start your java app server
 - That's all !
 
@@ -114,9 +114,9 @@ For example :
 ```
 
 - Activate security and link `lognavigator-authentication-context.xml` in lognavigator configuration. To do that, 3 ways :
-** Add system properties `-Dspring.profiles.active=security-enabled -Dlognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server startup script
-** Add JNDI keys/values `spring.profiles.active=security-enabled` and `lognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server JNDI configuration
-** Put `lognavigator-authentication-context.xml` into your server classpath and define `spring.profiles.active=security-enabled` as system property or JNDI key/value 
+    - Add system properties `-Dspring.profiles.active=security-enabled -Dlognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server startup script
+    - Add JNDI keys/values `spring.profiles.active=security-enabled` and `lognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server JNDI configuration
+    - Put `lognavigator-authentication-context.xml` into your server classpath and define `spring.profiles.active=security-enabled` as system property or JNDI key/value 
 
 
 # Requirements
