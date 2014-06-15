@@ -85,6 +85,7 @@ public class Constants {
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String URL_ENCODING = "UTF-8";
 	public static final String TAR_GZ_CONTENT_SPLIT = ".tar.gz!";
+	public static final String COMPRESSED_FILE_REGEX = ".*\\.(gz|tgz|zip|bz2)";
 
 	public static final String TABLE_LAYOUT_FULL_WIDTH = "col-md-13";
 	public static final String TABLE_LAYOUT_CENTERED = "col-md-offset-2 col-md-8";
