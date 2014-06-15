@@ -108,7 +108,7 @@ public class LogAccessServiceLocal implements LogAccessService {
 			fileInfo.setRelativePath(childrenFile.getPath().substring(logAccessConfig.getDirectory().length() + 1).replace('\\', '/'));
 			fileInfo.setDirectory(childrenFile.isDirectory());
 			fileInfo.setLastModified(new Date(childrenFile.lastModified()));
-			fileInfo.setFileSize(childrenFile.length());
+			fileInfo.setFileSize(childrenFile.isDirectory() ? 0L : childrenFile.length());
 			fileInfo.setLogAccessType(LogAccessType.LOCAL);
 			fileInfos.add(fileInfo);
 		}

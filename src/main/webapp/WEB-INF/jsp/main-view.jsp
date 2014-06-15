@@ -222,6 +222,7 @@
     <script src="<c:url value="/js/bootstrap.min.js"/>"></script>
     <script src="<c:url value="/js/jquery.dataTables.js"/>"></script>
     <script src="<c:url value="/js/dataTables.bootstrap.js"/>"></script>
+    <script src="<c:url value="/js/numeral.min.js"/>"></script>
     <script src="<c:url value="/js/jquery.placeholder.js"/>"></script>
    	<script src="<c:url value="/js/lognavigator.js"/>"></script>
 	<%-- /SCRIPTS --%>

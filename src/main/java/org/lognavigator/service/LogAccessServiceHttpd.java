@@ -42,6 +42,7 @@ public class LogAccessServiceHttpd implements LogAccessService {
 	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
 	private static final String LINK_END_TAG = "</a>";
 	private static final String DIRECTORY_SEPARATOR = "/";
+	private static final long ONE_KB = 1024L;
 	
 	
 	@Autowired
@@ -182,13 +183,13 @@ public class LogAccessServiceHttpd implements LogAccessService {
 						char sizeLastChar = sizeAsString.charAt(sizeAsString.length()-1);
 						switch (sizeLastChar) {
 						case 'K':
-							sizeAsBigDecimal = sizeAsBigDecimal.multiply(BigDecimal.valueOf(1000L));
+							sizeAsBigDecimal = sizeAsBigDecimal.multiply(BigDecimal.valueOf(ONE_KB));
 							break;
 						case 'M':
-							sizeAsBigDecimal = sizeAsBigDecimal.multiply(BigDecimal.valueOf(1000L * 1000L));
+							sizeAsBigDecimal = sizeAsBigDecimal.multiply(BigDecimal.valueOf(ONE_KB * ONE_KB));
 							break;
 						case 'G':
-							sizeAsBigDecimal = sizeAsBigDecimal.multiply(BigDecimal.valueOf(1000L * 1000L * 1000L));
+							sizeAsBigDecimal = sizeAsBigDecimal.multiply(BigDecimal.valueOf(ONE_KB * ONE_KB * ONE_KB));
 							break;
 						}
 						size = sizeAsBigDecimal.longValue();

@@ -198,7 +198,7 @@ public class LogAccessServiceSsh implements LogAccessService {
 			fileInfo.setRelativePath(remoteResourceInfo.getPath().substring(logAccessConfig.getDirectory().length() + 1).replace('\\', '/'));
 			fileInfo.setDirectory(remoteResourceInfo.isDirectory());
 			fileInfo.setLastModified(new Date(remoteResourceInfo.getAttributes().getMtime() * 1000L));
-			fileInfo.setFileSize(remoteResourceInfo.getAttributes().getSize());
+			fileInfo.setFileSize(remoteResourceInfo.isDirectory() ? 0L : remoteResourceInfo.getAttributes().getSize());
 			fileInfo.setLogAccessType(LogAccessType.SSH);
 			fileInfos.add(fileInfo);
 		}

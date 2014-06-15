@@ -32,8 +32,9 @@ public class TableCellFactory {
 		
 		SimpleDateFormat dateFormater = new SimpleDateFormat(DATE_FORMAT);
 		String lastModifiedFormated = (fileInfo.getLastModified() != null) ? dateFormater.format(fileInfo.getLastModified()) : "";
+		String fileSize = !fileInfo.isDirectory() ? String.valueOf(fileInfo.getFileSize()) : "-";
 
-		return createTableCellList(fileInfo.getFileName(), fileInfo.getRelativePath(), fileInfo.isDirectory(), String.valueOf(fileInfo.getFileSize()), lastModifiedFormated, fileInfo.getLogAccessType());
+		return createTableCellList(fileInfo.getFileName(), fileInfo.getRelativePath(), fileInfo.isDirectory(), fileSize, lastModifiedFormated, fileInfo.getLogAccessType());
 	}
 	
 	/**

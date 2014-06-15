@@ -31,9 +31,29 @@ function initPage() {
 		$("pre").addClass("nofloat");
 	}
 	
-	// Render results table
+	// Render results table (only if there are less than 1500 lines) 
 	var resultsSize = $("#resultsSize").val();
 	if (resultsSize && resultsSize < 1500) {
+
+		// Render 'size' column data
+		var dataTableColumnDefs = [];
+		$("#resultsTable").find("th").each(function(index) {
+			if ($(this).text().match(/size/gi)) {
+				dataTableColumnDefs.push({
+	                render: function ( data, type, row ) {
+	                	if (type == "display" || type == "filter" ) {
+		                    return (data == "-") ? data : numeral(data).format("0.[0] b");
+	                	}
+	                	else {
+	                		return data;
+	                	}
+	                },
+	                targets: index
+	            });
+			}
+		});
+		
+		// Render table using dataTable plugin
 		$("#resultsTable").dataTable({
 			bPaginate: false,
 			bStateSave: true,
@@ -41,10 +61,11 @@ function initPage() {
 				oData.oSearch.sSearch = "";
 			},
 			language: {
-			    info: "Showing _TOTAL_ entries",
-			    infoEmpty: "Showing 0 entries",
-			    sEmptyTable: "No entries to show"
-			  }
+				info: "Showing _TOTAL_ entries",
+				infoEmpty: "Showing 0 entries",
+				sEmptyTable: "No entries to show"
+			},
+			columnDefs: dataTableColumnDefs
 		});
 	}
 }
