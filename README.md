@@ -104,6 +104,7 @@ Technologies behind LogNavigator :
 - Spring MVC
 - Spring Security
 - sshj (for remote SSH connections)
+- linux commands (`tail`, `tar`, `gzip`, `curl`)
 
 
 # License
