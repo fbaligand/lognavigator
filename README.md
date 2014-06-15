@@ -81,6 +81,7 @@ PATH=<previous value>;%CYGWIN_HOME%\bin
 Enabling security allows 2 points :
 - Secure LogNavigator access with login/password authentication, based on HTTP Basic Authentication
 - Define user role based authorization for each log access configuration
+
 To enable security, few steps :
 - create a new file called `lognavigator-authentication-context.xml`, containing users, password and roles (authorities).
 Here's an example :
