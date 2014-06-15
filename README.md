@@ -76,6 +76,48 @@ CYGWIN_HOME=<cygwin install directory>
 PATH=<previous value>;%CYGWIN_HOME%\bin
 ```
 
+# Enable Security
+
+Enabling security allows 2 points :
+- Secure LogNavigator access with login/password authentication, based on HTTP Basic Authentication
+- Define user role based authorization for each log access configuration
+To enable security, few steps :
+- create a new file called `lognavigator-authentication-context.xml`, containing users, password and roles (authorities).
+Here's an example :
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	   xmlns="http://www.springframework.org/schema/security"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
+>
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder hash="md5"/>
+			<user-service>
+				<user name="user1" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="role1, role2" />
+				<user name="user2" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="role3" />
+				<user name="user3" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>
+```
+In this example, passwords are hashed using `md5` algorithm. But you can also use `sha`, `sha-256`, `bcrypt` or even `plaintext`.
+
+- In your `lognavigator.xml` file, for each `log-access-config`, define authorized users and roles.
+For example : 
+```xml
+<log-access-config id="e-protected-access" ... authorized-roles="role1 role2" authorized-users="user1" />
+```
+
+- Activate security and link `lognavigator-authentication-context.xml` in lognavigator configuration. To do that, 3 ways :
+** Add system properties `-Dspring.profiles.active=security-enabled -Dlognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server startup script
+** Add JNDI keys/values `spring.profiles.active=security-enabled` and `lognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server JNDI configuration
+** Put `lognavigator-authentication-context.xml` into your server classpath and define `spring.profiles.active=security-enabled` as system property or JNDI key/value 
+
+
 # Requirements
 
 - Java SE 6+
