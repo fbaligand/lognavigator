@@ -58,10 +58,10 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 # Screenshots
 
 **1. logs list**
-![](src/site/logs-list.png)
+![](src/site/logs-list.png?raw=true)
 
 **2. log content**
-![](src/site/log-content.png)
+![](src/site/log-content.png?raw=true)
 
 
 # Make it work on windows
