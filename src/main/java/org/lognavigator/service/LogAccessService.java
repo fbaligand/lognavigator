@@ -31,7 +31,7 @@ public interface LogAccessService {
 	public void downloadFile(String logAccessConfigId, String fileName, OutputStream downloadOutputStream) throws LogAccessException;
 
 	/**
-	 * List files and directory present in requested logAccessConfig (optionaly in subPath)
+	 * List files and directories contained in requested logAccessConfig (optionally in subPath)
 	 * @param logAccessConfigId log access config id
 	 * @param subPath sub-path relative to logAccessConfig directory (optional)
 	 * @return list of informations about files and directories
