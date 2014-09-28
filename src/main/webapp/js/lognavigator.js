@@ -51,6 +51,22 @@ function initPage() {
 	                targets: index
 	            });
 			}
+			else if ($(this).text().match(/file/gi)) {
+				dataTableColumnDefs.push({
+					render: function ( data, type, row ) {
+						if (type == "sort") {
+							var $data = $(data);
+							var sortedData = $data.hasClass("text-warning") ? "a" : "b";
+							sortedData += $data.text();
+							return sortedData;
+						}
+						else {
+							return data;
+						}
+					},
+					targets: index
+				});
+			}
 		});
 		
 		// Render table using dataTable plugin
