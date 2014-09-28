@@ -49,7 +49,7 @@ public class ListController {
 		}
 		
 		// Prepare the table lines for HTML presentation
-		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
+		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>(fileInfos.size());
 
 		// Construct cells for files and folders
 		for (FileInfo fileInfo : fileInfos) {
