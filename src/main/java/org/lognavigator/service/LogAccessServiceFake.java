@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
+import org.lognavigator.util.Constants;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -29,22 +30,28 @@ public class LogAccessServiceFake implements LogAccessService {
 
 		if (shellCommand.equals("ls -l")) {
 			sb.append("total 40\n");
-			sb.append("-rw-rw-r-- 1 tomcat dexploit 1189 13 mars  12:22 ConsultationPortlet.xml\n");
-			sb.append("-rw-r--r-- 1 tomcat dexploit 1091 24 avril 12:09 ContextePortlet.xml\n");
-			sb.append("-rw-rw-r-- 1 tomcat dexploit 1788 11 avril 16:12 FluxDeMassePortlet.xml\n");
-			sb.append("-rw-rw-r-- 1 tomcat dexploit  112 13 mars  12:22 LayoutTemplateTitanDeveloppement.xml\n");
-			sb.append("-rw-rw-r-- 1 tomcat dexploit 1078 13 mars  12:22 MenuPortlet.xml\n");
-			sb.append("-rw-rw-r-- 1 tomcat dexploit 2380 25 févr. 17:58 MessagerieInternePortlet.xml\n");
+			sb.append("-rw-rw-r-- 1 root root 1189 13 mars  12:22 file1.log\n");
+			sb.append("-rw-r--r-- 1 root root 1091 24 avril 12:09 file2.log\n");
+			sb.append("-rw-rw-r-- 1 root root 1788 11 avril 16:12 file3.log\n");
+			sb.append("-rw-rw-r-- 1 root root  112 13 mars  12:22 file4.log\n");
+			sb.append("-rw-rw-r-- 1 root root 1078 13 mars  12:22 file5.log\n");
+			sb.append("-rw-rw-r-- 1 root root 2380 25 févr. 17:58 file6.log\n");
 		}
 		else if (shellCommand.startsWith("ls")) {
-			sb.append("ConsultationPortlet.xml\n");
-			sb.append("ContextePortlet.xml\n");
-			sb.append("FluxDeMassePortlet.xml\n");
-			sb.append("LayoutTemplateTitanDeveloppement.xml\n");
-			sb.append("MenuPortlet.xml\n");
-			sb.append("MessagerieInternePortlet.xml\n");
+			sb.append("file1.log\n");
+			sb.append("file2.log\n");
+			sb.append("file3.log\n");
+			sb.append("file4.log\n");
+			sb.append("file5.log\n");
+			sb.append("file6.log\n");
 		}
-		else {
+		else if (shellCommand.startsWith(Constants.TAR_GZ_FILE_VIEW_COMMAND_START)) {
+			sb.append("drwx------ Administrators/None     0 2014-03-29 15:33 backup/\n");
+			sb.append("-rw-r--r-- Administrators/None   298 2014-03-02 11:25 backup/apache-access-3l.log.gz\n");
+			sb.append("-rw-r--r-- Administrators/None   508 2014-03-02 11:25 backup/apache-access-10l.log.gz\n");
+			sb.append("-rwx------ Administrators/None  2260 2014-03-02 10:02 backup/apache-access-100l.log.gz\n");
+		}
+ 		else {
 			sb.append("INFO - message1\n");
 			sb.append("INFO - message2\n");
 			sb.append("INFO - message3\n");
