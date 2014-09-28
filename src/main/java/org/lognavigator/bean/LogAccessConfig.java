@@ -167,7 +167,16 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	@Override
 	public String toString() {
-		return "LogAccessConfig [" + id + ": " + user + "@" + host + ":" + directory + "]";
+		switch (type) {
+		case SSH:
+			return "LogAccessConfig [" + id + ": SSH " + user + "@" + host + ":" + directory + "]";
+		case LOCAL:
+			return "LogAccessConfig [" + id + ": LOCAL " + directory + "]";
+		case HTTPD:
+			return "LogAccessConfig [" + id + ": HTTPD " + url + "]";
+		default:
+			throw new IllegalStateException("Unknown LogAccessConfig type : " + type);
+		}
 	}
 	
 	@Override
