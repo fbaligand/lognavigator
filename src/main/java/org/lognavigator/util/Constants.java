@@ -69,10 +69,10 @@ public class Constants {
 	public static final String HTTPD_FILE_VIEW_COMMAND_START = "curl -s ";
 	public static final String HTTPD_FILE_VIEW_COMMAND_PREFIX = HTTPD_FILE_VIEW_COMMAND_START + "{0} | ";
 	
-	public static final String TWO_PARAMS_COMMAND_REGEX = "(grep|egrep|awk|gawk) .+";
+	public static final String TWO_PARAMS_COMMAND_REGEX = "(grep|egrep|awk|gawk)";
 
-	public static final String FORBIDDEN_COMMANDS = "(rm|rmdir|kill)";
-	public static final String FORBIDDEN_COMMANDS_REGEX = "\\s*" + FORBIDDEN_COMMANDS + "\\s+.*|.*[\\|;`]\\s*" + FORBIDDEN_COMMANDS + "(\\s+.*)?";
+	public static final String DEFAULT_FORBIDDEN_COMMANDS = "rm,rmdir,mv,kill,ssh,chmod,chown,vi";
+	public static final String FORBIDDEN_COMMANDLINE_REGEX = "\\s*{0}\\s+.*|.*[\\|;`]\\s*{0}(\\s+.*)?";
 
 	
 	////////////

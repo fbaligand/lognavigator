@@ -9,14 +9,18 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.UnsupportedCharsetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lognavigator.bean.Breadcrumb;
+import org.lognavigator.bean.CommandLine;
 import org.lognavigator.bean.DisplayType;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
@@ -25,10 +29,12 @@ import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.service.LogAccessService;
 import org.lognavigator.util.BreadcrumbFactory;
+import org.lognavigator.util.CommandLineParser;
 import org.lognavigator.util.FileInfoFactory;
 import org.lognavigator.util.TableCellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +47,10 @@ public class CommandController {
 	
 	@Autowired
 	@Qualifier("facade")
-	private LogAccessService logAccessService;
+	LogAccessService logAccessService;
+	
+	@Value("${forbidden.commands:" + DEFAULT_FORBIDDEN_COMMANDS + "}")
+	String forbiddenCommands = DEFAULT_FORBIDDEN_COMMANDS;
 	
 	@RequestMapping("/{logAccessConfigId}/command")
 	public String executeCommand(Model model, 
@@ -51,10 +60,10 @@ public class CommandController {
 					  @RequestParam(value="displayType", required=false) DisplayType displayType
 	) throws AuthorizationException, LogAccessException, IOException {
 		
-		// Is command authorized ?
-		if (cmd.matches(FORBIDDEN_COMMANDS_REGEX)) {
-			throw new AuthorizationException("This command is forbidden");
-		}
+		CommandLine commandLine = CommandLineParser.parseCommandLine(cmd);
+		
+		// Is command forbidden ?
+		checkForbiddenCommand(commandLine);
 		
 		// Define default displayType when not given by client
 		if (displayType == null) { 
@@ -70,6 +79,9 @@ public class CommandController {
 		model.addAttribute(SHOW_OPTIONS_KEY, true);
 		model.addAttribute(ENCODING_KEY, encoding);
 		model.addAttribute(DISPLAY_TYPE_KEY, displayType);
+		
+		// Generate Breadcrumbs
+		generateBreadcrumbs(logAccessConfigId, commandLine, model);
 		
 		// Execute the command
 		InputStream resultStream = logAccessService.executeCommand(logAccessConfigId, cmd);
@@ -101,11 +113,28 @@ public class CommandController {
 			}
 		}
 		
-		// Generate Breadcrumbs
-		generateBreadcrumbs(logAccessConfigId, cmd, model);
-		
 		// Define view to display
 		return PREPARE_MAIN_VIEW;
+	}
+
+	/**
+	 * Checks that command line doesn't contain any forbidden command (for security reasons)
+	 * @param commandLine command line to check
+	 * @throws AuthorizationException if command line contains a forbidden command 
+	 */
+	private void checkForbiddenCommand(CommandLine commandLine) throws AuthorizationException {
+		
+		String forbiddenCommandsRegex = "(" + forbiddenCommands.replace(',', '|') + ")";
+		String forbiddenCommandLineRegex = MessageFormat.format(FORBIDDEN_COMMANDLINE_REGEX, forbiddenCommandsRegex);
+		
+		if (commandLine.getLine().matches(forbiddenCommandLineRegex)
+			|| commandLine.getCommand().matches(forbiddenCommandsRegex)
+			|| commandLine.getCommand().matches(">|>>") 
+			|| commandLine.getParams().contains(">") || 
+			commandLine.getParams().contains(">>")
+		) {
+			throw new AuthorizationException("This command is forbidden (" + forbiddenCommands + ",>,>>)");
+		}
 	}
 	
 	/**
@@ -208,7 +237,19 @@ public class CommandController {
 			List<TableCell> lineCells = TableCellFactory.createTableCellList(filePath, targzFileName + "!" + filePath, isDirectory, fileSize, fileDate, logAccessType);
 			tableLines.add(lineCells);
 		}
+
+		// Sort files by name
+		Comparator<List<TableCell>> tableLinesComparator = new Comparator<List<TableCell>>() {
+			@Override
+			public int compare(List<TableCell> line1, List<TableCell> line2) {
+				String fileName1 = line1.get(0).getContent();
+				String fileName2 = line2.get(0).getContent();
+				return fileName1.compareTo(fileName2);
+			}
+		};
+		Collections.sort(tableLines, tableLinesComparator);
 		
+		// Update Model to display data
 		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, SIZE_TABLE_HEADER, DATE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
 		
 		model.addAttribute(TABLE_LINES_KEY, tableLines);
@@ -232,71 +273,39 @@ public class CommandController {
 	/**
 	 * Generate Breadcrumbs containing path to current file (for navigation)
 	 * @param logAccessConfigId current logAccessConfigId 
-	 * @param cmd current executed command
+	 * @param commandLine current executed command
 	 * @param model model where to add breadcrumbs
 	 */
-	private void generateBreadcrumbs(String logAccessConfigId, String cmd, Model model) {
+	private void generateBreadcrumbs(String logAccessConfigId, CommandLine commandLine, Model model) {
 		
 		List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
 		
-		StringTokenizer stCmd = new StringTokenizer(cmd, " |");
-		boolean isCommandPassed = false;
-		boolean isFirstArgumentPassed = false;
-		String quotedString = null;
 		String filePath = null;
 		boolean lastElementIsLink = false;
 		String targzFilePath = null;
 		String targzSubFilename = null;
 		
-		while (stCmd.hasMoreTokens()) {
-			String token = stCmd.nextToken();
-			if (!isCommandPassed) {
-				isCommandPassed = true;
+		// first argument
+		if (commandLine.getParams().size() >= 1) {
+			String firstParam = commandLine.getParam(0);
+			if (commandLine.getLine().startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
+				filePath = firstParam.contains("/") ? firstParam.substring(0, firstParam.lastIndexOf('/')) : null;
+				lastElementIsLink = true;
+				targzFilePath = firstParam;
 			}
-			else if (!token.startsWith("-")) {
-				if (token.startsWith("\"") && token.endsWith("\"")) {
-					token = token.substring(1, token.length()-1);
-				}
-				else if (token.startsWith("\"")) {
-					quotedString = token.substring(1);
-					continue;
-				}
-				else if (quotedString != null) {
-					if (token.endsWith("\"")) {
-						quotedString += " " + token.substring(0, token.length()-1);
-						token = quotedString;
-						quotedString = null;
-					}
-					else {
-						quotedString += " " + token;
-						continue;
-					}
-				}
-				// first argument
-				if (!isFirstArgumentPassed) {
-					isFirstArgumentPassed = true;
-					if (cmd.startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
-						filePath = token.contains("/") ? token.substring(0, token.lastIndexOf('/')) : null;
-						lastElementIsLink = true;
-						targzFilePath = token;
-						continue;
-					}
-					else if (!cmd.matches(TWO_PARAMS_COMMAND_REGEX)) {
-						filePath = token;
-						break;
-					}
-				}
-				// second argument
-				else {
-					if (cmd.startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
-						targzSubFilename = token.contains("/") ? token.substring(token.lastIndexOf('/') + 1) : token;
-						break;
-					}
-					else {
-						filePath = token;
-						break;
-					}
-				}
+			else if (!commandLine.getCommand().matches(TWO_PARAMS_COMMAND_REGEX)) {
+				filePath = firstParam;
+			}
+		}
+		
+		// second argument
+		if (commandLine.getParams().size() >= 2) {
+			String secondParam = commandLine.getParam(1);
+			if (commandLine.getLine().startsWith(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START)) {
+				targzSubFilename = secondParam.contains("/") ? secondParam.substring(secondParam.lastIndexOf('/') + 1) : secondParam;
+			}
+			else if (commandLine.getCommand().matches(TWO_PARAMS_COMMAND_REGEX)) {
+				filePath = secondParam;
 			}
 		}
 		
