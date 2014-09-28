@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -39,7 +40,8 @@ public class LogAccessServiceHttpd implements LogAccessService {
 	private static final String TABLE_END = "</pre>";
 	private static final String LINK_HREF_END = "\"";
 	private static final String LINK_HREF_START = "<a href=\"";
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
+	private static final String DATE_FORMAT_NUMERIC = "yyyy-MM-dd HH:mm";
+	private static final String DATE_FORMAT_LITTERAL = "dd-MMM-yyyy HH:mm";
 	private static final String LINK_END_TAG = "</a>";
 	private static final String DIRECTORY_SEPARATOR = "/";
 	private static final long ONE_KB = 1024L;
@@ -170,14 +172,21 @@ public class LogAccessServiceHttpd implements LogAccessService {
 				
 				// Parse date
 				int linkTagEnd = currentLine.indexOf(LINK_END_TAG) + LINK_END_TAG.length();
-				String dateAndSize = currentLine.substring(linkTagEnd).trim();
-				String dateAsString = dateAndSize.substring(0, DATE_FORMAT.length());
-				Date date = new SimpleDateFormat(DATE_FORMAT).parse(dateAsString);
+				String[] dateAndSize = currentLine.substring(linkTagEnd).trim().replaceAll("\\s+", " ").split(" ");
+				String dateAsString = dateAndSize[0] + " " + dateAndSize[1];
+				
+				Date date;
+				if (dateAsString.length() == DATE_FORMAT_NUMERIC.length()) {
+					date = new SimpleDateFormat(DATE_FORMAT_NUMERIC).parse(dateAsString);
+				}
+				else {
+					date = new SimpleDateFormat(DATE_FORMAT_LITTERAL, Locale.US).parse(dateAsString);
+				}
 
 				// Parse size
 				long size = 0;
 				if (!isDirectory) {
-					String sizeAsString = dateAndSize.substring(DATE_FORMAT.length() + 1).trim();
+					String sizeAsString = dateAndSize[2];
 					if (sizeAsString.matches("[0-9.]+[KMG]")) {
 						BigDecimal sizeAsBigDecimal = new BigDecimal(sizeAsString.substring(0, sizeAsString.length()-1));
 						char sizeLastChar = sizeAsString.charAt(sizeAsString.length()-1);
