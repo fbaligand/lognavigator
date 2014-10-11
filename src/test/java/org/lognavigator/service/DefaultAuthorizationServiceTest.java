@@ -12,13 +12,13 @@ import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.service.AuthorizationService;
-import org.lognavigator.service.AuthorizationServiceImpl;
+import org.lognavigator.service.DefaultAuthorizationService;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 
 
-public class AuthorizationServiceImplTest {
+public class DefaultAuthorizationServiceTest {
 	
-	private AuthorizationService authorizationService = new AuthorizationServiceImpl();
+	private AuthorizationService authorizationService = new DefaultAuthorizationService();
 	
 	@Test
 	public void testCheckUserAuthorizationFor_Authorized() throws Exception {

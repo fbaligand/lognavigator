@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Qualifier("facade")
-public class LogAccessServiceFacade implements LogAccessService {
+public class FacadeLogAccessService implements LogAccessService {
 	
 	@Value("${fake:false}")
 	private boolean isFakeEnabled;

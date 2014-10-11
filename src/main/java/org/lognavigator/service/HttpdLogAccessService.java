@@ -33,7 +33,7 @@ import org.springframework.util.FileCopyUtils;
  */
 @Service
 @Qualifier("httpd")
-public class LogAccessServiceHttpd implements LogAccessService {
+public class HttpdLogAccessService implements LogAccessService {
 	
 	private static final String CHARSET_PARAM = "charset=";
 	private static final String TABLE_START = "<pre>";

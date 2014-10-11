@@ -8,13 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lognavigator.bean.LogNavigatorConfig;
 import org.lognavigator.exception.ConfigException;
-import org.lognavigator.service.ConfigServiceImpl;
+import org.lognavigator.service.DefaultConfigService;
 import org.springframework.core.io.ClassPathResource;
 
 
-public class ConfigServiceImplTest {
+public class DefaultConfigServiceTest {
 	
-	private ConfigServiceImpl configService = new ConfigServiceImpl();
+	private DefaultConfigService configService = new DefaultConfigService();
 	
 	@Before
 	public void setup() throws Exception {

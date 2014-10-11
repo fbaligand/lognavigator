@@ -24,9 +24,9 @@ import org.springframework.util.StringUtils;
 
 
 @Service
-public class ConfigServiceImpl implements ConfigService {
+public class DefaultConfigService implements ConfigService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultConfigService.class);
 	private static final String DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION = "classpath:lognavigator.xml";
 	
 	Set<LogAccessConfig> logAccessConfigs;

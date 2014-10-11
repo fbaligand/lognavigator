@@ -14,7 +14,7 @@ import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.controller.AuthorizationInterceptor;
 import org.lognavigator.exception.AuthorizationException;
-import org.lognavigator.service.AuthorizationServiceImpl;
+import org.lognavigator.service.DefaultAuthorizationService;
 import org.lognavigator.service.ConfigService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,7 +39,7 @@ public class AuthorizationInterceptorTest {
 	public void setUp() throws Exception {
 		
 		// Inject authorization service
-		authorizationInterceptor.authorizationService = new AuthorizationServiceImpl();
+		authorizationInterceptor.authorizationService = new DefaultAuthorizationService();
 		
 		// Mock context path
 		when(httpRequestMock.getContextPath()).thenReturn("/LogNavigator");

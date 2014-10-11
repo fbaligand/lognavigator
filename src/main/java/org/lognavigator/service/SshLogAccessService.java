@@ -2,6 +2,7 @@ package org.lognavigator.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.util.Date;
@@ -25,6 +26,7 @@ import org.lognavigator.util.SshCloseFilterInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 
 /**
@@ -32,7 +34,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Qualifier("ssh")
-public class LogAccessServiceSsh implements LogAccessService {
+public class SshLogAccessService implements LogAccessService {
+	
+	private static final String GET_OS_INFO_COMMAND = "uname -a";
+	private static final String WINDOWS_OS_MARKER = "cygwin";
 	
 	@Autowired
 	ConfigService configService;
@@ -70,7 +75,7 @@ public class LogAccessServiceSsh implements LogAccessService {
 		// Execute the shell command
 		Command resultCommand;
 		try {
-			resultCommand = session.exec("cd " + logAccessConfig.getDirectory() + "; " + shellCommand);
+			resultCommand = session.exec("cd " + logAccessConfig.getDirectory() + " && " + shellCommand);
 		}
 		catch (SSHException e) {
             try {
@@ -205,5 +210,20 @@ public class LogAccessServiceSsh implements LogAccessService {
 		
 		// Return meta-informations about files and folders
 		return fileInfos;
+	}
+	
+	private boolean isWindowsOS(LogAccessConfig logAccessConfig) throws LogAccessException {
+		if (logAccessConfig.isWindowsOS() == null) {
+			try {
+				InputStream resultStream = executeCommand(logAccessConfig.getId(), GET_OS_INFO_COMMAND);
+				String result = FileCopyUtils.copyToString(new InputStreamReader(resultStream));
+				boolean isWindowsOS = result.toLowerCase().contains(WINDOWS_OS_MARKER);
+				logAccessConfig.setWindowsOS(isWindowsOS);
+			}
+			catch (IOException ioe) {
+				throw new LogAccessException("Error while reading response of command : " + GET_OS_INFO_COMMAND, ioe);
+			}
+		}
+		return logAccessConfig.isWindowsOS();
 	}
 }

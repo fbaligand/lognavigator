@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -49,6 +50,9 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	@XmlAttribute(name="display-group")
 	private String displayGroup;
+	
+	@XmlTransient
+	private Boolean isWindowsOS;
 	
 	
 	//////////////////
@@ -109,42 +113,49 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	public LogAccessType getType() {
 		return type;
 	}
 	public void setType(LogAccessType type) {
 		this.type = type;
 	}
+	
 	public String getHost() {
 		return host;
 	}
 	public void setHost(String host) {
 		this.host = host;
 	}
+	
 	public String getUser() {
 		return user;
 	}
 	public void setUser(String user) {
 		this.user = user;
 	}
+	
 	public String getDirectory() {
 		return directory;
 	}
 	public void setDirectory(String directory) {
 		this.directory = directory;
 	}
+	
 	public String getUrl() {
 		return url;
 	}
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
 	public List<String> getAuthorizedUsers() {
 		return authorizedUsers;
 	}
 	public void setAuthorizedUsers(List<String> authorizedUsers) {
 		this.authorizedUsers = authorizedUsers;
 	}
+	
 	public List<String> getAuthorizedRoles() {
 		return authorizedRoles;
 	}
@@ -155,9 +166,15 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	public String getDisplayGroup() {
 		return displayGroup;
 	}
-
 	public void setDisplayGroup(String displayGroup) {
 		this.displayGroup = displayGroup;
+	}
+
+	public Boolean isWindowsOS() {
+		return isWindowsOS;
+	}
+	public void setWindowsOS(Boolean isWindowsOS) {
+		this.isWindowsOS = isWindowsOS;
 	}
 
 	

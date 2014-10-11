@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class AuthorizationServiceImpl implements AuthorizationService {
+public class DefaultAuthorizationService implements AuthorizationService {
 
 	@Override
 	public void checkUserAuthorizationFor(LogAccessConfig logAccessConfig, Authentication authenticatedUser) throws AuthorizationException {

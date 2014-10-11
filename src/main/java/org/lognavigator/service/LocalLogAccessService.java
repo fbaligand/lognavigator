@@ -25,7 +25,7 @@ import org.springframework.util.FileCopyUtils;
  */
 @Service
 @Qualifier("local")
-public class LogAccessServiceLocal implements LogAccessService {
+public class LocalLogAccessService implements LogAccessService {
 	
 	@Autowired
 	ConfigService configService;

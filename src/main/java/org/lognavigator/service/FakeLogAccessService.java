@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Qualifier("fake")
-public class LogAccessServiceFake implements LogAccessService {
+public class FakeLogAccessService implements LogAccessService {
 	
 	@Override
 	public InputStream executeCommand(String logAccessConfigId, String shellCommand) throws LogAccessException {

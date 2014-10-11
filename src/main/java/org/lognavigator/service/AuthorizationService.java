@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 
 
 /**
- * Service which managers user authorizations to log access configurations
+ * Service which manages user authorizations to log access configurations
  */
 public interface AuthorizationService {
 
