@@ -71,7 +71,7 @@ Because LogNavigator is based on linux commands, LogNavigator doesn't work out-o
 - During install process, check option **_Net > curl_**
 - Add following environment variables :
 ```dos
-CYGWIN=mintty
+CYGWIN=mintty nodosfilewarning
 CYGWIN_HOME=<cygwin install directory>
 PATH=<previous value>;%CYGWIN_HOME%\bin
 ```
