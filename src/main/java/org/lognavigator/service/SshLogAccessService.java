@@ -86,7 +86,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		Command resultCommand;
 		try {
 			session = sshClient.startSession();
-			resultCommand = session.exec("cd " + logAccessConfig.getDirectory() + " && " + shellCommand);
+			resultCommand = session.exec("cd \"" + logAccessConfig.getDirectory() + "\" && " + shellCommand);
 		}
 		catch (SSHException e) {
 			IOUtils.closeQuietly(session, sshClient);
