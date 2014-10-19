@@ -2,7 +2,8 @@
 
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
-**Key points :**
+## Features
+
 - Navigate into your logs with the comfort of a web interface
 - All your logs from different servers centralized in one entry point
 - Configure log access from different sources : 
@@ -117,6 +118,16 @@ For example :
     - Add system properties `-Dspring.profiles.active=security-enabled -Dlognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server startup script
     - Add JNDI keys/values `spring.profiles.active=security-enabled` and `lognavigator.authentication.config=file:/path/to/lognavigator-authentication-context.xml` to your server JNDI configuration
     - Put `lognavigator-authentication-context.xml` into your server classpath and define `spring.profiles.active=security-enabled` as system property or JNDI key/value 
+
+
+# Advanced Options
+
+- **forbidden.commands:** custom the list of forbidden commands (default is: rm,rmdir,mv,kill,ssh,chmod,chown,vi)
+- **filelist.maxcount:** custom the maximum file count displayed in the file list screen (default is: 1000)
+
+You can custom advanced options using two ways :
+- system properties
+- jndi environment entries
 
 
 # Requirements
