@@ -199,7 +199,7 @@ public class CommandController {
 			public int compare(List<TableCell> line1, List<TableCell> line2) {
 				String fileName1 = line1.get(0).getContent();
 				String fileName2 = line2.get(0).getContent();
-				return fileName1.compareTo(fileName2);
+				return fileName1.compareToIgnoreCase(fileName2);
 			}
 		};
 		Collections.sort(tableLines, tableLinesComparator);
