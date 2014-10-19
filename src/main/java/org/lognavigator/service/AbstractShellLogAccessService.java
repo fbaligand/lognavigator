@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Set;
@@ -84,11 +85,11 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 
 		// Execute perl command
 		InputStream resultStream = executeCommand(logAccessConfigId, listCommand);
-		BufferedReader resultReader = new BufferedReader(new InputStreamReader(resultStream));
+		BufferedReader resultReader = new BufferedReader(new InputStreamReader(resultStream, Charset.forName("UTF-8")));
 		
 		// Parse the result lines to build FileInfo list
 		Set<FileInfo> fileInfos = new TreeSet<FileInfo>();
-		String line;
+		String line = null;
 		try {
 			while ((line = resultReader.readLine()) != null) {
 				
@@ -117,6 +118,9 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 			
 			// Return list of files
 			return fileInfos;
+		}
+		catch (NumberFormatException e) {
+			throw new LogAccessException("Error while executing list command : " + line, e);
 		}
 		catch (IOException e) {
 			throw new LogAccessException("I/O Error while listing files in path '" + subPath + "' in log access config : "  + logAccessConfig, e);
