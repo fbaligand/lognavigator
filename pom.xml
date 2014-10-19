@@ -40,10 +40,20 @@
 	</issueManagement>
   
 	<properties>
-		<spring.version>3.2.8.RELEASE</spring.version>
-		<spring.security.version>3.2.1.RELEASE</spring.security.version>
+		<spring.version>3.2.11.RELEASE</spring.version>
+		<spring.security.version>3.2.5.RELEASE</spring.security.version>
 		<slf4j.version>1.7.5</slf4j.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 
