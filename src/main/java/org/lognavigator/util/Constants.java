@@ -14,7 +14,6 @@ public class Constants {
 	public static final String FOLDER_VIEW_URL_PREFIX = "list?subPath=";
 	public static final String LOGS_LIST_URL = "list";
 	
-	public static final String FORWARD_COMMAND_CONTROLLER = "forward:command";
 	public static final String FILE_VIEW_URL_PREFIX = "command?cmd=";
 
 	public static final String MAIN_VIEW = "main-view";
@@ -29,6 +28,8 @@ public class Constants {
 	public static final String LOG_ACCESS_CONFIG_IDS_BY_DISPLAY_GROUP_KEY = "logAccessConfigIdsByDisplayGroup";
 	public static final String ERROR_TITLE_KEY = "errorTitle";
 	public static final String ERROR_MESSAGE_KEY = "errorMessage";
+	public static final String WARN_TITLE_KEY = "warnTitle";
+	public static final String WARN_MESSAGE_KEY = "warnMessage";
 	public static final String SHOW_OPTIONS_KEY = "showOptions";
 	public static final String ENCODING_KEY = "encoding";
 	public static final String DISPLAY_TYPE_KEY = "displayType";
@@ -54,8 +55,8 @@ public class Constants {
 	// COMMANDS //
 	//////////////
 
-	public static final String LIST_COMMAND_START = "ls ";
-	public static final String DEFAULT_LIST_COMMAND = LIST_COMMAND_START + "-l";
+	public static final String DEFAULT_LIST_COMMAND = "ls";
+	public static final String PERL_LIST_COMMAND = "perl -e ''foreach $filename (`ls -t \"{0}\" | head -{1,number,#}`) '{' chomp($filename); @stat=stat(\"{0}/$filename\"); printf \"%x %d %d000 %s\\n\", @stat[2] & 0040000, @stat[7], @stat[9], $filename; '}'''";
 	public static final String DEFAULT_FILE_VIEW_COMMAND = "tail -1000 {0}";
 	
 	public static final String GZ_FILE_VIEW_COMMAND = "gzip -dc {0} | tail -1000";

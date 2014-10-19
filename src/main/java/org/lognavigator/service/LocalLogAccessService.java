@@ -14,7 +14,6 @@ import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -25,10 +24,7 @@ import org.springframework.util.FileCopyUtils;
  */
 @Service
 @Qualifier("local")
-public class LocalLogAccessService implements LogAccessService {
-	
-	@Autowired
-	ConfigService configService;
+public class LocalLogAccessService extends AbstractShellLogAccessService implements LogAccessService {
 	
 	@Override
 	public InputStream executeCommand(String logAccessConfigId, String shellCommand) throws LogAccessException {
@@ -39,7 +35,7 @@ public class LocalLogAccessService implements LogAccessService {
 		try {
 			// Prepare shellCommand array (depending OS)
 			String[] shellCommandArray = null;
-			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			if (isWindowsOS(logAccessConfig)) {
 				shellCommandArray = new String[]{"cmd", "/C", shellCommand};
 			}
 			else {
@@ -47,7 +43,8 @@ public class LocalLogAccessService implements LogAccessService {
 			}
 			
 			// Execute the command
-			Process process = Runtime.getRuntime().exec(shellCommandArray, null, new File(logAccessConfig.getDirectory()));
+			File currentDirectory = (logAccessConfig.getDirectory() != null) ? new File(logAccessConfig.getDirectory()) : null;
+			Process process = Runtime.getRuntime().exec(shellCommandArray, null, currentDirectory);
 			
 			// Get and return the result stream
 			InputStream resultStream = process.getInputStream();
@@ -77,11 +74,8 @@ public class LocalLogAccessService implements LogAccessService {
 	}
 
 	@Override
-	public Set<FileInfo> listFiles(String logAccessConfigId, String subPath) throws LogAccessException {
+	protected Set<FileInfo> listFilesUsingNativeSystem(LogAccessConfig logAccessConfig, String subPath) throws LogAccessException {
 		
-		// Get the LogAccessConfig
-		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
-
 		// Define target directory
 		String targetPath = logAccessConfig.getDirectory();
 		if (subPath != null) {
@@ -115,5 +109,16 @@ public class LocalLogAccessService implements LogAccessService {
 		
 		// Return meta-informations about files and folders
 		return fileInfos;
+	}
+
+	@Override
+	protected boolean isWindowsOS(LogAccessConfig logAccessConfig) {
+		if (logAccessConfig.isWindowsOS() == null) {
+			// Check if OS is windows
+			boolean isWindowsOS = System.getProperty("os.name").toLowerCase().contains("windows");
+			// Update logAccessConfig to cache the information (and not execute command every time)
+			logAccessConfig.setWindowsOS(isWindowsOS);
+		}
+		return logAccessConfig.isWindowsOS();
 	}
 }

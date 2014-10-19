@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.connection.channel.direct.Session.Command;
@@ -23,7 +24,6 @@ import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.util.ScpStreamingSystemFile;
 import org.lognavigator.util.SshCloseFilterInputStream;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -34,64 +34,68 @@ import org.springframework.util.FileCopyUtils;
  */
 @Service
 @Qualifier("ssh")
-public class SshLogAccessService implements LogAccessService {
+public class SshLogAccessService extends AbstractShellLogAccessService implements LogAccessService {
 	
 	private static final String GET_OS_INFO_COMMAND = "uname -a";
 	private static final String WINDOWS_OS_MARKER = "cygwin";
 	
-	@Autowired
-	ConfigService configService;
+	private static ThreadLocal<SSHClient> sshClientThreadLocal = new ThreadLocal<SSHClient>();
+
 	
+	/**
+	 * Override listFiles() method to share the ssh client among the different executed commands
+	 */
+	@Override
+	public Set<FileInfo> listFiles(String logAccessConfigId, String subPath) throws LogAccessException {
+		
+		// Get the LogAccessConfig
+		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
+
+		// Create ssh client, authenticate and put it into thread local for a shared use
+		SSHClient sshClient = connectAndAuthenticate(logAccessConfig);
+		sshClientThreadLocal.set(sshClient);
+
+		// List files using prepared ssh client
+		try {
+			return super.listFiles(logAccessConfigId, subPath);
+		}
+		finally {
+			sshClientThreadLocal.remove();
+			try {
+				sshClient.disconnect();
+			} catch (IOException e) {}
+		}
+	}
+
 	@Override
 	public InputStream executeCommand(String logAccessConfigId, String shellCommand) throws LogAccessException {
 		
 		// Get the LogAccessConfig
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
-		
-		// Connect to the remote host
-		SSHClient sshClient = new SSHClient();
-		try {
-			sshClient.loadKnownHosts();
-			sshClient.connect(logAccessConfig.getHost());
-		}
-		catch (IOException e) {
-			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
-		}
-		
-		// Authenticate to the remote host
-		Session session;
-		try {
-			sshClient.authPublickey(logAccessConfig.getUser());
-			session = sshClient.startSession();
-		}
-		catch (SSHException e) {
-            try {
-				sshClient.disconnect();
-			}
-            catch (IOException ioe) {}
-			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
+
+		// Create ssh client and authenticate
+		SSHClient sshClient = sshClientThreadLocal.get();
+		boolean closeSshClient = false;
+		if (sshClient == null) {
+			sshClient = connectAndAuthenticate(logAccessConfig);
+			closeSshClient = true;
 		}
 
 		// Execute the shell command
+		Session session = null;
 		Command resultCommand;
 		try {
+			session = sshClient.startSession();
 			resultCommand = session.exec("cd " + logAccessConfig.getDirectory() + " && " + shellCommand);
 		}
 		catch (SSHException e) {
-            try {
-    			session.close();
-			}
-            catch(SSHException sshe) {}
-            try {
-				sshClient.disconnect();
-			}
-            catch (IOException ioe) {}
+			IOUtils.closeQuietly(session, sshClient);
 			throw new LogAccessException("Error when executing command " + shellCommand + " to " + logAccessConfig, e);
 		}
 		
 		// Get and return the result stream
 		InputStream resultStream = new SequenceInputStream(resultCommand.getInputStream(), resultCommand.getErrorStream());
-		resultStream = new SshCloseFilterInputStream(resultStream, sshClient, session);
+		resultStream = new SshCloseFilterInputStream(resultStream, resultCommand, session, (closeSshClient ? sshClient : null));
 		return resultStream;
 	}
 
@@ -101,31 +105,13 @@ public class SshLogAccessService implements LogAccessService {
 		// Get the LogAccessConfig
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
 		
-		// Connect to the remote host
-		SSHClient sshClient = new SSHClient();
-		try {
-			sshClient.loadKnownHosts();
-			sshClient.connect(logAccessConfig.getHost());
-		}
-		catch (IOException e) {
-			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
-		}
-		
-		// Authenticate to the remote host
-		try {
-			sshClient.authPublickey(logAccessConfig.getUser());
-		}
-		catch (SSHException e) {
-            try {
-				sshClient.disconnect();
-			}
-            catch (IOException ioe) {}
-			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
-		}
+		// Create ssh client and authenticate
+		SSHClient sshClient = connectAndAuthenticate(logAccessConfig);
 
 		// Execute the download
 		try {
-			sshClient.newSCPFileTransfer().download(logAccessConfig.getDirectory() + "/" + fileName, new ScpStreamingSystemFile(downloadOutputStream));
+			String filePath = logAccessConfig.getDirectory() + "/" + fileName;
+			sshClient.newSCPFileTransfer().download(filePath, new ScpStreamingSystemFile(downloadOutputStream));
 		}
 		catch (IOException e) {
 			throw new LogAccessException("Error when executing downloading " + fileName + " on " + logAccessConfig, e);
@@ -140,31 +126,10 @@ public class SshLogAccessService implements LogAccessService {
 	}
 
 	@Override
-	public Set<FileInfo> listFiles(String logAccessConfigId, String subPath) throws LogAccessException {
-		// Get the LogAccessConfig
-		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
+	protected Set<FileInfo> listFilesUsingNativeSystem(LogAccessConfig logAccessConfig, String subPath) throws LogAccessException {
 		
-		// Connect to the remote host
-		SSHClient sshClient = new SSHClient();
-		try {
-			sshClient.loadKnownHosts();
-			sshClient.connect(logAccessConfig.getHost());
-		}
-		catch (IOException e) {
-			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
-		}
-		
-		// Authenticate to the remote host
-		try {
-			sshClient.authPublickey(logAccessConfig.getUser());
-		}
-		catch (SSHException e) {
-            try {
-				sshClient.disconnect();
-			}
-            catch (IOException ioe) {}
-			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
-		}
+		// Get ssh client
+		SSHClient sshClient = sshClientThreadLocal.get();
 
 		// Define target directory
 		String targetPath = logAccessConfig.getDirectory();
@@ -183,16 +148,7 @@ public class SshLogAccessService implements LogAccessService {
 			throw new LogAccessException("Error when listing files and directories on " + logAccessConfig, e);
 		}
 		finally {
-            try {
-            	if (sftpClient != null) {
-                	sftpClient.close();
-            	}
-			}
-            catch(IOException ioe) {}
-            try {
-				sshClient.disconnect();
-			}
-            catch (IOException ioe) {}
+			IOUtils.closeQuietly(sftpClient, sshClient);
 		}
 		
 		// Extract meta-informations
@@ -212,12 +168,18 @@ public class SshLogAccessService implements LogAccessService {
 		return fileInfos;
 	}
 	
-	private boolean isWindowsOS(LogAccessConfig logAccessConfig) throws LogAccessException {
+	@Override
+	protected boolean isWindowsOS(LogAccessConfig logAccessConfig) throws LogAccessException {
 		if (logAccessConfig.isWindowsOS() == null) {
 			try {
+				// Execute command to know OS
 				InputStream resultStream = executeCommand(logAccessConfig.getId(), GET_OS_INFO_COMMAND);
+				
+				// Check if OS is windows
 				String result = FileCopyUtils.copyToString(new InputStreamReader(resultStream));
 				boolean isWindowsOS = result.toLowerCase().contains(WINDOWS_OS_MARKER);
+
+				// Update logAccessConfig to cache the information (and not execute command every time)
 				logAccessConfig.setWindowsOS(isWindowsOS);
 			}
 			catch (IOException ioe) {
@@ -226,4 +188,35 @@ public class SshLogAccessService implements LogAccessService {
 		}
 		return logAccessConfig.isWindowsOS();
 	}
+
+	/**
+	 * Create a ssh client to logAccessConfig host, and process authentication by ssh key
+	 * @param logAccessConfig log access config to connect to
+	 * @return the created and authenticated ssh client
+	 * @throws LogAccessException if a technical error occurs
+	 */
+	private SSHClient connectAndAuthenticate(LogAccessConfig logAccessConfig) throws LogAccessException {
+		// Connect to the remote host
+		SSHClient sshClient = new SSHClient();
+		try {
+			sshClient.loadKnownHosts();
+			sshClient.connect(logAccessConfig.getHost());
+		}
+		catch (IOException e) {
+			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
+		}
+		
+		// Authenticate to the remote host
+		try {
+			sshClient.authPublickey(logAccessConfig.getUser());
+		}
+		catch (SSHException e) {
+			IOUtils.closeQuietly(sshClient);
+			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
+		}
+		
+		// Return the connnected and authenticated client
+		return sshClient;
+	}
+
 }

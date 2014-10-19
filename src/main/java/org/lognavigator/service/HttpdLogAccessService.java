@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.SequenceInputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
@@ -15,6 +14,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+
+import net.schmizz.sshj.common.IOUtils;
 
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
@@ -50,6 +51,10 @@ public class HttpdLogAccessService implements LogAccessService {
 	@Autowired
 	ConfigService configService;
 	
+	@Autowired
+	@Qualifier("local")
+	LogAccessService localLogAccessService;
+	
 	
 	@Override
 	public InputStream executeCommand(String logAccessConfigId, String shellCommand) throws LogAccessException {
@@ -60,29 +65,9 @@ public class HttpdLogAccessService implements LogAccessService {
 		// Replace "curl -s <file>" occurences by "curl -s <full url>"
 		String urlPrefix = logAccessConfig.getUrl();
 		String fullUrlShellCommand = shellCommand.replaceFirst(Constants.HTTPD_FILE_VIEW_COMMAND_START, Constants.HTTPD_FILE_VIEW_COMMAND_START + urlPrefix);
-		
-		try {
-			// Prepare shellCommand array (depending OS)
-			String[] shellCommandArray = null;
-			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-				shellCommandArray = new String[]{"cmd", "/C", fullUrlShellCommand};
-			}
-			else {
-				shellCommandArray = new String[]{"/bin/sh", "-c", fullUrlShellCommand};
-			}
-			
-			// Execute the command
-			Process process = Runtime.getRuntime().exec(shellCommandArray);
-			
-			// Get and return the result stream
-			InputStream resultStream = process.getInputStream();
-			InputStream errorStream = process.getErrorStream();
-			InputStream sequenceStream = new SequenceInputStream(resultStream, errorStream);
-			return sequenceStream;
-		}
-		catch (IOException e) {
-			throw new LogAccessException("Error when executing command " + shellCommand + " to " + logAccessConfig, e);
-		}
+
+		// Execute curl command
+		return localLogAccessService.executeCommand(logAccessConfigId, fullUrlShellCommand);
 	}
 
 	@Override
@@ -152,12 +137,20 @@ public class HttpdLogAccessService implements LogAccessService {
 			
 			// Result meta-informations
 			Set<FileInfo> fileInfos = new TreeSet<FileInfo>();
+			int maxFileCount = configService.getFileListMaxCount();
+			int fileCount = 0;
 				
 			// Extract files and directories : each line is a file/directory
 			while ( (currentLine = remoteReader.readLine()) != null) {
 				
 				// Last Line
 				if (currentLine.contains(TABLE_END)) {
+					break;
+				}
+				
+				// Check file count
+				++fileCount;
+				if (fileCount > maxFileCount) {
 					break;
 				}
 				
@@ -231,6 +224,9 @@ public class HttpdLogAccessService implements LogAccessService {
 		}
 		catch (ParseException e) {
 			throw new LogAccessException("Error when parsing log files list on " + logAccessConfig, e);
+		}
+		finally {
+			IOUtils.closeQuietly(remoteReader);
 		}
 	}
 }

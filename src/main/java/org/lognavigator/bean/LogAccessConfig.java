@@ -54,6 +54,9 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	@XmlTransient
 	private Boolean isWindowsOS;
 	
+	@XmlTransient
+	private Boolean isPerlInstalled;
+	
 	
 	//////////////////
 	// CONSTRUCTORS //
@@ -177,6 +180,13 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 		this.isWindowsOS = isWindowsOS;
 	}
 
+	public Boolean isPerlInstalled() {
+		return isPerlInstalled;
+	}
+	public void setPerlInstalled(Boolean isPerlInstalled) {
+		this.isPerlInstalled = isPerlInstalled;
+	}
+	
 	
 	//////////////////////////////////////////////
 	// TOSTRING / COMPARETO / EQUALS / HASHCODE // 
