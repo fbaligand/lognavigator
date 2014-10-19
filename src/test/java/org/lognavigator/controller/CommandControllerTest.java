@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.DisplayType;
 import org.lognavigator.exception.AuthorizationException;
+import org.lognavigator.service.DefaultConfigService;
 import org.lognavigator.service.FakeLogAccessService;
 import org.lognavigator.util.Constants;
 import org.springframework.ui.ExtendedModelMap;
@@ -20,6 +21,7 @@ public class CommandControllerTest {
 	public void setup() throws Exception {
 		commandController = new CommandController();
 		commandController.logAccessService = new FakeLogAccessService();
+		commandController.configService = new DefaultConfigService();
 	}
 
 	@Test
