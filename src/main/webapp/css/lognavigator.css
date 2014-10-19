@@ -49,3 +49,7 @@ pre {
     width: 100%;
     background-color: white;
 }
+
+.no-options {
+	margin-top: -50px;
+}

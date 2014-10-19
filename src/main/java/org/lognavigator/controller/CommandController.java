@@ -27,6 +27,7 @@ import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.bean.TableCell;
 import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.exception.LogAccessException;
+import org.lognavigator.service.ConfigService;
 import org.lognavigator.service.LogAccessService;
 import org.lognavigator.util.BreadcrumbFactory;
 import org.lognavigator.util.CommandLineParser;
@@ -34,12 +35,12 @@ import org.lognavigator.util.FileInfoFactory;
 import org.lognavigator.util.TableCellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 
 @Controller
@@ -49,9 +50,10 @@ public class CommandController {
 	@Qualifier("facade")
 	LogAccessService logAccessService;
 	
-	@Value("${forbidden.commands:" + DEFAULT_FORBIDDEN_COMMANDS + "}")
-	String forbiddenCommands = DEFAULT_FORBIDDEN_COMMANDS;
+	@Autowired
+	ConfigService configService;
 	
+
 	@RequestMapping("/{logAccessConfigId}/command")
 	public String executeCommand(Model model, 
 					  @PathVariable String logAccessConfigId, 
@@ -60,14 +62,25 @@ public class CommandController {
 					  @RequestParam(value="displayType", required=false) DisplayType displayType
 	) throws AuthorizationException, LogAccessException, IOException {
 		
+		// Parse command line
 		CommandLine commandLine = CommandLineParser.parseCommandLine(cmd);
 		
 		// Is command forbidden ?
 		checkForbiddenCommand(commandLine);
 		
+		// Forward to 'list' action, if command is 'ls'
+		if ((displayType == null || displayType == DisplayType.TABLE) && commandLine.getCommand().equals(DEFAULT_LIST_COMMAND) && !cmd.contains("|")) {
+			if (commandLine.hasParams()) {
+				return UrlBasedViewResolver.FORWARD_URL_PREFIX + FOLDER_VIEW_URL_PREFIX + commandLine.getParam(0);
+			}
+			else {
+				return UrlBasedViewResolver.FORWARD_URL_PREFIX + LOGS_LIST_URL;
+			}
+		}
+		
 		// Define default displayType when not given by client
-		if (displayType == null) { 
-			if (cmd.startsWith(LIST_COMMAND_START) || cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
+		if (displayType == null) {
+			if (cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
 				displayType = DisplayType.TABLE;
 			}
 			else {
@@ -95,10 +108,7 @@ public class CommandController {
 		// Process the result lines for html table display
 		else {
 			try {
-				if (cmd.startsWith(LIST_COMMAND_START)) {
-					processLs(resultReader, model);
-				}
-				else if (cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
+				if (cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
 					processTarGzList(resultReader, model, cmd);
 				}
 				else {
@@ -124,7 +134,7 @@ public class CommandController {
 	 */
 	private void checkForbiddenCommand(CommandLine commandLine) throws AuthorizationException {
 		
-		String forbiddenCommandsRegex = "(" + forbiddenCommands.replace(',', '|') + ")";
+		String forbiddenCommandsRegex = "(" + configService.getForbiddenCommands().replace(',', '|') + ")";
 		String forbiddenCommandLineRegex = MessageFormat.format(FORBIDDEN_COMMANDLINE_REGEX, forbiddenCommandsRegex);
 		
 		if (commandLine.getLine().matches(forbiddenCommandLineRegex)
@@ -133,65 +143,10 @@ public class CommandController {
 			|| commandLine.getParams().contains(">") || 
 			commandLine.getParams().contains(">>")
 		) {
-			throw new AuthorizationException("This command is forbidden (" + forbiddenCommands + ",>,>>)");
+			throw new AuthorizationException("This command is forbidden (" + configService.getForbiddenCommands() + ",>,>>)");
 		}
 	}
 	
-	/**
-	 * Display the result of a "ls" command as a convenient html table
-	 */
-	private void processLs(BufferedReader resultReader, Model model) throws IOException {
-		
-		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
-
-		// Header line
-		String line = resultReader.readLine();
-		
-		// No result
-		if (line == null) {
-			model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER));
-			tableLines.add(Arrays.asList(new TableCell("No File")));
-		}
-
-		// Simple ls
-		else if (!line.startsWith("total ")) {
-			do {
-				String fileName = line;
-				List<TableCell> lineCells = TableCellFactory.createTableCellList(fileName, fileName, false, null, null, LogAccessType.LOCAL);
-				tableLines.add(lineCells);
-			}
-			while ( (line = resultReader.readLine()) != null);
-			model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
-		}
-		
-		// Detailed ls
-		else {
-			while ( (line = resultReader.readLine()) != null) {
-				boolean isDirectory = line.startsWith(DIRECTORY_RIGHT);
-				line = line.replaceAll(" +", " ");
-				StringTokenizer stLine = new StringTokenizer(line, " ");
-				// Skip 4 first columns
-				stLine.nextToken();
-				stLine.nextToken();
-				stLine.nextToken();
-				stLine.nextToken();
-				// Get columns to display
-				String fileSize = stLine.nextToken();
-				String fileDate = stLine.nextToken();
-				fileDate += " " + stLine.nextToken();
-				fileDate += " " + stLine.nextToken();
-				String fileName = stLine.nextToken();
-				// Construct cells
-				List<TableCell> lineCells = TableCellFactory.createTableCellList(fileName, fileName, isDirectory, fileSize, fileDate, LogAccessType.LOCAL);
-				tableLines.add(lineCells);
-			}
-			model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, SIZE_TABLE_HEADER, DATE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
-		}
-		
-		model.addAttribute(TABLE_LINES_KEY, tableLines);
-		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
-	}
-
 	/**
 	 * Display the result of a "tar.gz list" command as a convenient html table
 	 */

@@ -12,7 +12,32 @@ public class CommandLine {
 	private String command;
 	private List<String> options = new ArrayList<String>();
 	private List<String> params = new ArrayList<String>();
-	
+
+
+	///////////// 
+	// METHODS //
+	///////////// 
+
+	public String getOption(int index) {
+		return getOptions().get(index);
+	}
+	public void addOption(String option) {
+		getOptions().add(option);
+	}
+
+	public boolean hasParams() {
+		return !getParams().isEmpty();
+	}
+	public String getParam(int index) {
+		return getParams().get(index);
+	}
+	public void addParam(String param) {
+		getParams().add(param);
+	}
+
+	/////////////////////// 
+	// GETTERS & SETTERS //
+	/////////////////////// 
 	
 	public String getLine() {
 		return line;
@@ -34,23 +59,11 @@ public class CommandLine {
 	public void setOptions(List<String> options) {
 		this.options = options;
 	}
-	public String getOption(int index) {
-		return getOptions().get(index);
-	}
-	public void addOption(String option) {
-		getOptions().add(option);
-	}
 	
 	public List<String> getParams() {
 		return params;
 	}
 	public void setParams(List<String> params) {
 		this.params = params;
-	}
-	public String getParam(int index) {
-		return getParams().get(index);
-	}
-	public void addParam(String param) {
-		getParams().add(param);
 	}
 }

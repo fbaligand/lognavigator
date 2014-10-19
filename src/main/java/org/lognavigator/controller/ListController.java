@@ -12,6 +12,7 @@ import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.TableCell;
 import org.lognavigator.exception.LogAccessException;
+import org.lognavigator.service.ConfigService;
 import org.lognavigator.service.LogAccessService;
 import org.lognavigator.util.BreadcrumbFactory;
 import org.lognavigator.util.FileInfoFactory;
@@ -32,6 +33,10 @@ public class ListController {
 	@Qualifier("facade")
 	private LogAccessService logAccessService;
 	
+	@Autowired
+	ConfigService configService;
+
+	
 	@RequestMapping("/{logAccessConfigId}/list")
 	public String list(Model model, 
 			           @PathVariable String logAccessConfigId,
@@ -39,13 +44,19 @@ public class ListController {
 			           )
 			           throws LogAccessException, IOException {
 
-		// Get the log files list
+		// List files contained in requested logAccessConfigId/subPath
 		Set<FileInfo> fileInfos = logAccessService.listFiles(logAccessConfigId, subPath);
 
 		// Add link to parent folder
 		if (subPath != null) {
 			FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(subPath);
 			fileInfos.add(parentFolderLink);
+		}
+		
+		// Add a warning if too many files
+		if (fileInfos.size() >= configService.getFileListMaxCount()) {
+			model.addAttribute(WARN_TITLE_KEY, "Too many files");
+			model.addAttribute(WARN_MESSAGE_KEY, "Only the " + configService.getFileListMaxCount() + " last updated files are displayed.");
 		}
 		
 		// Prepare the table lines for HTML presentation

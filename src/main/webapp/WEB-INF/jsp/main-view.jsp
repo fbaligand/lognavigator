@@ -138,7 +138,21 @@
 
 
 	<%-- RESULTS --%>
-	<section class="container-fluid" role="results">
+	<section class="container-fluid <c:if test="${!showOptions}">no-options</c:if>" role="results">
+
+		<%-- WARN MESSAGE --%>
+		<c:if test="${warnMessage != null}">
+			<div class="row-fluid">
+				<div class="col-md-offset-2 col-md-8">
+					<div class="alert alert-warning alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<strong>${warnTitle}:</strong> ${warnMessage}
+					</div>
+				</div>
+			</div>
+		</c:if>
 	
 		<c:choose>
 
