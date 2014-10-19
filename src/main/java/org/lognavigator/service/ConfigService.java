@@ -12,7 +12,7 @@ import org.lognavigator.exception.ConfigException;
 public interface ConfigService {
 
 	/**
-	 * First Reload logAccessConfigs if necessary.
+	 * First reload logAccessConfigs if necessary.
 	 * Then return the set of LogAccessConfig beans
 	 * @return set of all LogAccessConfig beans
 	 * @throws ConfigException when an error occurs while loading configuration (ex: bad configuration)
@@ -26,5 +26,14 @@ public interface ConfigService {
 	 * @throws ConfigException when no LogAccessConfig corresponds to the requested id
 	 */
 	public LogAccessConfig getLogAccessConfig(String id) throws ConfigException;
+	
+	/**
+	 * Return configured maximum file count displayed in the file list screen
+	 */
+	public int getFileListMaxCount();
 
+	/**
+	 * Return configured forbidden commands list
+	 */
+	public String getForbiddenCommands();
 }

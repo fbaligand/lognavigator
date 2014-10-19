@@ -1,5 +1,7 @@
 package org.lognavigator.service;
 
+import static org.lognavigator.util.Constants.DEFAULT_FORBIDDEN_COMMANDS;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,14 +29,27 @@ import org.springframework.util.StringUtils;
 public class DefaultConfigService implements ConfigService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultConfigService.class);
-	private static final String DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION = "classpath:lognavigator.xml";
 	
+	private static final String DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION = "classpath:lognavigator.xml";
+	private static final int DEFAULT_FILE_LIST_MAX_COUNT = 1000;
+	
+
 	Set<LogAccessConfig> logAccessConfigs;
 	long logNavigatorConfigLastModified;
+	JAXBContext logNavigatorConfigJaxbContext;
 
+	/** lognavigator main configuration location */
 	@Value("${lognavigator.config:" + DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION + "}")
 	Resource logNavigatorConfigResource;
-	JAXBContext logNavigatorConfigJaxbContext;
+	
+	/** max file count in screen listing files */
+	@Value("${filelist.maxcount:" + DEFAULT_FILE_LIST_MAX_COUNT + "}")
+	int fileListMaxCount; 
+	
+	/** forbidden commands list */
+	@Value("${forbidden.commands:" + DEFAULT_FORBIDDEN_COMMANDS + "}")
+	String forbiddenCommands = DEFAULT_FORBIDDEN_COMMANDS;
+	
 
 	@Override
 	public synchronized Set<LogAccessConfig> getLogAccessConfigs() throws ConfigException {
@@ -56,6 +71,16 @@ public class DefaultConfigService implements ConfigService {
 		
 		// No LogAccessConfig found
 		throw new ConfigException("logAccessConfigId " + id + " doesn't correspond to any known log access config");
+	}
+
+	@Override
+	public int getFileListMaxCount() {
+		return fileListMaxCount;
+	}
+	
+	@Override
+	public String getForbiddenCommands() {
+		return forbiddenCommands;
 	}
 	
 	/**
