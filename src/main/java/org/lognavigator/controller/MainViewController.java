@@ -1,8 +1,6 @@
 package org.lognavigator.controller;
 
-import static org.lognavigator.util.Constants.LOG_ACCESS_CONFIG_IDS_BY_DISPLAY_GROUP_KEY;
-import static org.lognavigator.util.Constants.LOG_ACCESS_CONFIG_ID_KEY;
-import static org.lognavigator.util.Constants.MAIN_VIEW;
+import static org.lognavigator.util.Constants.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -36,7 +33,7 @@ public class MainViewController {
 	
 
 	@RequestMapping("/{logAccessConfigId}/prepare-main-view")
-	public String prepareMainView(Model model, @PathVariable String logAccessConfigId) throws ConfigException {
+	public String prepareMainView(Model model) throws ConfigException {
 		
 		try {
 			
@@ -58,9 +55,7 @@ public class MainViewController {
 				logAccessConfigIds.add(logAccessConfig);
 			}
 			
-			
-			// Inject current logAccessConfigId and logAccessConfigIds map
-			model.addAttribute(LOG_ACCESS_CONFIG_ID_KEY, logAccessConfigId);
+			// Inject logAccessConfigIds map
 			model.addAttribute(LOG_ACCESS_CONFIG_IDS_BY_DISPLAY_GROUP_KEY, logAccessConfigsMap);
 		}
 		catch (ConfigException e) {
