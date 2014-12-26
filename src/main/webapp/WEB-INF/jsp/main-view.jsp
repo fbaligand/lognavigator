@@ -18,6 +18,8 @@
 	<%-- STYLES --%>
     <link rel="stylesheet" href="<c:url value="/css/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/css/font-awesome/css/font-awesome.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/select2/select2.css"/>">
+	<link rel="stylesheet" href="<c:url value="/css/select2/select2-bootstrap.css"/>">
 	<link rel="stylesheet" href="<c:url value="/css/datatables/css/dataTables.bootstrap.css"/>">
 	<link rel="stylesheet" href="<c:url value="/css/lognavigator.css"/>">
 	<%-- /STYLES --%>
@@ -58,7 +60,7 @@
 
 			<div class="navbar-collapse collapse">
 				<form class="navbar-form navbar-right">
-					<select name="logAccessConfigId" id="logAccessConfigId" class="form-control">
+					<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
 						<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
 							<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
 								<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
@@ -73,7 +75,6 @@
 		</div>
 	</nav>
    	<%-- /NAVBAR --%>
-
 
 	<%-- COMMAND FORM --%>
 	<section class="command-fixed-top" role="command-form">
@@ -238,6 +239,7 @@
     <script src="<c:url value="/js/dataTables.bootstrap.js"/>"></script>
     <script src="<c:url value="/js/numeral.min.js"/>"></script>
     <script src="<c:url value="/js/jquery.placeholder.js"/>"></script>
+   	<script src="<c:url value="/js/select2.min.js"/>"></script>
    	<script src="<c:url value="/js/lognavigator.js"/>"></script>
 	<%-- /SCRIPTS --%>
 

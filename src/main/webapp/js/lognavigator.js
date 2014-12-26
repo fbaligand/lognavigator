@@ -4,7 +4,10 @@ function initPage() {
 	if ($("#logAccessConfigId").width() < 200) {
 		$("#logAccessConfigId").width(200);
 	}
-	
+
+	// Render logAccessConfigId combobox
+	$("#logAccessConfigId").select2();
+
 	// Process logAccessConfigId combobox change
 	$("#logAccessConfigId").change(function(){
 		window.location = "../" + $(this).val() + "/list";
