@@ -114,7 +114,7 @@ public class HttpdLogAccessService implements LogAccessService {
 				int encodingStartIndex = contentType.indexOf(CHARSET_PARAM) + CHARSET_PARAM.length();
 				encoding = contentType.substring(encodingStartIndex);
 			}
-			InputStream remoteInputStream = url.openStream();
+			InputStream remoteInputStream = urlConnection.getInputStream();
 			remoteReader = new BufferedReader(new InputStreamReader(remoteInputStream, encoding));
 		}
 		catch (IOException e) {
