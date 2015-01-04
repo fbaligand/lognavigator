@@ -208,7 +208,15 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		
 		// Authenticate to the remote host
 		try {
-			sshClient.authPublickey(logAccessConfig.getUser());
+			if (logAccessConfig.getPassword() != null) {
+				sshClient.authPassword(logAccessConfig.getUser(), logAccessConfig.getPassword());
+			}
+			else if (logAccessConfig.getPrivatekey() != null) {
+				sshClient.authPublickey(logAccessConfig.getUser(), logAccessConfig.getPrivatekey());
+			}
+			else {
+				sshClient.authPublickey(logAccessConfig.getUser());
+			}
 		}
 		catch (SSHException e) {
 			IOUtils.closeQuietly(sshClient);

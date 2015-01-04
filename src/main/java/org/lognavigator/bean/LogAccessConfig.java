@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * - HTTPD: url
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder={"authorizedRoles", "authorizedUsers", "url", "directory", "host", "user", "type", "id"})
+@XmlType(propOrder={"authorizedRoles", "authorizedUsers", "url", "directory", "host", "password", "privatekey", "user", "type", "id"})
 public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	public static final String EVERYONE_IS_AUTHORIZED = "*";
@@ -36,6 +36,12 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	@XmlAttribute
 	private String user;
 
+	@XmlAttribute
+	private String privatekey;
+	
+	@XmlAttribute
+	private String password;
+	
 	@XmlAttribute
 	private String directory;
 
@@ -138,6 +144,20 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 		this.user = user;
 	}
 	
+	public String getPrivatekey() {
+		return privatekey;
+	}
+	public void setPrivatekey(String privatekey) {
+		this.privatekey = privatekey;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getDirectory() {
 		return directory;
 	}

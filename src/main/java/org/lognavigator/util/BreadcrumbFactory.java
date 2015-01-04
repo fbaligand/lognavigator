@@ -33,11 +33,15 @@ public class BreadcrumbFactory {
 	 * @param lastElementIsLink
 	 */
 	public static void addSubPath(List<Breadcrumb> breadcrumbs, String path, boolean lastElementIsLink) {
+		path = path.replace("//", "/");
 		String[] pathElements = path.split("/");
 		int currentSlashIndex = 0;
 		
 		for (int i=0; i<pathElements.length; i++) {
 			String label = pathElements[i];
+			if (label.isEmpty()) {
+				continue;
+			}
 			if (!label.equals("*") && (lastElementIsLink || i < pathElements.length - 1)) {
 				try {
 					currentSlashIndex = path.indexOf('/', currentSlashIndex + 1);
