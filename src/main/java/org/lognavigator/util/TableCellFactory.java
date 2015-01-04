@@ -62,8 +62,9 @@ public class TableCellFactory {
 				// Process special case of tar.gz contents
 				if (relativePath.contains(TAR_GZ_CONTENT_SPLIT)) {
 					String targzFileName = relativePath.split("!")[0];
+					String targzEntryPath = relativePath.split("!")[1];
 					commandPattern = commandPattern.replace(" {0}", "");
-					commandPattern = MessageFormat.format(TAR_GZ_CONTENT_FILE_VIEW_COMMAND, "{0}", fileName, commandPattern);
+					commandPattern = MessageFormat.format(TAR_GZ_CONTENT_FILE_VIEW_COMMAND, "{0}", targzEntryPath, commandPattern);
 					commandArg = targzFileName;
 				}
 
@@ -78,13 +79,18 @@ public class TableCellFactory {
 				
 				// Compute view command
 				String command = MessageFormat.format(commandPattern, commandArg);
-				String simpleFileName = fileName.replaceAll(".*/", "");
-				lineCells.add(new TableCell(simpleFileName, FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING)));
+				lineCells.add(new TableCell(fileName, FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING)));
 			}
 			// Directory
 			else {
+				String cellContent = fileName;
 				String link = relativePath != null ? FOLDER_VIEW_URL_PREFIX + URLEncoder.encode(relativePath, URL_ENCODING) : LOGS_LIST_URL;
-				lineCells.add(new TableCell(fileName, link, null, "text-warning"));
+				String linkIcon = null;
+				if (fileName.equals("..")) {
+					linkIcon =  "fa fa-reply";
+					cellContent = "Parent Folder";
+				}
+				lineCells.add(new TableCell(cellContent, link, linkIcon, "text-warning"));
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedCharsetException(URL_ENCODING);
@@ -102,7 +108,7 @@ public class TableCellFactory {
 
 		// File actions
 		if (!isDirectory) {
-			lineCells.add(new TableCell("download", "download?fileName=" + relativePath, "glyphicon glyphicon-download"));
+			lineCells.add(new TableCell("Download", "download?fileName=" + relativePath, "glyphicon glyphicon-download"));
 		}
 		else {
 			lineCells.add(new TableCell(null));

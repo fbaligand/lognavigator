@@ -10,12 +10,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.UnsupportedCharsetException;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,8 +34,6 @@ import org.lognavigator.service.ConfigService;
 import org.lognavigator.service.LogAccessService;
 import org.lognavigator.util.BreadcrumbFactory;
 import org.lognavigator.util.CommandLineParser;
-import org.lognavigator.util.FileInfoFactory;
-import org.lognavigator.util.TableCellFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,9 @@ public class CommandController {
 	
 	@Autowired
 	ConfigService configService;
+	
+	@Autowired
+	ListController listController;
 	
 
 	@RequestMapping("/{logAccessConfigId}/command")
@@ -109,7 +113,7 @@ public class CommandController {
 		else {
 			try {
 				if (cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
-					processTarGzList(resultReader, model, cmd);
+					return processTarGzList(resultReader, model, cmd);
 				}
 				else {
 					processOtherCommand(resultReader, model);
@@ -149,24 +153,24 @@ public class CommandController {
 	
 	/**
 	 * Display the result of a "tar.gz list" command as a convenient html table
+	 * @return view name to display
 	 */
-	private void processTarGzList(BufferedReader resultReader, Model model, String cmd) throws IOException {
+	private String processTarGzList(BufferedReader resultReader, Model model, String cmd) throws IOException {
 		
 		// Compute archive filename
 		Matcher matcher = Pattern.compile("[^ ]+\\.tar\\.gz").matcher(cmd);
 		matcher.find();
 		String targzFileName = matcher.group();
 		
-		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
+		Set<FileInfo> archiveEntryList = new TreeSet<FileInfo>();
 
-		// Add link to parent folder
-		FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(targzFileName);
-		List<TableCell> parentFolderCells = TableCellFactory.createTableCellList(parentFolderLink);
-		tableLines.add(parentFolderCells);
-		
 		// Compute archive contents list
 		String line;
-		while ( (line = resultReader.readLine()) != null) {
+		int remainingFileCount = configService.getFileListMaxCount();
+		SimpleDateFormat targzDateFormat = new SimpleDateFormat(TAR_GZ_DATE_FORMAT);
+		LogAccessType logAccessType = cmd.startsWith(HTTPD_FILE_VIEW_COMMAND_START) ? LogAccessType.HTTPD : LogAccessType.LOCAL;
+		
+		while ( (line = resultReader.readLine()) != null && remainingFileCount > 0) {
 			
 			// directories are ignored
 			boolean isDirectory = line.startsWith(DIRECTORY_RIGHT);
@@ -174,41 +178,40 @@ public class CommandController {
 				continue;
 			}
 			
+			--remainingFileCount;
 			line = line.replaceAll(" +", " ");
 			StringTokenizer stLine = new StringTokenizer(line, " ");
-			
-			// Skip 2 first columns
-			stLine.nextToken();
-			stLine.nextToken();
-			
-			// Get columns to display
-			String fileSize = stLine.nextToken();
-			String fileDate = stLine.nextToken();
-			fileDate += " " + stLine.nextToken() + ":00";
-			String filePath = stLine.nextToken();
-			
-			// Construct cells
-			LogAccessType logAccessType = cmd.startsWith(HTTPD_FILE_VIEW_COMMAND_START) ? LogAccessType.HTTPD : LogAccessType.LOCAL;
-			List<TableCell> lineCells = TableCellFactory.createTableCellList(filePath, targzFileName + "!" + filePath, isDirectory, fileSize, fileDate, logAccessType);
-			tableLines.add(lineCells);
+
+			try {
+				// Skip 2 first columns
+				stLine.nextToken();
+				stLine.nextToken();
+				
+				// Get columns to display
+				Long fileSize = Long.parseLong(stLine.nextToken());
+				String sFileDate = stLine.nextToken() + " " + stLine.nextToken();
+				Date fileDate = targzDateFormat.parse(sFileDate);
+				String filePath = stLine.nextToken();
+				String fileName = filePath.replaceAll(".*/", "");
+				
+				// Construct FileInfo bean
+				FileInfo fileInfo = new FileInfo();
+				fileInfo.setFileName(fileName);
+				fileInfo.setRelativePath(targzFileName + "!" + filePath);
+				fileInfo.setDirectory(false);
+				fileInfo.setFileSize(fileSize);
+				fileInfo.setLastModified(fileDate);
+				fileInfo.setLogAccessType(logAccessType);
+				archiveEntryList.add(fileInfo);
+			}
+			catch (ParseException e) {
+				throw new IOException("Invalid tar.gz content", e);
+			}
+
 		}
 
-		// Sort files by name
-		Comparator<List<TableCell>> tableLinesComparator = new Comparator<List<TableCell>>() {
-			@Override
-			public int compare(List<TableCell> line1, List<TableCell> line2) {
-				String fileName1 = line1.get(0).getContent();
-				String fileName2 = line2.get(0).getContent();
-				return fileName1.compareToIgnoreCase(fileName2);
-			}
-		};
-		Collections.sort(tableLines, tableLinesComparator);
-		
-		// Update Model to display data
-		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, SIZE_TABLE_HEADER, DATE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
-		
-		model.addAttribute(TABLE_LINES_KEY, tableLines);
-		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
+		// Render archive entry list in HTML
+		return listController.renderFileList(model, targzFileName, archiveEntryList);
 	}
 
 	/**

@@ -61,7 +61,7 @@ public class Constants {
 	
 	public static final String GZ_FILE_VIEW_COMMAND = "gzip -dc {0} | tail -1000";
 	public static final String TAR_GZ_FILE_VIEW_COMMAND_START = "tar -ztvf ";
-	public static final String TAR_GZ_FILE_VIEW_COMMAND = TAR_GZ_FILE_VIEW_COMMAND_START + "{0}";
+	public static final String TAR_GZ_FILE_VIEW_COMMAND = TAR_GZ_FILE_VIEW_COMMAND_START + "{0} | sort -r -k 4,5";
 	public static final String TAR_GZ_FILE_VIEW_COMMAND_END = "| tar -ztv";
 
 	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START = "tar -O -zxf ";
@@ -84,6 +84,7 @@ public class Constants {
 	public static final String DEFAULT_ENCODING_OPTION = "UTF-8";
 	public static final String DEFAULT_DISPLAY_TYPE_OPTION = "RAW";
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public static final String TAR_GZ_DATE_FORMAT = "yyyy-MM-dd HH:mm";
 	public static final String URL_ENCODING = "UTF-8";
 	public static final String TAR_GZ_CONTENT_SPLIT = ".tar.gz!";
 	public static final String COMPRESSED_FILE_REGEX = ".*\\.(gz|tgz|zip|bz2)";

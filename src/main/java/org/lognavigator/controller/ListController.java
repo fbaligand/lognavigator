@@ -47,16 +47,36 @@ public class ListController {
 		// List files contained in requested logAccessConfigId/subPath
 		Set<FileInfo> fileInfos = logAccessService.listFiles(logAccessConfigId, subPath);
 
-		// Add link to parent folder
+		// Construct breadcrumbs
 		if (subPath != null) {
-			FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(subPath);
-			fileInfos.add(parentFolderLink);
+			List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
+			BreadcrumbFactory.addSubPath(breadcrumbs, subPath, false);
+			model.addAttribute(BREADCRUMBS_KEY, breadcrumbs);
 		}
+
+		return renderFileList(model, subPath, fileInfos);
+	}
+
+
+	/**
+	 * Render a file list as a HTML table, using list view
+	 * @param model model attributes
+	 * @param subPath path which is listed
+	 * @param fileInfos file list to render
+	 * @return view name to process rendering
+	 */
+	String renderFileList(Model model, String subPath, Set<FileInfo> fileInfos) {
 		
 		// Add a warning if too many files
 		if (fileInfos.size() >= configService.getFileListMaxCount()) {
 			model.addAttribute(WARN_TITLE_KEY, "Too many files");
 			model.addAttribute(WARN_MESSAGE_KEY, "Only the " + configService.getFileListMaxCount() + " last updated files are displayed.");
+		}
+		
+		// Add link to parent folder
+		if (subPath != null) {
+			FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(subPath);
+			fileInfos.add(parentFolderLink);
 		}
 		
 		// Prepare the table lines for HTML presentation
@@ -68,16 +88,10 @@ public class ListController {
 			tableLines.add(lineCells);
 		}
 
+		// Add table cells to model so that view can render file list
 		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(FILE_TABLE_HEADER, SIZE_TABLE_HEADER, DATE_TABLE_HEADER, ACTIONS_TABLE_HEADER));
 		model.addAttribute(TABLE_LINES_KEY, tableLines);
 		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
-
-		// Construct breadcrumbs
-		if (subPath != null) {
-			List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
-			BreadcrumbFactory.addSubPath(breadcrumbs, subPath, false);
-			model.addAttribute(BREADCRUMBS_KEY, breadcrumbs);
-		}
 
 		// Return view to display
 		return PREPARE_MAIN_VIEW;
