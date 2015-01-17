@@ -45,6 +45,7 @@ public class HttpdLogAccessService implements LogAccessService {
 	private static final String DATE_FORMAT_LITTERAL = "dd-MMM-yyyy HH:mm";
 	private static final String LINK_END_TAG = "</a>";
 	private static final String DIRECTORY_SEPARATOR = "/";
+	private static final String LAST_MODIFIED_SORT = "?C=M;O=D";
 	private static final long ONE_KB = 1024L;
 	
 	
@@ -101,6 +102,10 @@ public class HttpdLogAccessService implements LogAccessService {
 		if (subPath != null) {
 			targetUrl += DIRECTORY_SEPARATOR + subPath;
 		}
+		if (!targetUrl.endsWith(DIRECTORY_SEPARATOR)) {
+			targetUrl += DIRECTORY_SEPARATOR;
+		}
+		targetUrl += LAST_MODIFIED_SORT;
 
 		// Connect to URL (provided by Apache Http Server)
 		BufferedReader remoteReader;
@@ -109,7 +114,7 @@ public class HttpdLogAccessService implements LogAccessService {
 			URLConnection urlConnection = url.openConnection();
 			urlConnection.connect();
 			String contentType = urlConnection.getContentType();
-			String encoding = "ISO-8859-1";
+			String encoding = Constants.ISO_ENCODING;
 			if (contentType != null && contentType.contains(CHARSET_PARAM)) {
 				int encodingStartIndex = contentType.indexOf(CHARSET_PARAM) + CHARSET_PARAM.length();
 				encoding = contentType.substring(encodingStartIndex);

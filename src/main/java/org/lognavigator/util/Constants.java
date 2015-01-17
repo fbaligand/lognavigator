@@ -80,12 +80,15 @@ public class Constants {
 	// OTHERS //
 	////////////
 
+	
+	public static final String UTF8_ENCODING = "UTF-8";
+	public static final String ISO_ENCODING = "ISO-8859-1";
 	public static final String DIRECTORY_RIGHT = "d";
-	public static final String DEFAULT_ENCODING_OPTION = "UTF-8";
+	public static final String DEFAULT_ENCODING_OPTION = UTF8_ENCODING;
 	public static final String DEFAULT_DISPLAY_TYPE_OPTION = "RAW";
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String TAR_GZ_DATE_FORMAT = "yyyy-MM-dd HH:mm";
-	public static final String URL_ENCODING = "UTF-8";
+	public static final String URL_ENCODING = UTF8_ENCODING;
 	public static final String TAR_GZ_CONTENT_SPLIT = ".tar.gz!";
 	public static final String COMPRESSED_FILE_REGEX = ".*\\.(gz|tgz|zip|bz2)";
 
