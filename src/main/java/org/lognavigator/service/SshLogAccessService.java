@@ -110,7 +110,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 
 		// Execute the download
 		try {
-			String filePath = logAccessConfig.getDirectory() + "/" + fileName;
+			String filePath = fileName.startsWith("/") ? fileName : logAccessConfig.getDirectory() + "/" + fileName;
 			sshClient.newSCPFileTransfer().download(filePath, new ScpStreamingSystemFile(downloadOutputStream));
 		}
 		catch (IOException e) {
