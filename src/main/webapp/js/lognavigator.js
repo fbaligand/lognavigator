@@ -90,7 +90,7 @@ function initPage() {
 		});
 		
 		// Enable DataTables FixedHeader extension
-		var dataTableOffsetTop = $("#displayTypeTABLE").length > 0 ? 210 : 160;
+		var dataTableOffsetTop = $("#displayTypeTABLE").length > 0 ? 215 : 165;
 		new $.fn.dataTable.FixedHeader(datatable, { offsetTop: dataTableOffsetTop } );
 	}
 }

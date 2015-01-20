@@ -92,7 +92,7 @@ public class Constants {
 	public static final String TAR_GZ_CONTENT_SPLIT = ".tar.gz!";
 	public static final String COMPRESSED_FILE_REGEX = ".*\\.(gz|tgz|zip|bz2)";
 
-	public static final String TABLE_LAYOUT_FULL_WIDTH = "col-md-13";
+	public static final String TABLE_LAYOUT_FULL_WIDTH = "full-width";
 	public static final String TABLE_LAYOUT_CENTERED = "col-md-offset-2 col-md-8";
 
 }

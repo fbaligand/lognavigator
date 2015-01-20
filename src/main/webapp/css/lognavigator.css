@@ -39,6 +39,10 @@ pre {
 	width: 16em;
 }
 
+td {
+	white-space: nowrap;
+}
+
 .command-fixed-top {
     position: fixed;
 	top: 51px;
