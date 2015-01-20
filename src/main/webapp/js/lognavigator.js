@@ -38,9 +38,10 @@ function initPage() {
 	var resultsSize = $("#resultsSize").val();
 	if (resultsSize && resultsSize < 1500) {
 
-		// Render 'size' column data
+		// Render 'size' and 'file' column data
 		var dataTableColumnDefs = [];
 		$("#resultsTable").find("th").each(function(index) {
+			// 'size' column
 			if ($(this).text().match(/size/gi)) {
 				dataTableColumnDefs.push({
 	                render: function ( data, type, row ) {
@@ -54,6 +55,7 @@ function initPage() {
 	                targets: index
 	            });
 			}
+			// 'file' column
 			else if ($(this).text().match(/file/gi)) {
 				dataTableColumnDefs.push({
 					render: function ( data, type, row ) {
@@ -72,12 +74,12 @@ function initPage() {
 			}
 		});
 		
-		// Render table using dataTable plugin
-		$("#resultsTable").dataTable({
+		// Render table using DataTables plugin
+		var datatable = $("#resultsTable").dataTable({
 			bPaginate: false,
 			bStateSave: true,
 			fnStateSaveParams: function (oSettings, oData) {
-				oData.oSearch.sSearch = "";
+				oData.search.search = "";
 			},
 			language: {
 				info: "Showing _TOTAL_ entries",
@@ -86,6 +88,10 @@ function initPage() {
 			},
 			columnDefs: dataTableColumnDefs
 		});
+		
+		// Enable DataTables FixedHeader extension
+		var dataTableOffsetTop = $("#displayTypeTABLE").length > 0 ? 210 : 160;
+		new $.fn.dataTable.FixedHeader(datatable, { offsetTop: dataTableOffsetTop } );
 	}
 }
 

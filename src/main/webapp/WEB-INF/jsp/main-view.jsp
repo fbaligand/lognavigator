@@ -16,18 +16,19 @@
 	<title>LogNavigator</title>
 
 	<%-- STYLES --%>
-    <link rel="stylesheet" href="<c:url value="/css/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/css/font-awesome/css/font-awesome.css"/>">
-    <link rel="stylesheet" href="<c:url value="/css/select2/select2.css"/>">
-	<link rel="stylesheet" href="<c:url value="/css/select2/select2-bootstrap.css"/>">
-	<link rel="stylesheet" href="<c:url value="/css/datatables/css/dataTables.bootstrap.css"/>">
-	<link rel="stylesheet" href="<c:url value="/css/lognavigator.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/webjars/bootstrap/3.3.1/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/webjars/font-awesome/4.2.0/css/font-awesome.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/webjars/select2/3.5.2/select2.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/webjars/select2-bootstrap-css/1.4.4/select2-bootstrap.css"/>">
+	<link rel="stylesheet" href="<c:url value="/resources/webjars/datatables-plugins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css"/>">
+	<link rel="stylesheet" href="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/css/dataTables.fixedHeader.css"/>">
+	<link rel="stylesheet" href="<c:url value="/resources/${appVersion}/css/lognavigator.css"/>">
 	<%-- /STYLES --%>
 
     <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="<c:url value="/js/html5shiv.js"/>"></script>
-      <script src="<c:url value="/js/respond.min.js"/>"></script>
+      <script src="<c:url value="/resources/webjars/html5shiv/3.7.2/html5shiv.min.js"/>"></script>
+      <script src="<c:url value="/resources/webjars/respond/1.4.2/dest/respond.min.js"/>"></script>
     <![endif]-->
 
 </head>
@@ -233,14 +234,15 @@
 		
         
 	<%-- SCRIPTS --%>
-    <script src="<c:url value="/js/jquery-1.10.2.js"/>"></script>
-    <script src="<c:url value="/js/bootstrap.min.js"/>"></script>
-    <script src="<c:url value="/js/jquery.dataTables.js"/>"></script>
-    <script src="<c:url value="/js/dataTables.bootstrap.js"/>"></script>
-    <script src="<c:url value="/js/numeral.min.js"/>"></script>
-    <script src="<c:url value="/js/jquery.placeholder.js"/>"></script>
-   	<script src="<c:url value="/js/select2.min.js"/>"></script>
-   	<script src="<c:url value="/js/lognavigator.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/jquery/1.11.1/jquery.min.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/bootstrap/3.3.1/js/bootstrap.min.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/datatables/1.10.4/js/jquery.dataTables.min.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/datatables-plugins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.min.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/js/dataTables.fixedHeader.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/numeral-js/1.5.3-1/min/numeral.min.js"/>"></script>
+    <script src="<c:url value="/resources/webjars/jquery-placeholder/2.0.7/jquery.placeholder.min.js"/>"></script>
+   	<script src="<c:url value="/resources/webjars/select2/3.5.2/select2.min.js"/>"></script>
+   	<script src="<c:url value="/resources/${appVersion}/js/lognavigator.js"/>"></script>
 	<%-- /SCRIPTS --%>
 
 </body>

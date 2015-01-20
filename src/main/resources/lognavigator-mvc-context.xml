@@ -27,4 +27,12 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
+	<!-- Configure Third-Party Static Web Resources -->
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" cache-period="31536000" />
+	
+	<!-- Configure Project Static Web Resources -->
+	<context:property-placeholder location="META-INF/MANIFEST.MF"/>
+	<mvc:resources mapping="/${Implementation-Version}/js/**" location="/js/" cache-period="31536000" />
+	<mvc:resources mapping="/${Implementation-Version}/css/**" location="/css/" cache-period="31536000" />
+	
 </beans>
