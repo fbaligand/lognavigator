@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -22,6 +22,7 @@ import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
+import org.lognavigator.util.LastUpdatedRemoteResourceFilter;
 import org.lognavigator.util.ScpStreamingSystemFile;
 import org.lognavigator.util.SshCloseFilterInputStream;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -137,12 +138,14 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 			targetPath += "/" + subPath;
 		}
 
-		// List files and directories
+		// List files and directories (keep only the 'fileListMaxCount' last modified resources)
 		SFTPClient sftpClient = null;
-		List<RemoteResourceInfo> remoteResourceInfos;
+		Collection<RemoteResourceInfo> remoteResourceInfos;
 		try {
 			sftpClient = sshClient.newSFTPClient();
-			remoteResourceInfos = sftpClient.ls(targetPath);
+			LastUpdatedRemoteResourceFilter remoteResourcefilter = new LastUpdatedRemoteResourceFilter(configService.getFileListMaxCount());
+			sftpClient.ls(targetPath, remoteResourcefilter);
+			remoteResourceInfos = remoteResourcefilter.getRemoteResourceInfos();
 		}
 		catch (IOException e) {
 			throw new LogAccessException("Error when listing files and directories on " + logAccessConfig, e);
