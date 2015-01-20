@@ -22,6 +22,8 @@ public class CommandControllerTest {
 		commandController = new CommandController();
 		commandController.logAccessService = new FakeLogAccessService();
 		commandController.configService = new DefaultConfigService();
+		commandController.listController = new ListController();
+		commandController.listController.configService = new DefaultConfigService();
 	}
 
 	@Test
