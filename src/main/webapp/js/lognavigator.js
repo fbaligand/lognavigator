@@ -1,12 +1,12 @@
 function initPage() {
 	
-	// Enlarge logAccessConfigId combobox if necessary
-	if ($("#logAccessConfigId").width() < 200) {
-		$("#logAccessConfigId").width(200);
-	}
-
-	// Render logAccessConfigId combobox
-	$("#logAccessConfigId").select2();
+	// Render logAccessConfigId combobox using select2 plugin
+	$("#logAccessConfigId").select2({
+		width: "element",
+	    matcher: function(term, text, opt) {
+	         return text.toUpperCase().indexOf(term.toUpperCase()) >= 0 || opt.parent("optgroup").attr("label").toUpperCase().indexOf(term.toUpperCase()) >= 0;
+	    }
+	});
 
 	// Process logAccessConfigId combobox change
 	$("#logAccessConfigId").change(function(){
