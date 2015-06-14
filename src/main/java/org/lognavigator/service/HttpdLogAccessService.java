@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +34,6 @@ import org.springframework.util.FileCopyUtils;
 @Qualifier("httpd")
 public class HttpdLogAccessService implements LogAccessService {
 	
-	private static final String CHARSET_PARAM = "charset=";
 	private static final String TABLE_START = "<pre>";
 	private static final String TABLE_END = "</pre>";
 	private static final String LINK_HREF_END = "\"";
@@ -63,9 +60,21 @@ public class HttpdLogAccessService implements LogAccessService {
 		// Get the LogAccessConfig
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
 		
-		// Replace "curl -s <file>" occurences by "curl -s <full url>"
+		// Generate authentication option (if requested in configuration)
+		String authenticationOption = "";
+		if (logAccessConfig.getUser() != null && logAccessConfig.getPassword() != null) {
+			authenticationOption = "-u \"" + logAccessConfig.getUser() + ":" + logAccessConfig.getPassword() + "\" ";
+		}
+		
+		// Generate proxy option (if requested in configuration)
+		String proxyOption = "";
+		if (logAccessConfig.getProxy() != null) {
+			proxyOption = "-x " + logAccessConfig.getProxy() + " ";
+		}
+		
+		// Generate curl command with full url
 		String urlPrefix = logAccessConfig.getUrl();
-		String fullUrlShellCommand = shellCommand.replaceFirst(Constants.HTTPD_FILE_VIEW_COMMAND_START, Constants.HTTPD_FILE_VIEW_COMMAND_START + urlPrefix);
+		String fullUrlShellCommand = shellCommand.replaceFirst(Constants.HTTPD_FILE_VIEW_COMMAND_START, Constants.HTTPD_FILE_VIEW_COMMAND_START + authenticationOption + proxyOption + urlPrefix);
 
 		// Execute curl command
 		return localLogAccessService.executeCommand(logAccessConfigId, fullUrlShellCommand);
@@ -76,14 +85,13 @@ public class HttpdLogAccessService implements LogAccessService {
 		
 		// Get the LogAccessConfig
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
-		
-		// Define target url
-		String targetUrl = logAccessConfig.getUrl() + DIRECTORY_SEPARATOR + fileName;
+
+		// Define curl shell command
+		String shellCommand = Constants.HTTPD_FILE_VIEW_COMMAND_START + fileName;
 
 		// Execute the download
 		try {
-			URL url = new URL(targetUrl);
-			InputStream remoteInputStream = url.openStream();
+			InputStream remoteInputStream = executeCommand(logAccessConfigId, shellCommand);
 			FileCopyUtils.copy(remoteInputStream, downloadOutputStream);
 		}
 		catch (IOException e) {
@@ -97,30 +105,18 @@ public class HttpdLogAccessService implements LogAccessService {
 		// Get the LogAccessConfig
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
 		
-		// Define target url
-		String targetUrl = logAccessConfig.getUrl();
+		// Define curl shell command
+		String shellCommand = Constants.HTTPD_FILE_VIEW_COMMAND_START;
 		if (subPath != null) {
-			targetUrl += DIRECTORY_SEPARATOR + subPath;
+			shellCommand += subPath + DIRECTORY_SEPARATOR;
 		}
-		if (!targetUrl.endsWith(DIRECTORY_SEPARATOR)) {
-			targetUrl += DIRECTORY_SEPARATOR;
-		}
-		targetUrl += LAST_MODIFIED_SORT;
+		shellCommand += LAST_MODIFIED_SORT;
 
-		// Connect to URL (provided by Apache Http Server)
+		// Execute command to get file list
 		BufferedReader remoteReader;
 		try {
-			URL url = new URL(targetUrl);
-			URLConnection urlConnection = url.openConnection();
-			urlConnection.connect();
-			String contentType = urlConnection.getContentType();
-			String encoding = Constants.ISO_ENCODING;
-			if (contentType != null && contentType.contains(CHARSET_PARAM)) {
-				int encodingStartIndex = contentType.indexOf(CHARSET_PARAM) + CHARSET_PARAM.length();
-				encoding = contentType.substring(encodingStartIndex);
-			}
-			InputStream remoteInputStream = urlConnection.getInputStream();
-			remoteReader = new BufferedReader(new InputStreamReader(remoteInputStream, encoding));
+			InputStream remoteInputStream = executeCommand(logAccessConfigId, shellCommand);
+			remoteReader = new BufferedReader(new InputStreamReader(remoteInputStream, Constants.ISO_ENCODING));
 		}
 		catch (IOException e) {
 			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
@@ -137,7 +133,7 @@ public class HttpdLogAccessService implements LogAccessService {
 				}
 			}
 			if (!isTableStartReached) {
-				throw new LogAccessException("No valid content for log files list on " + logAccessConfig);
+				throw new LogAccessException("Impossible to get log files list on " + logAccessConfig);
 			}
 			
 			// Result meta-informations
