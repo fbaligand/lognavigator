@@ -166,6 +166,9 @@ public class DefaultConfigService implements ConfigService {
 				if (StringUtils.isEmpty(logAccessConfig.getUrl())) {
 					throw new ConfigException("'url' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
 				}
+				if (!logAccessConfig.getUrl().endsWith("/")) {
+					logAccessConfig.setUrl(logAccessConfig.getUrl() + "/");
+				}
 				break;
 			case SSH:
 				if (StringUtils.isEmpty(logAccessConfig.getUser())) {
