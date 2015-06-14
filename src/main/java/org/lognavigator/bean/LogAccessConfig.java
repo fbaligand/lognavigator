@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * - HTTPD: url
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder={"authorizedRoles", "authorizedUsers", "url", "directory", "host", "password", "privatekey", "user", "type", "id"})
+@XmlType(propOrder={"proxy", "trust", "displayGroup", "authorizedRoles", "authorizedUsers", "url", "directory", "host", "password", "privatekey", "user", "type", "id"})
 public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	public static final String EVERYONE_IS_AUTHORIZED = "*";
@@ -56,6 +56,12 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	@XmlAttribute(name="display-group")
 	private String displayGroup;
+	
+	@XmlAttribute(name="trust")
+	private boolean trust;
+	
+	@XmlAttribute(name="proxy")
+	private String proxy;
 	
 	@XmlTransient
 	private Boolean isWindowsOS;
@@ -191,6 +197,22 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	}
 	public void setDisplayGroup(String displayGroup) {
 		this.displayGroup = displayGroup;
+	}
+
+	public boolean isTrust() {
+		return trust;
+	}
+
+	public void setTrust(boolean trust) {
+		this.trust = trust;
+	}
+
+	public String getProxy() {
+		return proxy;
+	}
+
+	public void setProxy(String proxy) {
+		this.proxy = proxy;
 	}
 
 	public Boolean isWindowsOS() {
