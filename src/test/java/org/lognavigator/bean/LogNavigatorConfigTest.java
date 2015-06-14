@@ -31,7 +31,7 @@ public class LogNavigatorConfigTest {
 		System.out.println(xmlOutput);
 		
 		// Assertions
-		String expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><lognavigator-config><log-access-config id=\"log-access1\" type=\"LOCAL\" user=\"Fabien\" host=\"localhost\" directory=\"/logs\" authorized-users=\"*\" authorized-roles=\"*\"/><log-access-config id=\"log-access2\" type=\"LOCAL\" user=\"Fabien\" host=\"localhost\" directory=\"/logs\" authorized-users=\"*\" authorized-roles=\"*\"/></lognavigator-config>";
+		String expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><lognavigator-config><log-access-config id=\"log-access1\" type=\"LOCAL\" user=\"Fabien\" host=\"localhost\" directory=\"/logs\" authorized-users=\"*\" authorized-roles=\"*\" trust=\"false\"/><log-access-config id=\"log-access2\" type=\"LOCAL\" user=\"Fabien\" host=\"localhost\" directory=\"/logs\" authorized-users=\"*\" authorized-roles=\"*\" trust=\"false\"/></lognavigator-config>";
 		assertEquals(expectedXml, xmlOutput.toString());
 	}
 
