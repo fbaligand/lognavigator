@@ -12,9 +12,9 @@ LogNavigator is a web application, made in java, which lets you browse your logs
     - remote logs exposed by Apache Httpd DirectoryIndex (using HTTP)
 - List logs, watch log content, filter log content, download log content
 - Take advantage of powerful linux commands to get filtered log content
-- Easily watch log content even if log file is archived in a `GZ` or `TAR.GZ` archive
+- Easily browse file logs and watch log content inside `GZ` or `TAR.GZ` archives
+- Smart combobox to choose current log access config, with filtering and grouping
 - Optionally securise log access with user authentication and role-based authorization
-
 
 # Getting Started
 
@@ -27,12 +27,12 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <lognavigator-config>
-    <log-access-config id="a-local-dir" type="LOCAL" directory="/path/to/logs" display-group="local-configs" />
-    <log-access-config id="b-remote-dir-using-ssh" type="SSH" user="your-user" host="remote-host" directory="/path/to/logs" display-group="remote-configs" />
-    <log-access-config id="c-remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" display-group="httpd-configs" />
+    <log-access-config id="local-dir" type="LOCAL" directory="/path/to/logs" display-group="a-local-configs" />
+    <log-access-config id="remote-dir-using-ssh" type="SSH" user="your-user" password="your-password" host="remote-host" trust="true" directory="/path/to/logs" display-group="b-remote-configs" />
+    <log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" display-group="c-httpd-configs" />
 </lognavigator-config>
 ```
-- _Important note :_ if you define a `SSH` configuration, your local user hosting lognavigator server must have its ssh private key authorized to access remote host using remote user.
+- You can get more examples in [Configuration Examples](#configuration-examples) section
 - Link `lognavigator.xml` to your java app server, using one of these 3 means : 
     - Add system property `-Dlognavigator.config=file:/path/to/lognavigator.xml` to your server startup script
     - Add JNDI key/value `lognavigator.config=file:/path/to/lognavigator.xml` to your server JNDI configuration
@@ -63,6 +63,9 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 
 **2. log content**
 ![](src/site/log-content.png?raw=true)
+
+**3. choose log access config to browse**
+![](src/site/smart-combobox.png?raw=true)
 
 
 # Make it work on windows
@@ -120,6 +123,47 @@ For example :
     - Put `lognavigator-authentication-context.xml` into your server classpath and define `spring.profiles.active=security-enabled` as system property or JNDI key/value 
 
 
+# Configuration Examples
+
+- `LOCAL` log access configuration (to a directory on the same machine than lognavigator server) :
+```xml
+<log-access-config id="a-local-dir" type="LOCAL" directory="/path/to/logs" />
+```
+- `SSH` log access configuration to a remote directory using login/password (and force trust to remote host) :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" password="your-password" host="remote-host" trust="true" directory="/path/to/logs" />
+```
+- `SSH` log access configuration to a remote directory accessible using current user's private key (`~/.ssh/id_dsa` or `~/.ssh/id_rsa`) with no password :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" host="remote-host" directory="/path/to/logs" />
+```
+- `SSH` log access configuration to a remote directory accessible using a specific private key (DSA or RSA) with no password :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" host="remote-host" directory="/path/to/logs" />
+```
+- `SSH` log access configuration to a remote directory accessible using a specific private key (DSA or RSA) with a password :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" password="your-password" host="remote-host" directory="/path/to/logs" />
+```
+- `HTTPD` log access configuration to a remote directory accessible through an httpd server :
+```xml
+<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" />
+```
+- `HTTPD` log access configuration to a remote directory accessible through an httpd server using a proxy :
+```xml
+<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" proxy="proxy-host:proxy-port" />
+```
+- `HTTPD` log access configuration to a remote directory accessible through an httpd server, protected by login/password http basic authentication :
+```xml
+<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" user="your-user" password="your-password" />
+```
+- Group log access configurations in lognavigator combobox :
+```xml
+<log-access-config id="id1" type="LOCAL" directory="/path/to/logs" display-group="local-configs" />
+<log-access-config id="id2" type="LOCAL" directory="/path/to/logs2" display-group="local-configs" />
+```
+
+
 # Advanced Options
 
 - **forbidden.commands:** custom the list of forbidden commands (default is: rm,rmdir,mv,kill,ssh,chmod,chown,vi)
@@ -152,7 +196,7 @@ Versions and Release Notes are listed in [Releases](https://github.com/fbaligand
 # Behind the scene
 
 Technologies behind LogNavigator :
-- Twitter Bootstrap 3.1
+- Twitter Bootstrap 3
 - Datatables
 - jQuery
 - Spring MVC
