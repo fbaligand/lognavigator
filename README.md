@@ -23,7 +23,8 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 - [Go to the last release](https://github.com/fbaligand/lognavigator/releases/latest) and download `WAR` file
 - Deploy the `WAR` file on your favorite java app server (tomcat, jettty, glassfish, ...)
 - Create a new file named `lognavigator.xml` wherever you want
-- Define your log access configurations inside `lognavigator.xml`. For example :
+- Define your log access configurations inside `lognavigator.xml`.  
+For example :
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <lognavigator-config>
@@ -64,7 +65,7 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 **2. log content**
 ![](src/site/log-content.png?raw=true)
 
-**3. choose log access config to browse**
+**3. choose log access config to browse**  
 ![](src/site/smart-combobox.png?raw=true)
 
 
