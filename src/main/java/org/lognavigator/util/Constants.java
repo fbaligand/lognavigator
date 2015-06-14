@@ -62,12 +62,12 @@ public class Constants {
 	public static final String GZ_FILE_VIEW_COMMAND = "gzip -dc {0} | tail -1000";
 	public static final String TAR_GZ_FILE_VIEW_COMMAND_START = "tar -ztvf ";
 	public static final String TAR_GZ_FILE_VIEW_COMMAND = TAR_GZ_FILE_VIEW_COMMAND_START + "{0} | sort -r -k 4,5";
-	public static final String TAR_GZ_FILE_VIEW_COMMAND_END = "| tar -ztv";
+	public static final String TAR_GZ_FILE_VIEW_COMMAND_END = "| tar -ztv | sort -r -k 4,5";
 
 	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START = "tar -O -zxf ";
 	public static final String TAR_GZ_CONTENT_FILE_VIEW_COMMAND = TAR_GZ_CONTENT_FILE_VIEW_COMMAND_START + "{0} {1} | {2}";
 
-	public static final String HTTPD_FILE_VIEW_COMMAND_START = "curl -s ";
+	public static final String HTTPD_FILE_VIEW_COMMAND_START = "curl -ks ";
 	public static final String HTTPD_FILE_VIEW_COMMAND_PREFIX = HTTPD_FILE_VIEW_COMMAND_START + "{0} | ";
 	
 	public static final String TWO_PARAMS_COMMAND_REGEX = "(grep|egrep|awk|gawk)";
