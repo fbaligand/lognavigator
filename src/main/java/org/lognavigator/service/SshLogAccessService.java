@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.schmizz.sshj.Config;
+import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.common.SSHException;
@@ -17,6 +19,8 @@ import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.connection.channel.direct.Session.Command;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
+import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
+import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
@@ -41,6 +45,8 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 	private static final String WINDOWS_OS_MARKER = "cygwin";
 	
 	private static ThreadLocal<SSHClient> sshClientThreadLocal = new ThreadLocal<SSHClient>();
+
+	private Config sshClientConfig = new DefaultConfig();
 
 	
 	/**
@@ -200,9 +206,14 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 	 */
 	private SSHClient connectAndAuthenticate(LogAccessConfig logAccessConfig) throws LogAccessException {
 		// Connect to the remote host
-		SSHClient sshClient = new SSHClient();
+		SSHClient sshClient = new SSHClient(sshClientConfig);
 		try {
-			sshClient.loadKnownHosts();
+			if (logAccessConfig.isTrust()) {
+				sshClient.addHostKeyVerifier(new PromiscuousVerifier());
+			}
+			else {
+				sshClient.loadKnownHosts();
+			}
 			sshClient.connect(logAccessConfig.getHost());
 		}
 		catch (IOException e) {
@@ -211,7 +222,11 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		
 		// Authenticate to the remote host
 		try {
-			if (logAccessConfig.getPassword() != null) {
+			if (logAccessConfig.getPrivatekey() != null && logAccessConfig.getPassword() != null) {
+				KeyProvider keyProvider = sshClient.loadKeys(logAccessConfig.getPrivatekey(), logAccessConfig.getPassword());
+				sshClient.authPublickey(logAccessConfig.getUser(), keyProvider);
+			}
+			else if (logAccessConfig.getPassword() != null) {
 				sshClient.authPassword(logAccessConfig.getUser(), logAccessConfig.getPassword());
 			}
 			else if (logAccessConfig.getPrivatekey() != null) {
@@ -222,6 +237,10 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 			}
 		}
 		catch (SSHException e) {
+			IOUtils.closeQuietly(sshClient);
+			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
+		}
+		catch (IOException e) {
 			IOUtils.closeQuietly(sshClient);
 			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
 		}
