@@ -126,42 +126,47 @@ For example :
 
 # Configuration Examples
 
-- `LOCAL` log access configuration (to a directory on the same machine than lognavigator server) :
+### `LOCAL` log access configurations
+- access to a directory on the same machine than lognavigator server :
 ```xml
 <log-access-config id="a-local-dir" type="LOCAL" directory="/path/to/logs" />
 ```
-- `SSH` log access configuration to a remote directory using login/password (and force trust to remote host) :
-```xml
-<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" password="your-password" host="remote-host" trust="true" directory="/path/to/logs" />
-```
-- `SSH` log access configuration to a remote directory accessible using current user's private key (`~/.ssh/id_dsa` or `~/.ssh/id_rsa`) with no password :
-```xml
-<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" host="remote-host" directory="/path/to/logs" />
-```
-- `SSH` log access configuration to a remote directory accessible using a specific private key (DSA or RSA) with no password :
-```xml
-<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" host="remote-host" directory="/path/to/logs" />
-```
-- `SSH` log access configuration to a remote directory accessible using a specific private key (DSA or RSA) with a password :
-```xml
-<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" password="your-password" host="remote-host" directory="/path/to/logs" />
-```
-- `HTTPD` log access configuration to a remote directory accessible through an httpd server :
-```xml
-<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" />
-```
-- `HTTPD` log access configuration to a remote directory accessible through an httpd server using a proxy :
-```xml
-<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" proxy="proxy-host:proxy-port" />
-```
-- `HTTPD` log access configuration to a remote directory accessible through an httpd server, protected by login/password http basic authentication :
-```xml
-<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" user="your-user" password="your-password" />
-```
-- Group log access configurations in lognavigator combobox :
+- group log access configurations in lognavigator combobox :
 ```xml
 <log-access-config id="id1" type="LOCAL" directory="/path/to/logs" display-group="local-configs" />
 <log-access-config id="id2" type="LOCAL" directory="/path/to/logs2" display-group="local-configs" />
+```
+
+### `SSH` log access configurations
+- access to a remote directory using login/password (and force trust to remote host) :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" password="your-password" host="remote-host" trust="true" directory="/path/to/logs" />
+```
+- access to a remote directory using current user's private key (`~/.ssh/id_dsa` or `~/.ssh/id_rsa`) and no password :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" host="remote-host" directory="/path/to/logs" />
+```
+- access to a remote directory using a specific private key (DSA or RSA) and no password :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" host="remote-host" directory="/path/to/logs" />
+```
+- access to a remote directory using a specific private key (DSA or RSA) and a password :
+```xml
+<log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" password="your-password" host="remote-host" directory="/path/to/logs" />
+```
+
+### `HTTPD` log access configurations
+- access to a remote directory accessible through a httpd server :
+```xml
+<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" />
+```
+- access to a remote directory accessible through a httpd server using a proxy :
+```xml
+<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" proxy="proxy-host:proxy-port" />
+```
+- access to a remote directory accessible through a httpd server, protected by login/password basic authentication :
+```xml
+<log-access-config id="remote-httpd-logs" type="HTTPD" url="http://archive.apache.org/dist/tomcat/" user="your-user" password="your-password" />
 ```
 
 
