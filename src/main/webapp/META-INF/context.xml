@@ -12,8 +12,8 @@
 		<!-- Custom here the location of lognavigator authentication config file : file:path or classpath:path -->
 <!-- 	<Environment name="lognavigator.authentication.config" value="file:/path/to/lognavigator-authentication-context.xml" type="java.lang.String" /> -->
 
-		<!-- Custom here the list of forbidden commands (default is: rm,rmdir,mv,kill,ssh,chmod,chown,vi) -->
-<!-- 	<Environment name="forbidden.commands" value="rm,rmdir,mv,kill,ssh,chmod,chown,vi,ps" type="java.lang.String" /> -->
+		<!-- Custom here the list of forbidden commands (default is: rm,rmdir,mkdir,mv,kill,killall,ssh,chmod,chown,vi,touch) -->
+<!-- 	<Environment name="forbidden.commands" value="rm,rmdir,mkdir,mv,kill,killall,ssh,chmod,chown,vi,touch,ps" type="java.lang.String" /> -->
 
 		<!-- Custom here the maximum file count displayed in the file list screen (default is: 1000) -->
 <!-- 	<Environment name="filelist.maxcount" value="1500" type="java.lang.Integer" /> -->

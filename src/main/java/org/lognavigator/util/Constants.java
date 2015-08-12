@@ -72,7 +72,7 @@ public class Constants {
 	
 	public static final String TWO_PARAMS_COMMAND_REGEX = "(grep|egrep|awk|gawk)";
 
-	public static final String DEFAULT_FORBIDDEN_COMMANDS = "rm,rmdir,mv,kill,ssh,chmod,chown,vi";
+	public static final String DEFAULT_FORBIDDEN_COMMANDS = "rm,rmdir,mkdir,mv,kill,killall,ssh,chmod,chown,vi,touch";
 	public static final String FORBIDDEN_COMMANDLINE_REGEX = "\\s*{0}\\s+.*|.*[\\|;`]\\s*{0}(\\s+.*)?";
 
 	
