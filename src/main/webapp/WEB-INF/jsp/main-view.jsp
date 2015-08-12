@@ -41,7 +41,7 @@
 		<div class="container-fluid">
 
 			<div class="navbar-header">
-				<a href="<c:url value="/"/>" class="navbar-brand">LogNavigator</a>
+				<a href="<c:url value="/"/>" class="navbar-brand" title="v${appVersion}">LogNavigator</a>
 			</div>
 
 			<c:if test="${breadcrumbs != null}">
