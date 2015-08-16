@@ -30,9 +30,9 @@ public class MainViewController {
 
 	@Autowired
 	private AuthorizationService authorizationService;
-	
 
-	@RequestMapping("/{logAccessConfigId}/prepare-main-view")
+
+	@RequestMapping("/logs/{logAccessConfigId}/prepare-main-view")
 	public String prepareMainView(Model model) throws ConfigException {
 		
 		try {

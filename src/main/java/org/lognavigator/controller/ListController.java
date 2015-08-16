@@ -36,8 +36,12 @@ public class ListController {
 	@Autowired
 	ConfigService configService;
 
+	@RequestMapping({"/logs/{logAccessConfigId}", "/logs/{logAccessConfigId}/"})
+	public String redirectToList() {
+		return "redirect:/logs/{logAccessConfigId}/list";
+	}
 	
-	@RequestMapping("/{logAccessConfigId}/list")
+	@RequestMapping("/logs/{logAccessConfigId}/list")
 	public String list(Model model, 
 			           @PathVariable String logAccessConfigId,
 			           @RequestParam(value="subPath", required=false) String subPath

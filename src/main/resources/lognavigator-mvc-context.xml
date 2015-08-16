@@ -8,31 +8,32 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 >
 
+	<!-- Spring MVC deserves all http requests (/*) -->
+	<mvc:default-servlet-handler/>
+
     <!-- Enable Spring MVC @Controller programming model -->
 	<context:component-scan base-package="org.lognavigator.controller" />
     <mvc:annotation-driven />
     
     <!-- Enable JSP view resolver -->
-	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
+    <mvc:view-resolvers>
+    	<mvc:jsp prefix="/WEB-INF/jsp/" suffix=".jsp"/>
+    </mvc:view-resolvers>
 	
 	<!-- Configure Spring Interceptors -->
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/**"/>
+			<mvc:mapping path="/logs/**"/>
 			<ref bean="authorizationInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- Configure Third-Party Static Web Resources -->
-	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" cache-period="31536000" />
+	<mvc:resources mapping="/resources/webjars/**" location="classpath:/META-INF/resources/webjars/" cache-period="31536000" />
 	
 	<!-- Configure Project Static Web Resources -->
 	<context:property-placeholder location="META-INF/MANIFEST.MF"/>
-	<mvc:resources mapping="/${Implementation-Version}/js/**" location="/js/" cache-period="31536000" />
-	<mvc:resources mapping="/${Implementation-Version}/css/**" location="/css/" cache-period="31536000" />
+	<mvc:resources mapping="/resources/${Implementation-Version}/js/**" location="/js/" cache-period="31536000" />
+	<mvc:resources mapping="/resources/${Implementation-Version}/css/**" location="/css/" cache-period="31536000" />
 	
 </beans>

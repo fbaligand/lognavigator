@@ -34,9 +34,7 @@
 	<!-- Spring MVC Servlet Mapping -->
 	<servlet-mapping>
 		<servlet-name>lognavigator</servlet-name>
-		<url-pattern>/index.html</url-pattern>
-		<url-pattern>/logs/*</url-pattern>
-		<url-pattern>/resources/*</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
 	<!-- Spring Security Filter -->
@@ -48,10 +46,5 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<servlet-name>lognavigator</servlet-name>
 	</filter-mapping>
-
-	<!-- Welcome Page -->
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
 
 </web-app>

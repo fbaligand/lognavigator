@@ -58,7 +58,7 @@ public class CommandController {
 	ListController listController;
 	
 
-	@RequestMapping("/{logAccessConfigId}/command")
+	@RequestMapping("/logs/{logAccessConfigId}/command")
 	public String executeCommand(Model model, 
 					  @PathVariable String logAccessConfigId, 
 					  @RequestParam(value="cmd", required=false, defaultValue=DEFAULT_LIST_COMMAND) String cmd,

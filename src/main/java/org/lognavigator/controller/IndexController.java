@@ -26,7 +26,7 @@ public class IndexController {
 	private AuthorizationService authorizationService;
 	
 	
-	@RequestMapping("/index.html")
+	@RequestMapping({"/", "/logs", "/logs/"})
 	public String index(Model model) throws AuthorizationException {
 
 		// Get only authorized log access configs

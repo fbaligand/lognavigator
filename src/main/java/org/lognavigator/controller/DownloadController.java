@@ -29,7 +29,7 @@ public class DownloadController {
 	@Qualifier("facade")
 	private LogAccessService logAccessService;
 	
-	@RequestMapping("/{logAccessConfigId}/download")
+	@RequestMapping("/logs/{logAccessConfigId}/download")
 	public void download(Model model, 
 					  @PathVariable String logAccessConfigId, 
 					  @RequestParam(value="fileName") String fileName,
