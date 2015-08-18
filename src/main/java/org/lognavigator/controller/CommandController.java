@@ -107,6 +107,7 @@ public class CommandController {
 		// Process the result lines for raw display
 		if (displayType == DisplayType.RAW) {
 			model.addAttribute(RAW_CONTENT_KEY, resultReader);
+			return VIEW_RAW;
 		}
 		
 		// Process the result lines for html table display
@@ -125,10 +126,8 @@ public class CommandController {
 				}
 				catch (IOException e) {}
 			}
+			return VIEW_TABLE;
 		}
-		
-		// Define view to display
-		return PREPARE_MAIN_VIEW;
 	}
 
 	/**

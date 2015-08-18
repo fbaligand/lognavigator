@@ -1,4 +1,4 @@
-package org.lognavigator.controller;
+package org.lognavigator.mvc;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;

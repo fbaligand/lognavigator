@@ -1,4 +1,4 @@
-package org.lognavigator.controller;
+package org.lognavigator.mvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ public class LogNavigatorHandlerExceptionResolver implements HandlerExceptionRes
 		String errorTitle = exception.getClass().getSimpleName().replaceFirst("(Error|Exception)", " Error");
 		String errorMessage = exception.getMessage();
 		
-		ModelAndView modelAndView = new ModelAndView(Constants.PREPARE_MAIN_VIEW);
+		ModelAndView modelAndView = new ModelAndView(Constants.VIEW_ERROR);
 		modelAndView.addObject(Constants.ERROR_TITLE_KEY, errorTitle);
 		modelAndView.addObject(Constants.ERROR_MESSAGE_KEY, errorMessage);
 		return modelAndView;

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="*" template="/WEB-INF/jsp/main-template.jsp" preparer="tilesTemplateViewPreparer">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp"/>
+	</definition>
+
+</tiles-definitions>

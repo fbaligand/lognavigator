@@ -1,4 +1,4 @@
-package org.lognavigator.controller;
+package org.lognavigator.mvc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
-import org.lognavigator.controller.AuthorizationInterceptor;
 import org.lognavigator.exception.AuthorizationException;
+import org.lognavigator.mvc.AuthorizationInterceptor;
 import org.lognavigator.service.DefaultAuthorizationService;
 import org.lognavigator.service.ConfigService;
 import org.mockito.InjectMocks;

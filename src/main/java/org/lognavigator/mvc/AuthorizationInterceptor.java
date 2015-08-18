@@ -1,4 +1,4 @@
-package org.lognavigator.controller;
+package org.lognavigator.mvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

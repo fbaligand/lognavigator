@@ -98,6 +98,6 @@ public class ListController {
 		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_CENTERED);
 
 		// Return view to display
-		return PREPARE_MAIN_VIEW;
+		return VIEW_TABLE;
 	}
 }

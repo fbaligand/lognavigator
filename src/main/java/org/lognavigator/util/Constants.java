@@ -16,8 +16,9 @@ public class Constants {
 	
 	public static final String FILE_VIEW_URL_PREFIX = "command?cmd=";
 
-	public static final String MAIN_VIEW = "main-view";
-	public static final String PREPARE_MAIN_VIEW = "forward:prepare-main-view";
+	public static final String VIEW_TABLE = "table";
+	public static final String VIEW_RAW = "raw";
+	public static final String VIEW_ERROR = "error";
 
 	
 	////////////////////

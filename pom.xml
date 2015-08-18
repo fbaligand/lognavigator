@@ -42,6 +42,7 @@
 	<properties>
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<spring.security.version>4.0.2.RELEASE</spring.security.version>
+		<tiles.version>3.0.5</tiles.version>
 		<slf4j.version>1.7.7</slf4j.version>
 	</properties>
 
@@ -51,6 +52,11 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aop</artifactId>
 				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -90,6 +96,11 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-jsp</artifactId>
+			<version>${tiles.version}</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>

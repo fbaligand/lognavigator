@@ -40,7 +40,7 @@ public class CommandControllerTest {
 		String viewName = commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
-		Assert.assertEquals(Constants.PREPARE_MAIN_VIEW, viewName);
+		Assert.assertEquals(Constants.VIEW_RAW, viewName);
 		Assert.assertEquals(true, model.get(Constants.SHOW_OPTIONS_KEY));
 		Assert.assertEquals(encoding, model.get(Constants.ENCODING_KEY));
 		Assert.assertEquals(displayType, model.get(Constants.DISPLAY_TYPE_KEY));
