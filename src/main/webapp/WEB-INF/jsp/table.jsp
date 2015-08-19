@@ -2,7 +2,6 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@taglib prefix="lognavigator" uri="https://github.com/fbaligand/lognavigator/taglib" %>
 
 <div class="row">&nbsp;</div>
 <div class="row-fluid">
