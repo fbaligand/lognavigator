@@ -7,6 +7,7 @@
 
 	<definition name="*" template="/WEB-INF/jsp/main-template.jsp" preparer="tilesTemplateViewPreparer">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp"/>
+		<put-attribute name="viewName" value="{1}"/>
 	</definition>
 
 </tiles-definitions>

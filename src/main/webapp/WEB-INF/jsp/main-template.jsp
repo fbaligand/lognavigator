@@ -171,7 +171,9 @@
     <script src="<c:url value="/resources/webjars/numeral-js/1.5.3-1/min/numeral.min.js"/>"></script>
     <script src="<c:url value="/resources/webjars/jquery-placeholder/2.0.7/jquery.placeholder.min.js"/>"></script>
    	<script src="<c:url value="/resources/webjars/select2/3.5.2/select2.min.js"/>"></script>
-   	<script src="<c:url value="/resources/${appVersion}/js/lognavigator.js"/>"></script>
+   	<script src="<c:url value="/resources/${appVersion}/js/lognavigator-common.js"/>"></script>
+   	<tiles:importAttribute name="viewName"/>
+   	<script src="<c:url value="/resources/${appVersion}/js/lognavigator-${viewName}.js"/>"></script>
 	<%-- /SCRIPTS --%>
 
 </body>
