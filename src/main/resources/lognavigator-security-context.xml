@@ -13,8 +13,11 @@
 
 	<!-- Profile which enables Spring-Security -->
 	<beans:beans profile="security-enabled">
+	
+		<http pattern="/resources/**" security="none"/>
+	
 		<http realm="LogNavigator Authentication" use-expressions="true">
-			<intercept-url pattern="/**" access="authenticated"/>
+			<intercept-url pattern="/**" access="authenticated" />
 			<http-basic />
 		</http>
 		
