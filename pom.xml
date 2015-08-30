@@ -40,6 +40,7 @@
 	</issueManagement>
 
 	<properties>
+<!-- 		<spring.version>4.2.1.BUILD-SNAPSHOT</spring.version> -->
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<spring.security.version>4.0.2.RELEASE</spring.security.version>
 		<tiles.version>3.0.5</tiles.version>
@@ -96,11 +97,11 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
 			<version>${tiles.version}</version>
-        </dependency>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -252,7 +253,7 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<goals>install</goals>
+					<goals>install -Dmaven.test.skip</goals>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>release</releaseProfiles>
 					<pushChanges>true</pushChanges>
@@ -301,4 +302,13 @@
 			</build>
 		</profile>
 	</profiles>
+	
+<!-- 	<repositories> -->
+<!-- 		<repository> -->
+<!-- 			<id>spring-snapshot</id> -->
+<!-- 			<url>http://repo.spring.io/snapshot</url> -->
+<!--          	<releases><enabled>false</enabled></releases> -->
+<!-- 			<snapshots><enabled>true</enabled></snapshots> -->
+<!-- 		</repository> -->
+<!-- 	</repositories> -->
 </project>

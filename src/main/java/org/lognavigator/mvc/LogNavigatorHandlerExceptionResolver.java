@@ -3,9 +3,11 @@ package org.lognavigator.mvc;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.lognavigator.exception.ConfigException;
 import org.lognavigator.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +32,9 @@ public class LogNavigatorHandlerExceptionResolver implements HandlerExceptionRes
 		ModelAndView modelAndView = new ModelAndView(Constants.VIEW_ERROR);
 		modelAndView.addObject(Constants.ERROR_TITLE_KEY, errorTitle);
 		modelAndView.addObject(Constants.ERROR_MESSAGE_KEY, errorMessage);
+		if (exception instanceof AccessDeniedException || exception instanceof ConfigException) {
+			modelAndView.addObject(Constants.BLOCKING_ERROR_KEY, Boolean.TRUE);
+		}
 		return modelAndView;
 	}
 

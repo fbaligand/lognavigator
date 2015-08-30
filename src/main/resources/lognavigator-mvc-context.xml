@@ -11,11 +11,14 @@
 	<!-- Spring MVC deserves all http requests (/*) -->
 	<mvc:default-servlet-handler/>
 
-    <!-- Enable Spring MVC @Controller programming model -->
+	<!-- Enable Spring MVC @Controller programming model -->
 	<context:component-scan base-package="org.lognavigator.controller, org.lognavigator.mvc" />
-    <mvc:annotation-driven />
+	<mvc:annotation-driven />
 
 	<!-- Enable Tiles Layout Templating -->
+<!-- 	<mvc:tiles-configurer preparer-factory="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"> -->
+<!-- 		<mvc:definitions location="/WEB-INF/tiles.xml"/> -->
+<!-- 	</mvc:tiles-configurer> -->
 	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
 		<property name="definitions">
 			<list>
@@ -25,19 +28,11 @@
 		<property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"/>
 	</bean>
     
-    <!-- Enable Tiles View Resolver -->
-    <mvc:view-resolvers>
-    	<mvc:tiles />
-    </mvc:view-resolvers>
+	<!-- Enable Tiles View Resolver -->
+	<mvc:view-resolvers>
+		<mvc:tiles />
+	</mvc:view-resolvers>
     
-	<!-- Configure Spring Interceptors -->
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/logs/*/*"/>
-			<ref bean="authorizationInterceptor"/>
-		</mvc:interceptor>
-	</mvc:interceptors>
-
 	<!-- Configure Third-Party Static Web Resources -->
 	<mvc:resources mapping="/resources/webjars/**" location="classpath:/META-INF/resources/webjars/" cache-period="31536000" />
 	

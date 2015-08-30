@@ -46,5 +46,11 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<servlet-name>lognavigator</servlet-name>
 	</filter-mapping>
+	
+	<!-- Error page for non-authenticated people -->
+	<error-page>
+		<error-code>401</error-code>
+		<location>/error/401</location>
+	</error-page>
 
 </web-app>

@@ -61,6 +61,9 @@
 			<div class="navbar-collapse collapse">
 				<form class="navbar-form navbar-right">
 					<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
+						<c:if test="${blockingError}">
+							<option></option>
+						</c:if>
 						<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
 							<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
 								<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
@@ -77,7 +80,7 @@
    	<%-- /NAVBAR --%>
 
 	<%-- COMMAND FORM --%>
-	<section class="command-fixed-top" role="command-form">
+	<section class="command-fixed-top <c:if test="${blockingError}">hide</c:if>" role="command-form">
 		<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-offset-2 col-md-8">

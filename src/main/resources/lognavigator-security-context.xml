@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
-	   xmlns="http://www.springframework.org/schema/security"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:security="http://www.springframework.org/schema/security"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
 >
 
 	<!-- Profile which disables Spring-Security -->
-	<beans:beans profile="security-disabled">
-		<http security="none" />
-	</beans:beans>
+	<beans profile="security-disabled">
+		<security:http security="none" />
+	</beans>
 
 	<!-- Profile which enables Spring-Security -->
-	<beans:beans profile="security-enabled">
+	<beans profile="security-enabled">
 	
-		<http pattern="/resources/**" security="none"/>
+		<security:http request-matcher="regex" pattern="^/(error|resources)/.+$" security="none"/>
 	
-		<http realm="LogNavigator Authentication" use-expressions="true">
-			<intercept-url pattern="/**" access="authenticated" />
-			<http-basic />
-		</http>
+		<security:http realm="LogNavigator Authentication" use-expressions="false" access-decision-manager-ref="accessDecisionManager" >
+			<security:intercept-url pattern="/logs/*/*" access="IS_AUTHENTICATED_FULLY, IS_AUTHORIZED_LOG_ACCESS_CONFIG" />
+			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
+			<security:http-basic />
+			<security:access-denied-handler error-page="/error/403"/>
+		</security:http>
+		
+		<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+			<constructor-arg>
+				<list>
+					<bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+					<bean class="org.lognavigator.mvc.LogAccessConfigAuthorizedVoter"/>
+				</list>
+			</constructor-arg>
+		</bean>
 		
 		<!-- Reference to external spring-security authentication-manager configuration -->	
-		<beans:import resource="${lognavigator.authentication.config:classpath:lognavigator-authentication-context.xml}"/>
-	</beans:beans>
+		<import resource="${lognavigator.authentication.config:classpath:lognavigator-authentication-context.xml}"/>
+	</beans>
 	
-</beans:beans>
+</beans>
