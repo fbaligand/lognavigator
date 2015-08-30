@@ -266,14 +266,26 @@ public class CommandController {
 			}
 		}
 		
+		// special case : view content file included in a tar.gz archive, using curl
+		if (commandLine.getLine().matches(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_USING_CURL_REGEX)) {
+			targzFilePath = filePath;
+			filePath = targzFilePath.contains("/") ? targzFilePath.substring(0, targzFilePath.lastIndexOf('/')) : null;
+			lastElementIsLink = true;
+			targzSubFilename = commandLine.getLine().replaceFirst(TAR_GZ_CONTENT_FILE_VIEW_COMMAND_USING_CURL_REGEX, "$2");
+			targzSubFilename = targzSubFilename.contains("/") ? targzSubFilename.substring(targzSubFilename.lastIndexOf('/') + 1) : targzSubFilename;
+		}
+		
 		if (filePath != null) {
 			BreadcrumbFactory.addSubPath(breadcrumbs, filePath, lastElementIsLink);
 		}
 		if (targzFilePath != null) {
 			try {
-				int filenameIndex = targzFilePath.indexOf("/") + 1;
+				int filenameIndex = targzFilePath.lastIndexOf("/") + 1;
 				String targzFilename = filenameIndex > 0 ? targzFilePath.substring(filenameIndex) : targzFilePath;
-				String command = TAR_GZ_FILE_VIEW_COMMAND_START + targzFilePath;
+				String command = MessageFormat.format(TAR_GZ_FILE_VIEW_COMMAND, targzFilePath);
+				if (commandLine.getLine().startsWith(HTTPD_FILE_VIEW_COMMAND_START)) {
+					command = HTTPD_FILE_VIEW_COMMAND_START + targzFilePath + TAR_GZ_FILE_VIEW_COMMAND_END;
+				}
 				String link = FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING);
 				breadcrumbs.add(new Breadcrumb(targzFilename, link));
 				breadcrumbs.add(new Breadcrumb(targzSubFilename));
