@@ -101,8 +101,8 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		}
 		
 		// Get and return the result stream
-		InputStream resultStream = new SequenceInputStream(resultCommand.getInputStream(), resultCommand.getErrorStream());
-		resultStream = new SshCloseFilterInputStream(resultStream, resultCommand, session, (closeSshClient ? sshClient : null));
+		InputStream sequenceStream = new SequenceInputStream(resultCommand.getInputStream(), resultCommand.getErrorStream());
+		InputStream resultStream = new SshCloseFilterInputStream(sequenceStream, resultCommand, session, (closeSshClient ? sshClient : null));
 		return resultStream;
 	}
 
