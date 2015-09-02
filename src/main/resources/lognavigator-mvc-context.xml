@@ -16,17 +16,9 @@
 	<mvc:annotation-driven />
 
 	<!-- Enable Tiles Layout Templating -->
-<!-- 	<mvc:tiles-configurer preparer-factory="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"> -->
-<!-- 		<mvc:definitions location="/WEB-INF/tiles.xml"/> -->
-<!-- 	</mvc:tiles-configurer> -->
-	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
-		<property name="definitions">
-			<list>
-				<value>/WEB-INF/tiles.xml</value>
-			</list>
-		</property>
-		<property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"/>
-	</bean>
+	<mvc:tiles-configurer preparer-factory="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory">
+		<mvc:definitions location="/WEB-INF/tiles.xml"/>
+	</mvc:tiles-configurer>
     
 	<!-- Enable Tiles View Resolver -->
 	<mvc:view-resolvers>
