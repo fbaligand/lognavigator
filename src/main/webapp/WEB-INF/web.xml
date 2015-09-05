@@ -53,4 +53,10 @@
 		<location>/error/401</location>
 	</error-page>
 
+	<!-- Error page for technical server errors -->
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error/500</location>
+	</error-page>
+
 </web-app>

@@ -16,6 +16,15 @@ public class ErrorController {
 		throw accessDeniedException;
 	}
 
+	@RequestMapping("/error/500")
+	public void errorTechnical(HttpServletRequest request) throws Throwable {
+		Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+		while (exception.getCause() != null) {
+			exception = exception.getCause();
+		}
+		throw exception;
+	}
+	
 	@RequestMapping("/error/401")
 	@ResponseBody
 	public String errorAuthentication() {
