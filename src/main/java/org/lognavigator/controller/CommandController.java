@@ -219,10 +219,12 @@ public class CommandController {
 	private void processOtherCommand(BufferedReader resultReader, Model model) throws IOException {
 		List<List<TableCell>> tableLines = new ArrayList<List<TableCell>>();
 		String line;
+		int lineNumber = 0;
 		while ( (line = resultReader.readLine()) != null) {
-			tableLines.add(Arrays.asList(new TableCell(line)));
+			++lineNumber;
+			tableLines.add(Arrays.asList(new TableCell(String.valueOf(lineNumber)), new TableCell(line)));
 		}
-		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(LINE_CONTENT_TABLE_HEADER));
+		model.addAttribute(TABLE_HEADERS_KEY, Arrays.asList(LINE_NUMBER_TABLE_HEADER, LINE_CONTENT_TABLE_HEADER));
 		model.addAttribute(TABLE_LINES_KEY, tableLines);
 		model.addAttribute(TABLE_LAYOUT_CLASS_KEY, TABLE_LAYOUT_FULL_WIDTH);
 	}

@@ -9,16 +9,14 @@
 		<table class="table table-hover table-condensed" id="resultsTable">
 			<thead>
 				<tr>
-					<th>#</th>
 					<c:forEach var="tableHeader" items="${tableHeaders}">
 						<th>${tableHeader}</th>
 					</c:forEach>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="tableLine" items="${tableLines}" varStatus="status">
+				<c:forEach var="tableLine" items="${tableLines}">
 					<tr>
-						<td>${status.count}</td>
 						<c:forEach var="tableCell" items="${tableLine}">
 							<c:choose>
 								<c:when test="${tableCell.link != null and tableCell.linkIcon != null}">

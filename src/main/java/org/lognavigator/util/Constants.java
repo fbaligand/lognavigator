@@ -50,6 +50,7 @@ public class Constants {
 	public static final String DATE_TABLE_HEADER = "Date";
 	public static final String SIZE_TABLE_HEADER = "Size";
 	public static final String ACTIONS_TABLE_HEADER = "Actions";
+	public static final String LINE_NUMBER_TABLE_HEADER = "#";
 	public static final String LINE_CONTENT_TABLE_HEADER = "Line Content";
 	
 
