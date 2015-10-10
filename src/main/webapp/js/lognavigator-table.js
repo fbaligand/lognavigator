@@ -12,8 +12,29 @@ function renderResultsTable() {
 	// Render 'size' and 'file' column data
 	var dataTableColumnDefs = [];
 	$("#resultsTable").find("th").each(function(index) {
+		// 'file' column
+		if ($(this).text().match(/file/gi)) {
+			dataTableColumnDefs.push({
+				render: function ( data, type, row ) {
+					if (type == "sort") {
+						var $data = $(data);
+						var sortedData = $data.hasClass("text-warning") ? "a" : "b";
+						sortedData += $data.text();
+						return sortedData;
+					}
+					else if (type == "filter" ) {
+						return $(data).text();
+					}
+					else {
+						return data;
+					}
+				},
+				targets: index,
+				type: "string"
+			});
+		}
 		// 'size' column
-		if ($(this).text().match(/size/gi)) {
+		else if ($(this).text().match(/size/gi)) {
 			dataTableColumnDefs.push({
                 render: function ( data, type, row ) {
                 	if (type == "display" || type == "filter" ) {
@@ -23,25 +44,16 @@ function renderResultsTable() {
                 		return data;
                 	}
                 },
-                targets: index
+                targets: index,
+                type: "num"
             });
 		}
-		// 'file' column
-		else if ($(this).text().match(/file/gi)) {
+		// 'actions' column
+		else if ($(this).text().match(/actions/gi)) {
 			dataTableColumnDefs.push({
-				render: function ( data, type, row ) {
-					if (type == "sort") {
-						var $data = $(data);
-						var sortedData = $data.hasClass("text-warning") ? "a" : "b";
-						sortedData += $data.text();
-						return sortedData;
-					}
-					else {
-						return data;
-					}
-				},
 				targets: index,
-				sType: "string"
+				orderable: false,
+				searchable: false
 			});
 		}
 	});
