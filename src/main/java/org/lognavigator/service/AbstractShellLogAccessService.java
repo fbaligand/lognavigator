@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.schmizz.sshj.common.IOUtils;
+
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.exception.LogAccessException;
@@ -126,10 +128,7 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 			throw new LogAccessException("I/O Error while listing files in path '" + subPath + "' in log access config : "  + logAccessConfig, e);
 		}
 		finally {
-			try {
-				resultReader.close();
-			}
-			catch (IOException e) {}
+			IOUtils.closeQuietly(resultReader);
 		}
 	}
 	

@@ -8,6 +8,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import net.schmizz.sshj.common.IOUtils;
+
 import org.lognavigator.util.Constants;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.util.HtmlUtils;
@@ -44,9 +46,7 @@ public class RawContentTag extends TagSupport {
 			throw new JspException(e);
 		}
 		finally {
-			try {
-				rawContent.close();
-			} catch (IOException ex) {}
+			IOUtils.closeQuietly(rawContent);
 		}
 	}
 }

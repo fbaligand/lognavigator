@@ -13,6 +13,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import net.schmizz.sshj.common.IOUtils;
+
 import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogNavigatorConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
@@ -120,13 +122,7 @@ public class DefaultConfigService implements ConfigService {
 			throw new ConfigException("XML load error when trying to load lognavigator config file " + logNavigatorConfigResource, e);
 		}
 		finally {
-			if (logNavigatorConfigInputStream != null) {
-				try {
-					logNavigatorConfigInputStream.close();
-				} catch (IOException e) {
-					// Silently close the stream
-				}
-			}
+			IOUtils.closeQuietly(logNavigatorConfigInputStream);
 		}
 		
 		validateConfiguration();

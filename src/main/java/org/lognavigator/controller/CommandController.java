@@ -22,6 +22,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.schmizz.sshj.common.IOUtils;
+
 import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.CommandLine;
 import org.lognavigator.bean.DisplayType;
@@ -121,10 +123,7 @@ public class CommandController {
 				}
 			}
 			finally {
-				try {
-					resultReader.close();
-				}
-				catch (IOException e) {}
+				IOUtils.closeQuietly(resultReader);
 			}
 			return VIEW_TABLE;
 		}
