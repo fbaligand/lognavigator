@@ -53,7 +53,12 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 			return sequenceStream;
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when executing command " + shellCommand + " to " + logAccessConfig, e);
+			if (e.getMessage().matches("Cannot run program \".+\" \\(in directory \".*\"\\).*")) {
+				throw new LogAccessException("Configuration is invalid : directory " + logAccessConfig.getDirectory() + " does not exist", e);
+			}
+			else {
+				throw new LogAccessException("Error when executing command " + shellCommand + " to " + logAccessConfig, e);
+			}
 		}
 	}
 
