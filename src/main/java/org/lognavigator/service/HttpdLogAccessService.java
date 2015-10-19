@@ -124,16 +124,18 @@ public class HttpdLogAccessService implements LogAccessService {
 		
 		try {
 			// Read until table head
+			StringBuilder startContent = new StringBuilder();
 			String currentLine;
 			boolean isTableStartReached = false;
 			while ( (currentLine = remoteReader.readLine()) != null) {
+				startContent.append(currentLine).append("\n");
 				if (currentLine.contains(TABLE_START)) {
 					isTableStartReached = true;
 					break;
 				}
 			}
 			if (!isTableStartReached) {
-				throw new LogAccessException("Impossible to get log files list on " + logAccessConfig);
+				throw new LogAccessException("Impossible to get log files list on URL " + logAccessConfig.getUrl() + " :\n" + startContent.toString());
 			}
 			
 			// Result meta-informations
