@@ -11,6 +11,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 
 /**
@@ -27,7 +28,7 @@ public class LogNavigatorHandlerExceptionResolver implements HandlerExceptionRes
 		
 		// Compute error message to display
 		String errorTitle = exception.getClass().getSimpleName().replaceFirst("(Error|Exception)", " Error");
-		String errorMessage = exception.getMessage();
+		String errorMessage = HtmlUtils.htmlEscape(exception.getMessage()).replace("\n", "<br/>");
 		
 		ModelAndView modelAndView = new ModelAndView(Constants.VIEW_ERROR);
 		modelAndView.addObject(Constants.ERROR_TITLE_KEY, errorTitle);
