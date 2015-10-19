@@ -25,7 +25,8 @@ import org.springframework.util.FileCopyUtils;
 public abstract class AbstractShellLogAccessService implements LogAccessService {
 	
 	private static final String DIRECTORY_MARKER = "4000";
-	private static final String GET_PERL_INFO_COMMAND = "perl -v";
+	private static final String GET_PERL_INFO_COMMAND = "echo DIRECTORY_OK && perl -v";
+	private static final String DIRECTORY_OK_MARKER = "DIRECTORY_OK";
 	private static final String PERL_INSTALLED_MARKER = "this is perl";
 
 	@Autowired
@@ -53,6 +54,9 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 				InputStream resultStream = executeCommand(logAccessConfig.getId(), GET_PERL_INFO_COMMAND);
 				// Check if perl is installed
 				String result = FileCopyUtils.copyToString(new InputStreamReader(resultStream));
+				if (!result.contains(DIRECTORY_OK_MARKER)) {
+					throw new LogAccessException("Configuration is invalid : directory " + logAccessConfig.getDirectory() + " does not exist");
+				}
 				boolean isPerlInstalled = result.toLowerCase().contains(PERL_INSTALLED_MARKER);
 				// Update logAccessConfig to cache the information (and not execute command every time)
 				logAccessConfig.setPerlInstalled(isPerlInstalled);
