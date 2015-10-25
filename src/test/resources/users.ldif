@@ -1,0 +1,58 @@
+##############
+# ROOT NODES #
+##############
+
+dn: ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: groups
+
+dn: ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+#########
+# USERS #
+#########
+
+dn: uid=user1,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: user1
+userPassword: password
+
+dn: uid=user2,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: user2
+userPassword: password
+
+dn: uid=user3,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: user3
+userPassword: password
+
+#########
+# ROLES #
+#########
+
+dn: cn=lognavigator,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: lognavigator
+uniqueMember: uid=user1,ou=people,dc=springframework,dc=org
+uniqueMember: uid=user2,ou=people,dc=springframework,dc=org
+
+dn: cn=lognavigator-protected,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: lognavigator-protected
+uniqueMember: uid=user1,ou=people,dc=springframework,dc=org
