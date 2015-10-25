@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.TableCell;
@@ -42,7 +44,8 @@ public class ListController {
 	}
 	
 	@RequestMapping("/logs/{logAccessConfigId}/list")
-	public String list(Model model, 
+	public String list(Model model,
+	           		   HttpServletRequest request,
 			           @PathVariable String logAccessConfigId,
 			           @RequestParam(value="subPath", required=false) String subPath
 			           )
@@ -55,7 +58,7 @@ public class ListController {
 		if (subPath != null) {
 			List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
 			BreadcrumbFactory.addSubPath(breadcrumbs, subPath, false);
-			model.addAttribute(BREADCRUMBS_KEY, breadcrumbs);
+			request.setAttribute(BREADCRUMBS_KEY, breadcrumbs);
 		}
 
 		return renderFileList(model, subPath, fileInfos);
