@@ -11,11 +11,14 @@ import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.service.DefaultConfigService;
 import org.lognavigator.service.FakeLogAccessService;
 import org.lognavigator.util.Constants;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
 
 public class CommandControllerTest {
 
 	private CommandController commandController;
+	
+	private MockHttpServletRequest request;
 
 	@Before
 	public void setup() throws Exception {
@@ -24,6 +27,8 @@ public class CommandControllerTest {
 		commandController.configService = new DefaultConfigService();
 		commandController.listController = new ListController();
 		commandController.listController.configService = new DefaultConfigService();
+		
+		request = new MockHttpServletRequest();
 	}
 
 	@Test
@@ -37,14 +42,14 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 
 		// when
-		String viewName = commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		String viewName = commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
 		Assert.assertEquals(Constants.VIEW_RAW, viewName);
-		Assert.assertEquals(true, model.get(Constants.SHOW_OPTIONS_KEY));
-		Assert.assertEquals(encoding, model.get(Constants.ENCODING_KEY));
-		Assert.assertEquals(displayType, model.get(Constants.DISPLAY_TYPE_KEY));
-		Assert.assertNotNull(model.get(Constants.BREADCRUMBS_KEY));
+		Assert.assertEquals(true, request.getAttribute(Constants.SHOW_OPTIONS_KEY));
+		Assert.assertEquals(encoding, request.getAttribute(Constants.ENCODING_KEY));
+		Assert.assertEquals(displayType, request.getAttribute(Constants.DISPLAY_TYPE_KEY));
+		Assert.assertNotNull(request.getAttribute(Constants.BREADCRUMBS_KEY));
 		Assert.assertNotNull(model.get(Constants.RAW_CONTENT_KEY));
 	}
 
@@ -60,10 +65,10 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
-		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  model.get(Constants.BREADCRUMBS_KEY);
+		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  request.getAttribute(Constants.BREADCRUMBS_KEY);
 		Assert.assertEquals(2, breadcrumbs.size());
 		Assert.assertEquals(logAccessConfigId, breadcrumbs.get(0).getLabel());
 		Assert.assertEquals("file.log", breadcrumbs.get(1).getLabel());
@@ -81,10 +86,10 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
-		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  model.get(Constants.BREADCRUMBS_KEY);
+		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  request.getAttribute(Constants.BREADCRUMBS_KEY);
 		Assert.assertEquals(3, breadcrumbs.size());
 		Assert.assertEquals(logAccessConfigId, breadcrumbs.get(0).getLabel());
 		Assert.assertEquals("folder", breadcrumbs.get(1).getLabel());
@@ -104,10 +109,10 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
-		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  model.get(Constants.BREADCRUMBS_KEY);
+		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  request.getAttribute(Constants.BREADCRUMBS_KEY);
 		Assert.assertEquals(4, breadcrumbs.size());
 		Assert.assertEquals(logAccessConfigId, breadcrumbs.get(0).getLabel());
 		Assert.assertEquals("folder1", breadcrumbs.get(1).getLabel());
@@ -127,10 +132,10 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.TABLE;
 		
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
-		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  model.get(Constants.BREADCRUMBS_KEY);
+		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  request.getAttribute(Constants.BREADCRUMBS_KEY);
 		Assert.assertEquals(3, breadcrumbs.size());
 		Assert.assertEquals(logAccessConfigId, breadcrumbs.get(0).getLabel());
 		Assert.assertEquals("backup", breadcrumbs.get(1).getLabel());
@@ -149,10 +154,10 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 		
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 		
 		// then
-		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  model.get(Constants.BREADCRUMBS_KEY);
+		List<Breadcrumb> breadcrumbs = (List<Breadcrumb>)  request.getAttribute(Constants.BREADCRUMBS_KEY);
 		Assert.assertEquals(4, breadcrumbs.size());
 		Assert.assertEquals(logAccessConfigId, breadcrumbs.get(0).getLabel());
 		Assert.assertEquals("backup", breadcrumbs.get(1).getLabel());
@@ -171,7 +176,7 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 	}
 
 	@Test(expected=AuthorizationException.class)
@@ -185,7 +190,7 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 		
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 	}
 	
 	@Test(expected=AuthorizationException.class)
@@ -199,7 +204,7 @@ public class CommandControllerTest {
 		DisplayType displayType = DisplayType.RAW;
 		
 		// when
-		commandController.executeCommand(model, logAccessConfigId, cmd, encoding, displayType);
+		commandController.executeCommand(model, request, logAccessConfigId, cmd, encoding, displayType);
 	}
 	
 }

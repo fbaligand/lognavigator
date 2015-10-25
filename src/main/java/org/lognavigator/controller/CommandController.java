@@ -16,11 +16,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import net.schmizz.sshj.common.IOUtils;
 
@@ -40,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,7 +65,8 @@ public class CommandController {
 	
 
 	@RequestMapping("/logs/{logAccessConfigId}/command")
-	public String executeCommand(Model model, 
+	public String executeCommand(Model model,
+					  HttpServletRequest request,
 					  @PathVariable String logAccessConfigId, 
 					  @RequestParam(value="cmd", required=false, defaultValue=DEFAULT_LIST_COMMAND) String cmd,
 					  @RequestParam(value="encoding", required=false, defaultValue=DEFAULT_ENCODING_OPTION) String encoding,
@@ -95,12 +100,12 @@ public class CommandController {
 		}
 		
 		// Add options to model
-		model.addAttribute(SHOW_OPTIONS_KEY, true);
-		model.addAttribute(ENCODING_KEY, encoding);
-		model.addAttribute(DISPLAY_TYPE_KEY, displayType);
+		request.setAttribute(SHOW_OPTIONS_KEY, true);
+		request.setAttribute(ENCODING_KEY, encoding);
+		request.setAttribute(DISPLAY_TYPE_KEY, displayType);
 		
 		// Generate Breadcrumbs
-		generateBreadcrumbs(logAccessConfigId, commandLine, model);
+		generateBreadcrumbs(logAccessConfigId, commandLine, request);
 		
 		// Execute the command
 		InputStream resultStream = logAccessService.executeCommand(logAccessConfigId, cmd);
@@ -163,12 +168,15 @@ public class CommandController {
 		Set<FileInfo> archiveEntryList = new TreeSet<FileInfo>();
 
 		// Compute archive contents list
+		StringBuilder potentialErrorMessage = new StringBuilder();
 		String line;
 		int remainingFileCount = configService.getFileListMaxCount();
 		SimpleDateFormat targzDateFormat = new SimpleDateFormat(TAR_GZ_DATE_FORMAT);
 		LogAccessType logAccessType = cmd.startsWith(HTTPD_FILE_VIEW_COMMAND_START) ? LogAccessType.HTTPD : LogAccessType.LOCAL;
 		
 		while ( (line = resultReader.readLine()) != null && remainingFileCount > 0) {
+			
+			potentialErrorMessage.append(line).append("\n");
 			
 			// directories are ignored
 			boolean isDirectory = line.startsWith(DIRECTORY_RIGHT);
@@ -202,8 +210,12 @@ public class CommandController {
 				fileInfo.setLogAccessType(logAccessType);
 				archiveEntryList.add(fileInfo);
 			}
+			catch (NoSuchElementException e) {
+				potentialErrorMessage.append(FileCopyUtils.copyToString(resultReader));
+				throw new IOException("Error while listing tar.gz entries.\n" + potentialErrorMessage.toString(), e);
+			}
 			catch (ParseException e) {
-				throw new IOException("Invalid tar.gz content", e);
+				throw new IOException("Error while listing tar.gz entries. " + e.getMessage(), e);
 			}
 
 		}
@@ -232,9 +244,9 @@ public class CommandController {
 	 * Generate Breadcrumbs containing path to current file (for navigation)
 	 * @param logAccessConfigId current logAccessConfigId 
 	 * @param commandLine current executed command
-	 * @param model model where to add breadcrumbs
+	 * @param request request where to add breadcrumbs as a request attribute
 	 */
-	private void generateBreadcrumbs(String logAccessConfigId, CommandLine commandLine, Model model) {
+	private void generateBreadcrumbs(String logAccessConfigId, CommandLine commandLine, HttpServletRequest request) {
 		
 		List<Breadcrumb> breadcrumbs = BreadcrumbFactory.createBreadCrumbs(logAccessConfigId);
 		
@@ -296,6 +308,6 @@ public class CommandController {
 			}
 		}
 		
-		model.addAttribute(BREADCRUMBS_KEY, breadcrumbs);
+		request.setAttribute(BREADCRUMBS_KEY, breadcrumbs);
 	}
 }
