@@ -222,6 +222,12 @@
 			<artifactId>apacheds-server-jndi</artifactId>
 			<version>1.5.5</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk15</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
