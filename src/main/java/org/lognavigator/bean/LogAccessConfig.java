@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * - HTTPD: url
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder={"proxy", "trust", "displayGroup", "authorizedRoles", "authorizedUsers", "url", "directory", "host", "password", "privatekey", "user", "type", "id"})
+@XmlType(propOrder={"id", "type", "user", "privatekey", "password", "host", "directory", "url", "proxy", "authorizedUsers", "authorizedRoles", "displayGroup", "trust"})
 public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	public static final String EVERYONE_IS_AUTHORIZED = "*";
