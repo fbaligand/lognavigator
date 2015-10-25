@@ -40,7 +40,7 @@ public class DefaultAuthorizationService implements AuthorizationService {
 			if (authenticatedUser != null) {
 				for (String authorizedRole : logAccessConfig.getAuthorizedRoles()) {
 					for (GrantedAuthority userRole : authenticatedUser.getAuthorities()) {
-						if (authorizedRole.equals(userRole.getAuthority())) {
+						if (authorizedRole.equalsIgnoreCase(userRole.getAuthority())) {
 							return;
 						}
 					}
