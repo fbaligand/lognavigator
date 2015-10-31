@@ -64,7 +64,7 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	private String proxy;
 	
 	@XmlTransient
-	private Boolean isWindowsOS;
+	private OsType osType;
 	
 	@XmlTransient
 	private Boolean isPerlInstalled;
@@ -202,7 +202,6 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	public boolean isTrust() {
 		return trust;
 	}
-
 	public void setTrust(boolean trust) {
 		this.trust = trust;
 	}
@@ -210,16 +209,15 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	public String getProxy() {
 		return proxy;
 	}
-
 	public void setProxy(String proxy) {
 		this.proxy = proxy;
 	}
 
-	public Boolean isWindowsOS() {
-		return isWindowsOS;
+	public OsType getOsType() {
+		return osType;
 	}
-	public void setWindowsOS(Boolean isWindowsOS) {
-		this.isWindowsOS = isWindowsOS;
+	public void setOsType(OsType osType) {
+		this.osType = osType;
 	}
 
 	public Boolean isPerlInstalled() {
