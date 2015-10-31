@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -174,21 +173,21 @@ public class CommandController {
 		SimpleDateFormat targzDateFormat = new SimpleDateFormat(TAR_GZ_DATE_FORMAT);
 		LogAccessType logAccessType = cmd.startsWith(HTTPD_FILE_VIEW_COMMAND_START) ? LogAccessType.HTTPD : LogAccessType.LOCAL;
 		
-		while ( (line = resultReader.readLine()) != null && remainingFileCount > 0) {
-			
-			potentialErrorMessage.append(line).append("\n");
-			
-			// directories are ignored
-			boolean isDirectory = line.startsWith(DIRECTORY_RIGHT);
-			if (isDirectory) {
-				continue;
-			}
-			
-			--remainingFileCount;
-			line = line.replaceAll(" +", " ");
-			StringTokenizer stLine = new StringTokenizer(line, " ");
-
-			try {
+		try {
+			while ( (line = resultReader.readLine()) != null && remainingFileCount > 0) {
+				
+				potentialErrorMessage.append(line).append("\n");
+				
+				// directories are ignored
+				boolean isDirectory = line.startsWith(DIRECTORY_RIGHT);
+				if (isDirectory) {
+					continue;
+				}
+				
+				--remainingFileCount;
+				line = line.replaceAll(" +", " ");
+				StringTokenizer stLine = new StringTokenizer(line, " ");
+	
 				// Skip 2 first columns
 				stLine.nextToken();
 				stLine.nextToken();
@@ -210,14 +209,13 @@ public class CommandController {
 				fileInfo.setLogAccessType(logAccessType);
 				archiveEntryList.add(fileInfo);
 			}
-			catch (NoSuchElementException e) {
-				potentialErrorMessage.append(FileCopyUtils.copyToString(resultReader));
-				throw new IOException("Error while listing tar.gz entries.\n" + potentialErrorMessage.toString(), e);
-			}
-			catch (ParseException e) {
-				throw new IOException("Error while listing tar.gz entries. " + e.getMessage(), e);
-			}
-
+		}
+		catch (RuntimeException e) {
+			potentialErrorMessage.append(FileCopyUtils.copyToString(resultReader));
+			throw new IOException("Error while listing tar.gz entries.\n" + potentialErrorMessage.toString(), e);
+		}
+		catch (ParseException e) {
+			throw new IOException("Error while listing tar.gz entries. " + e.getMessage(), e);
 		}
 
 		// Render archive entry list in HTML
