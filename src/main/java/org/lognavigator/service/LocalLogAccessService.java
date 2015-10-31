@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
+import org.lognavigator.bean.OsType;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,10 @@ import org.springframework.util.FileCopyUtils;
 @Qualifier("local")
 public class LocalLogAccessService extends AbstractShellLogAccessService implements LogAccessService {
 	
+	private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
+	private static final String WINDOWS_OS_MARKER = "windows";
+	private static final String AIX_OS_MARKER = "aix";
+
 	@Override
 	public InputStream executeCommand(String logAccessConfigId, String shellCommand) throws LogAccessException {
 		
@@ -35,7 +40,7 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 		try {
 			// Prepare shellCommand array (depending OS)
 			String[] shellCommandArray = null;
-			if (isWindowsOS(logAccessConfig)) {
+			if (getOSType(logAccessConfig) == OsType.WINDOWS) {
 				shellCommandArray = new String[]{"cmd", "/C", shellCommand};
 			}
 			else {
@@ -117,13 +122,27 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 	}
 
 	@Override
-	protected boolean isWindowsOS(LogAccessConfig logAccessConfig) {
-		if (logAccessConfig.isWindowsOS() == null) {
+	protected OsType getOSType(LogAccessConfig logAccessConfig) {
+		if (logAccessConfig.getOsType() == null) {
+			OsType osType;
+			String osName = System.getProperty(OS_NAME_SYSTEM_PROPERTY).toLowerCase();
+			
 			// Check if OS is windows
-			boolean isWindowsOS = System.getProperty("os.name").toLowerCase().contains("windows");
+			if (osName.contains(WINDOWS_OS_MARKER)) {
+				osType = OsType.WINDOWS;
+			}
+			// Check if OS is AIX
+			else if (osName.contains(AIX_OS_MARKER)) {
+				osType = OsType.AIX;
+			}
+			// By default, OS is considered linux-compliant
+			else {
+				osType = OsType.LINUX;
+			}
 			// Update logAccessConfig to cache the information (and not execute command every time)
-			logAccessConfig.setWindowsOS(isWindowsOS);
+			logAccessConfig.setOsType(osType);
 		}
-		return logAccessConfig.isWindowsOS();
+		return logAccessConfig.getOsType();
 	}
+
 }

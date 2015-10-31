@@ -14,8 +14,11 @@ import net.schmizz.sshj.common.IOUtils;
 
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
+import org.lognavigator.bean.OsType;
 import org.lognavigator.exception.LogAccessException;
-import org.lognavigator.util.Constants;
+
+import static org.lognavigator.util.Constants.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
@@ -31,14 +34,6 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 
 	@Autowired
 	protected ConfigService configService;
-	
-	/**
-	 * Check and return if host referenced by 'logAccessConfig' is running under Windows OS
-	 * @param logAccessConfig log access config to test
-	 * @return true if referenced host is running under Windows OS
-	 * @throws LogAccessException if a technical error occurs
-	 */
-	protected abstract boolean isWindowsOS(LogAccessConfig logAccessConfig) throws LogAccessException;
 	
 	
 	/**
@@ -68,7 +63,6 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 		return logAccessConfig.isPerlInstalled();
 	}
 
-
 	@Override
 	public Set<FileInfo> listFiles(String logAccessConfigId, String subPath) throws LogAccessException {
 		
@@ -80,13 +74,19 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 			return listFilesUsingNativeSystem(logAccessConfig, subPath);
 		}
 
-		
+		// Avoid trailing / at end of subPath
+		if (subPath != null && subPath.endsWith("/") && subPath.length() > 1) {
+			subPath = subPath.substring(0, subPath.length() - 1);
+		}
+
 		// Construct perl list command based path and maximum file count
 		String path = (subPath != null) ? subPath : ".";
-		String listCommand = MessageFormat.format(Constants.PERL_LIST_COMMAND, path, configService.getFileListMaxCount());
-		if (isWindowsOS(logAccessConfig)) {
-			listCommand = listCommand.replace("\"", "\\\"");
-			listCommand = listCommand.replace('\'', '"');
+		OsType osType = getOSType(logAccessConfig);
+		String listCommandPattern = (osType == OsType.AIX) ? PERL_LIST_COMMAND_AIX : PERL_LIST_COMMAND_LINUX_WINDOWS;
+		String listCommand = MessageFormat.format(listCommandPattern, path, configService.getFileListMaxCount());
+		if (osType == OsType.WINDOWS) {
+			listCommand = listCommand.replace("\"", "\\\"")
+					                 .replace('\'', '"');
 		}
 
 		// Execute perl command
@@ -95,10 +95,14 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 		
 		// Parse the result lines to build FileInfo list
 		Set<FileInfo> fileInfos = new TreeSet<FileInfo>();
+		StringBuilder potentialErrorMessage = new StringBuilder();
 		String line = null;
+		
 		try {
 			while ((line = resultReader.readLine()) != null) {
 				
+				potentialErrorMessage.append(line).append("\n");
+
 				// Parse the line
 				String[] lineTokens = line.split(" ");
 				boolean isDirectory = lineTokens[0].equals(DIRECTORY_MARKER);
@@ -111,6 +115,15 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 					++tokenIndex;
 				}
 				
+				// Compute relative path prefix
+				String relativePathPrefix = "";
+				if ("/".equals(subPath)) {
+					relativePathPrefix = subPath;
+				}
+				else if (subPath != null) {
+					relativePathPrefix = subPath + "/";
+				}
+				
 				// Build FileInfo bean
 				FileInfo fileInfo = new FileInfo();
 				fileInfo.setDirectory(isDirectory);
@@ -118,15 +131,19 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 				fileInfo.setLastModified(lastModified);
 				fileInfo.setFileName(fileName);
 				fileInfo.setLogAccessType(logAccessConfig.getType());
-				fileInfo.setRelativePath((subPath != null) ? subPath + "/" + fileName : fileName);
+				fileInfo.setRelativePath(relativePathPrefix + fileName);
 				fileInfos.add(fileInfo);
 			}
 			
 			// Return list of files
 			return fileInfos;
 		}
-		catch (NumberFormatException e) {
-			throw new LogAccessException("Error while executing list command : " + line, e);
+		catch (RuntimeException e) {
+			try {
+				potentialErrorMessage.append(FileCopyUtils.copyToString(resultReader));
+			}
+			catch (IOException ioe) {}
+			throw new LogAccessException("Error while executing list command : " + potentialErrorMessage.toString(), e);
 		}
 		catch (IOException e) {
 			throw new LogAccessException("I/O Error while listing files in path '" + subPath + "' in log access config : "  + logAccessConfig, e);
@@ -141,5 +158,13 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 	 * @see #listFiles(String, String)
 	 */
 	protected abstract Set<FileInfo> listFilesUsingNativeSystem(LogAccessConfig logAccessConfig, String subPath) throws LogAccessException;
+
+	/**
+	 * Compute and return which OS Type is isntalled on host referenced by 'logAccessConfig'
+	 * @param logAccessConfig log access config to test
+	 * @return which OS Type is installed on host referenced by 'logAccessConfig'
+	 * @throws LogAccessException if a technical error occurs
+	 */
+	protected abstract OsType getOSType(LogAccessConfig logAccessConfig) throws LogAccessException;
 
 }

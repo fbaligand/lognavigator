@@ -24,6 +24,7 @@ import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
+import org.lognavigator.bean.OsType;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.util.LastUpdatedRemoteResourceFilter;
@@ -43,6 +44,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 	
 	private static final String GET_OS_INFO_COMMAND = "uname -a";
 	private static final String WINDOWS_OS_MARKER = "cygwin";
+	private static final String AIX_OS_MARKER = "aix";
 	
 	private static ThreadLocal<SSHClient> sshClientThreadLocal = new ThreadLocal<SSHClient>();
 
@@ -178,26 +180,43 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 	}
 	
 	@Override
-	protected boolean isWindowsOS(LogAccessConfig logAccessConfig) throws LogAccessException {
-		if (logAccessConfig.isWindowsOS() == null) {
+	protected OsType getOSType(LogAccessConfig logAccessConfig) throws LogAccessException {
+		
+		if (logAccessConfig.getOsType() == null) {
+			OsType osType;
+			
 			try {
 				// Execute command to know OS
 				InputStream resultStream = executeCommand(logAccessConfig.getId(), GET_OS_INFO_COMMAND);
 				
+				// Get OS name
+				String osName = FileCopyUtils.copyToString(new InputStreamReader(resultStream)).toLowerCase();
+
 				// Check if OS is windows
-				String result = FileCopyUtils.copyToString(new InputStreamReader(resultStream));
-				boolean isWindowsOS = result.toLowerCase().contains(WINDOWS_OS_MARKER);
+				if (osName.contains(WINDOWS_OS_MARKER)) {
+					osType = OsType.WINDOWS;
+				}
+				// Check if OS is AIX
+				else if (osName.contains(AIX_OS_MARKER)) {
+					osType = OsType.AIX;
+				}
+				// By default, OS is considered linux-compliant
+				else {
+					osType = OsType.LINUX;
+				}
 
 				// Update logAccessConfig to cache the information (and not execute command every time)
-				logAccessConfig.setWindowsOS(isWindowsOS);
+				logAccessConfig.setOsType(osType);
+
 			}
 			catch (IOException ioe) {
 				throw new LogAccessException("Error while reading response of command : " + GET_OS_INFO_COMMAND, ioe);
 			}
 		}
-		return logAccessConfig.isWindowsOS();
+			
+		return logAccessConfig.getOsType();
 	}
-
+	
 	/**
 	 * Create a ssh client to logAccessConfig host, and process authentication by ssh key
 	 * @param logAccessConfig log access config to connect to
