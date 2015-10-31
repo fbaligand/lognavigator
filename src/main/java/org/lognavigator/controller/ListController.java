@@ -81,7 +81,7 @@ public class ListController {
 		}
 		
 		// Add link to parent folder
-		if (subPath != null) {
+		if (subPath != null && !subPath.equals("/")) {
 			FileInfo parentFolderLink = FileInfoFactory.createParentFolderLink(subPath);
 			fileInfos.add(parentFolderLink);
 		}
