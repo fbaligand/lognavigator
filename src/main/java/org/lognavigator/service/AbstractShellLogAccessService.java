@@ -143,7 +143,7 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 				potentialErrorMessage.append(FileCopyUtils.copyToString(resultReader));
 			}
 			catch (IOException ioe) {}
-			throw new LogAccessException("Error while executing list command : " + potentialErrorMessage.toString(), e);
+			throw new LogAccessException("Error while executing list command.\n " + potentialErrorMessage.toString(), e);
 		}
 		catch (IOException e) {
 			throw new LogAccessException("I/O Error while listing files in path '" + subPath + "' in log access config : "  + logAccessConfig, e);
