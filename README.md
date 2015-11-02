@@ -154,6 +154,10 @@ For example :
 ```xml
 <log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" password="your-password" host="remote-host" directory="/path/to/logs" />
 ```
+- on a remote directory, execute a pre-command before each main command (ex: add free tools for aix in PATH) :
+```xml
+<log-access-config id="remote-ssh-logs" type="SSH" user="your-user" host="remote-aix" directory="/path/to/logs" pre-command="PATH='/opt/freeware/bin:$PATH'" />
+```
 
 ### `HTTPD` log access configurations
 - access to a remote directory accessible through a httpd server :
