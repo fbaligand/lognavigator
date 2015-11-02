@@ -18,6 +18,7 @@ import org.lognavigator.exception.LogAccessException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -38,6 +39,11 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 		LogAccessConfig logAccessConfig = configService.getLogAccessConfig(logAccessConfigId);
 		
 		try {
+			// Add the precommand (if any)
+			if (StringUtils.hasText(logAccessConfig.getPreCommand())) {
+				shellCommand = logAccessConfig.getPreCommand() + " && " + shellCommand;
+			}
+
 			// Prepare shellCommand array (depending OS)
 			String[] shellCommandArray = null;
 			if (getOSType(logAccessConfig) == OsType.WINDOWS) {

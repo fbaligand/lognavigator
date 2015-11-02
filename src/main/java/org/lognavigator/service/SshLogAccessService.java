@@ -33,6 +33,7 @@ import org.lognavigator.util.SshCloseFilterInputStream;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -89,13 +90,19 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 			sshClient = connectAndAuthenticate(logAccessConfig);
 			closeSshClient = true;
 		}
+		
+		// Define the precommand (if any)
+		String precommand = "";
+		if (StringUtils.hasText(logAccessConfig.getPreCommand())) {
+			precommand = logAccessConfig.getPreCommand() + " && ";
+		}
 
 		// Execute the shell command
 		Session session = null;
 		Command resultCommand;
 		try {
 			session = sshClient.startSession();
-			resultCommand = session.exec("cd \"" + logAccessConfig.getDirectory() + "\" && " + shellCommand);
+			resultCommand = session.exec("cd \"" + logAccessConfig.getDirectory() + "\" && " + precommand + shellCommand);
 		}
 		catch (SSHException e) {
 			IOUtils.closeQuietly(session, sshClient);
