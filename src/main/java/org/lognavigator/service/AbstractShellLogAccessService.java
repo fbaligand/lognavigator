@@ -146,7 +146,7 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 			throw new LogAccessException("Error while executing list command.\n " + potentialErrorMessage.toString(), e);
 		}
 		catch (IOException e) {
-			throw new LogAccessException("I/O Error while listing files in path '" + subPath + "' in log access config : "  + logAccessConfig, e);
+			throw new LogAccessException("I/O Error while listing files in path '" + subPath + "'\n" + e.getMessage(), e);
 		}
 		finally {
 			IOUtils.closeQuietly(resultReader);

@@ -122,10 +122,10 @@ public class HttpdLogAccessService implements LogAccessService {
 			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
 		}
 		
+		String currentLine = null;
 		try {
 			// Read until table head
 			StringBuilder startContent = new StringBuilder();
-			String currentLine;
 			boolean isTableStartReached = false;
 			while ( (currentLine = remoteReader.readLine()) != null) {
 				startContent.append(currentLine).append("\n");
@@ -219,14 +219,14 @@ public class HttpdLogAccessService implements LogAccessService {
 			return fileInfos;
 			
 		}
-		catch (IOException e) {
-			throw new LogAccessException("Error when parsing log files list on " + logAccessConfig, e);
-		}
-		catch (NumberFormatException e) {
-			throw new LogAccessException("Error when parsing log files list on " + logAccessConfig, e);
+		catch (RuntimeException e) {
+			throw new LogAccessException("Error when parsing this line :\n" + currentLine, e);
 		}
 		catch (ParseException e) {
-			throw new LogAccessException("Error when parsing log files list on " + logAccessConfig, e);
+			throw new LogAccessException("Error when parsing this line :\n" + currentLine, e);
+		}
+		catch (IOException e) {
+			throw new LogAccessException("I/O Error when parsing log files list\n" + e.getMessage(), e);
 		}
 		finally {
 			IOUtils.closeQuietly(remoteReader);
