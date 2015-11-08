@@ -36,4 +36,12 @@ public interface ConfigService {
 	 * Return configured forbidden commands list
 	 */
 	public String getForbiddenCommands();
+	
+	/**
+	 * Retrieves and returns the default encoding for provided log access config.
+	 * First looks in logAccessConfig, then in environment configuration, and by default returns UTF-8
+	 * @param id LogAccessConfig id wanted
+	 * @return requested default encoding (UTF-8 or ISO-8859-1)
+	 */
+	public String getDefaultEncoding(String logAccessConfigId);
 }

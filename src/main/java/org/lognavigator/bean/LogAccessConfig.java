@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * - HTTPD: url
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder={"id", "type", "user", "privatekey", "password", "host", "directory", "url", "proxy", "authorizedUsers", "authorizedRoles", "displayGroup", "trust", "preCommand"})
+@XmlType(propOrder={"id", "type", "user", "privatekey", "password", "host", "directory", "url", "proxy", "authorizedUsers", "authorizedRoles", "displayGroup", "trust", "preCommand", "defaultEncoding"})
 public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	public static final String EVERYONE_IS_AUTHORIZED = "*";
@@ -65,6 +65,9 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	@XmlAttribute(name="pre-command")
 	private String preCommand;
+	
+	@XmlAttribute(name="default-encoding")
+	private String defaultEncoding;
 	
 	@XmlTransient
 	private OsType osType;
@@ -221,6 +224,13 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	}
 	public void setPreCommand(String preCommand) {
 		this.preCommand = preCommand;
+	}
+
+	public String getDefaultEncoding() {
+		return defaultEncoding;
+	}
+	public void setDefaultEncoding(String defaultEncoding) {
+		this.defaultEncoding = defaultEncoding;
 	}
 
 	public OsType getOsType() {

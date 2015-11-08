@@ -136,6 +136,10 @@ For example :
 <log-access-config id="id1" type="LOCAL" directory="/path/to/logs" display-group="local-configs" />
 <log-access-config id="id2" type="LOCAL" directory="/path/to/logs2" display-group="local-configs" />
 ```
+- customize the default encoding used to read command output (possible values are ISO-8859-1 and UTF-8) :
+```xml
+<log-access-config id="id1" type="LOCAL" directory="/path/to/logs" default-encoding="ISO-8859-1" />
+```
 
 ### `SSH` log access configurations
 - access to a remote directory using login/password (and force trust to remote host) :
@@ -154,7 +158,7 @@ For example :
 ```xml
 <log-access-config id="a-remote-dir-using-ssh" type="SSH" user="your-user" privatekey="/path/to/privatekey" password="your-password" host="remote-host" directory="/path/to/logs" />
 ```
-- on a remote directory, execute a pre-command before each main command (ex: add free tools for aix in PATH) :
+- on a remote directory, execute a pre-command before each main command (ex: add GNU Tools for AIX in PATH) :
 ```xml
 <log-access-config id="remote-ssh-logs" type="SSH" user="your-user" host="remote-aix" directory="/path/to/logs" pre-command="PATH='/opt/freeware/bin:$PATH'" />
 ```
@@ -176,10 +180,11 @@ For example :
 
 # Advanced Options
 
-- **forbidden.commands:** custom the list of forbidden commands (default is: rm,rmdir,mv,kill,ssh,chmod,chown,vi)
-- **filelist.maxcount:** custom the maximum file count displayed in the file list screen (default is: 1000)
+- **forbidden.commands:** customize the list of forbidden commands (default is: rm,rmdir,mv,kill,ssh,chmod,chown,vi)
+- **filelist.maxcount:** customize the maximum file count displayed in the file list screen (default is: 1000)
+- **default.encoding:** customize the default encoding used to read command output (default is: UTF-8). Possible values are ISO-8859-1 and UTF-8
 
-You can custom advanced options using two ways :
+You can customize advanced options using two ways :
 - system properties
 - jndi environment entries
 

@@ -68,7 +68,7 @@ public class CommandController {
 					  HttpServletRequest request,
 					  @PathVariable String logAccessConfigId, 
 					  @RequestParam(value="cmd", required=false, defaultValue=DEFAULT_LIST_COMMAND) String cmd,
-					  @RequestParam(value="encoding", required=false, defaultValue=DEFAULT_ENCODING_OPTION) String encoding,
+					  @RequestParam(value="encoding", required=false) String encoding,
 					  @RequestParam(value="displayType", required=false) DisplayType displayType
 	) throws AuthorizationException, LogAccessException, IOException {
 		
@@ -86,6 +86,11 @@ public class CommandController {
 			else {
 				return UrlBasedViewResolver.FORWARD_URL_PREFIX + LOGS_LIST_URL;
 			}
+		}
+		
+		// Define default encoding when not given by client
+		if (encoding == null) {
+			encoding = configService.getDefaultEncoding(logAccessConfigId);
 		}
 		
 		// Define default displayType when not given by client

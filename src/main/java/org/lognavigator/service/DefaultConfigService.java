@@ -1,6 +1,6 @@
 package org.lognavigator.service;
 
-import static org.lognavigator.util.Constants.DEFAULT_FORBIDDEN_COMMANDS;
+import static org.lognavigator.util.Constants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +36,13 @@ public class DefaultConfigService implements ConfigService {
 	private static final int DEFAULT_FILE_LIST_MAX_COUNT = 1000;
 	
 
+	/** All log access configurations loaded from lognavigator.xml */
 	Set<LogAccessConfig> logAccessConfigs;
+	
+	/** last time that lognavigator.xml was modified */
 	long logNavigatorConfigLastModified;
+
+	/** JAXBContext used to load lognavigator.xml content */
 	JAXBContext logNavigatorConfigJaxbContext;
 
 	/** lognavigator main configuration location */
@@ -51,6 +56,10 @@ public class DefaultConfigService implements ConfigService {
 	/** forbidden commands list */
 	@Value("${forbidden.commands:" + DEFAULT_FORBIDDEN_COMMANDS + "}")
 	String forbiddenCommands = DEFAULT_FORBIDDEN_COMMANDS;
+	
+	/** default encoding used to read command output */
+	@Value("${default.encoding:" + DEFAULT_ENCODING_OPTION + "}")
+	String defaultEncoding = DEFAULT_ENCODING_OPTION;
 	
 
 	@Override
@@ -83,6 +92,17 @@ public class DefaultConfigService implements ConfigService {
 	@Override
 	public String getForbiddenCommands() {
 		return forbiddenCommands;
+	}
+
+	@Override
+	public String getDefaultEncoding(String logAccessConfigId) {
+		LogAccessConfig logAccessConfig = getLogAccessConfig(logAccessConfigId);
+		if (logAccessConfig.getDefaultEncoding() != null) {
+			return logAccessConfig.getDefaultEncoding();
+		}
+		else {
+			return defaultEncoding;
+		}
 	}
 	
 	/**
@@ -199,4 +219,5 @@ public class DefaultConfigService implements ConfigService {
 			LOGGER.error("Error while loading configuration file {}", logNavigatorConfigResource, e);
 		}
 	}
+
 }

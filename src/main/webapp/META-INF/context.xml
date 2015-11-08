@@ -18,4 +18,7 @@
 		<!-- Custom here the maximum file count displayed in the file list screen (default is: 1000) -->
 <!-- 	<Environment name="filelist.maxcount" value="1500" type="java.lang.Integer" /> -->
 
+		<!-- Custom here the default encoding used to read command output (default is: UTF-8) -->
+<!-- 	<Environment name="default.encoding" value="ISO-8859-1" type="java.lang.String" /> -->
+
 </Context>
