@@ -5,7 +5,7 @@
 
 <div class="row">&nbsp;</div>
 <div class="row-fluid">
-	<div class="${tableLayoutClass}">
+	<div class="${tableLayoutClass}" id="resultsTableParent">
 		<table class="table table-hover table-condensed" id="resultsTable">
 			<thead>
 				<tr>

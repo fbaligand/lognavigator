@@ -61,3 +61,7 @@ td {
 table {
 	border-collapse: inherit;
 }
+
+div#resultsTableParent > table#resultsTable {
+	margin-top: 40px;
+}
