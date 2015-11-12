@@ -75,6 +75,9 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	@XmlTransient
 	private Boolean isPerlInstalled;
 	
+	@XmlTransient
+	private Boolean isLsWithGroupDirectoriesFirstSupported;
+	
 	
 	//////////////////
 	// CONSTRUCTORS //
@@ -247,6 +250,13 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 		this.isPerlInstalled = isPerlInstalled;
 	}
 	
+	public Boolean isLsWithGroupDirectoriesFirstSupported() {
+		return isLsWithGroupDirectoriesFirstSupported;
+	}
+	public void setLsWithGroupDirectoriesFirstSupported(Boolean isLsWithGroupDirectoriesFirstSupported) {
+		this.isLsWithGroupDirectoriesFirstSupported = isLsWithGroupDirectoriesFirstSupported;
+	}
+
 	
 	//////////////////////////////////////////////
 	// TOSTRING / COMPARETO / EQUALS / HASHCODE // 

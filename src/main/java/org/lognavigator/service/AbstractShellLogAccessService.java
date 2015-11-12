@@ -28,9 +28,14 @@ import org.springframework.util.FileCopyUtils;
 public abstract class AbstractShellLogAccessService implements LogAccessService {
 	
 	private static final String DIRECTORY_MARKER = "4000";
+
 	private static final String GET_PERL_INFO_COMMAND = "echo DIRECTORY_OK && perl -v";
 	private static final String DIRECTORY_OK_MARKER = "DIRECTORY_OK";
 	private static final String PERL_INSTALLED_MARKER = "this is perl";
+	
+	private static final String LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND = "ls -a --group-directories-first | head -1";
+	private static final String LS_WITH_GROUP_DIRECTORIES_FIRST_SUPPORTED_MARKER = ".\n";
+	
 
 	@Autowired
 	protected ConfigService configService;
@@ -63,6 +68,30 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 		return logAccessConfig.isPerlInstalled();
 	}
 
+	/**
+	 * Check and return if host referenced by 'logAccessConfig' supports command {@value #LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND}
+	 * @param logAccessConfig log access config to test
+	 * @return true if referenced host supports command {@value #LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND}
+	 * @throws LogAccessException if a technical error occurs
+	 */
+	protected boolean isLsWithGroupDirectoriesFirstSupported(LogAccessConfig logAccessConfig) throws LogAccessException {
+		if (logAccessConfig.isLsWithGroupDirectoriesFirstSupported() == null) {
+			try {
+				// Execute command to know if command {@value #LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND} is supported
+				InputStream resultStream = executeCommand(logAccessConfig.getId(), LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND);
+				// Check if command {@value #LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND} is supported
+				String result = FileCopyUtils.copyToString(new InputStreamReader(resultStream));
+				boolean isLsWithGroupDirectoriesFirstSupported = result.equals(LS_WITH_GROUP_DIRECTORIES_FIRST_SUPPORTED_MARKER);
+				// Update logAccessConfig to cache the information (and not execute command every time)
+				logAccessConfig.setLsWithGroupDirectoriesFirstSupported(isLsWithGroupDirectoriesFirstSupported);
+			}
+			catch (IOException ioe) {
+				throw new LogAccessException("Error while reading response of command : " + LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND, ioe);
+			}
+		}
+		return logAccessConfig.isLsWithGroupDirectoriesFirstSupported();
+	}
+	
 	@Override
 	public Set<FileInfo> listFiles(String logAccessConfigId, String subPath) throws LogAccessException {
 		
@@ -82,7 +111,7 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 		// Construct perl list command based path and maximum file count
 		String path = (subPath != null) ? subPath : ".";
 		OsType osType = getOSType(logAccessConfig);
-		String listCommandPattern = (osType == OsType.AIX) ? PERL_LIST_COMMAND_AIX : PERL_LIST_COMMAND_LINUX_WINDOWS;
+		String listCommandPattern = isLsWithGroupDirectoriesFirstSupported(logAccessConfig) ? PERL_LIST_COMMAND_LINUX_GROUP_DIRECTORIES_FIRST : PERL_LIST_COMMAND_FALLBACK;
 		String listCommand = MessageFormat.format(listCommandPattern, path, configService.getFileListMaxCount());
 		if (osType == OsType.WINDOWS) {
 			listCommand = listCommand.replace("\"", "\\\"")
