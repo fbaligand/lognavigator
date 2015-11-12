@@ -1,10 +1,9 @@
 function initLognavigatorRawView() {
 	
-	// Auto-adapt RAW content width
-	var $pre = $("pre");
-	if ($pre.length == 1 && $pre.width() < $(window).width()) {
-		$pre.addClass("nofloat");
+	// Auto-adapt RAW content width, if there is no horizontal scrollbar
+    if ($(document).width() <= $(window).width()) {
+    	$("pre").addClass("nofloat");
 	}
 }
 
-$(initLognavigatorRawView);
+$(window).load(initLognavigatorRawView);
