@@ -57,3 +57,7 @@ td {
 .no-options {
 	margin-top: -50px;
 }
+
+table {
+	border-collapse: inherit;
+}
