@@ -278,7 +278,22 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 	
 	@Override
 	public int compareTo(LogAccessConfig other) {
-		return this.id.compareTo(other.getId());
+		if (this.getDisplayGroup() == null && other.getDisplayGroup() != null) {
+			return -1;
+		}
+		else if (this.getDisplayGroup() != null && other.getDisplayGroup() == null) {
+			return 1;
+		}
+		int groupComparison = 0;
+		if (this.getDisplayGroup() != null) {
+			groupComparison = this.getDisplayGroup().compareTo(other.getDisplayGroup());
+		}
+		if (groupComparison != 0) {
+			return groupComparison;
+		}
+		else {
+			return this.getId().compareTo(other.getId());
+		}
 	}
 
 	@Override
