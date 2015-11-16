@@ -15,13 +15,13 @@
 	<title>LogNavigator</title>
 
 	<%-- STYLES --%>
-    <link rel="stylesheet" href="<c:url value="/resources/webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/webjars/font-awesome/4.2.0/css/font-awesome.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/webjars/select2/3.5.2/select2.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/webjars/select2-bootstrap-css/1.4.4/select2-bootstrap.css"/>">
-	<link rel="stylesheet" href="<c:url value="/resources/webjars/datatables-plugins/1.10.9-1/integration/bootstrap/3/dataTables.bootstrap.css"/>">
-	<link rel="stylesheet" href="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/css/dataTables.fixedHeader.css"/>">
-	<link rel="stylesheet" href="<c:url value="/resources/${appVersion}/css/lognavigator.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/font-awesome/4.2.0/css/font-awesome.min.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/select2/3.5.2/select2.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/select2-bootstrap-css/1.4.4/select2-bootstrap.css"/>">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables-plugins/1.10.9-1/integration/bootstrap/3/dataTables.bootstrap.css"/>">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/css/dataTables.fixedHeader.css"/>">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/${appVersion}/css/lognavigator.css"/>">
 	<%-- /STYLES --%>
 
     <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -166,17 +166,17 @@
 		
         
 	<%-- SCRIPTS --%>
-    <script src="<c:url value="/resources/webjars/jquery/1.11.1/jquery.min.js"/>"></script>
-    <script src="<c:url value="/resources/webjars/bootstrap/3.3.5/js/bootstrap.min.js"/>"></script>
-    <script src="<c:url value="/resources/webjars/datatables/1.10.9/js/jquery.dataTables.min.js"/>"></script>
-    <script src="<c:url value="/resources/webjars/datatables-plugins/1.10.9-1/integration/bootstrap/3/dataTables.bootstrap.min.js"/>"></script>
-    <script src="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/js/dataTables.fixedHeader.js"/>"></script>
-    <script src="<c:url value="/resources/webjars/numeral-js/1.5.3-1/min/numeral.min.js"/>"></script>
-    <script src="<c:url value="/resources/webjars/jquery-placeholder/2.0.7/jquery.placeholder.min.js"/>"></script>
-   	<script src="<c:url value="/resources/webjars/select2/3.5.2/select2.min.js"/>"></script>
-   	<script src="<c:url value="/resources/${appVersion}/js/lognavigator-common.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/jquery/1.11.1/jquery.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/bootstrap/3.3.5/js/bootstrap.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables/1.10.9/js/jquery.dataTables.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables-plugins/1.10.9-1/integration/bootstrap/3/dataTables.bootstrap.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/js/dataTables.fixedHeader.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/numeral-js/1.5.3-1/min/numeral.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/jquery-placeholder/2.0.7/jquery.placeholder.min.js"/>"></script>
+   	<script type="text/javascript" src="<c:url value="/resources/webjars/select2/3.5.2/select2.min.js"/>"></script>
+   	<script type="text/javascript" src="<c:url value="/resources/${appVersion}/js/lognavigator-common.js"/>"></script>
    	<tiles:importAttribute name="viewName"/>
-   	<script src="<c:url value="/resources/${appVersion}/js/lognavigator-${viewName}.js"/>"></script>
+   	<script type="text/javascript" src="<c:url value="/resources/${appVersion}/js/lognavigator-${viewName}.js"/>"></script>
 	<%-- /SCRIPTS --%>
 
 </body>
