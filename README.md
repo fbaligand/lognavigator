@@ -1,5 +1,7 @@
 # LogNavigator
 
+[![Travis Build Status](https://travis-ci.org/fbaligand/lognavigator.svg)](https://travis-ci.org/fbaligand/lognavigator)
+
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
 ## Features
