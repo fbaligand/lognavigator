@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+
+  <xs:element name="lognavigator-config" type="logNavigatorConfig"/>
+
+  <xs:complexType name="logAccessConfig">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Bean containing access config information to access one set of logs.
+Parameters to define by type :
+- LOCAL : directory
+- SSH : user, host, directory
+- HTTPD: url]]></xs:documentation>
+    </xs:annotation>
+    <xs:sequence/>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="type" type="logAccessType" use="required"/>
+    <xs:attribute name="user" type="xs:string"/>
+    <xs:attribute name="privatekey" type="xs:string"/>
+    <xs:attribute name="password" type="xs:string"/>
+    <xs:attribute name="host" type="xs:string"/>
+    <xs:attribute name="directory" type="xs:string"/>
+    <xs:attribute name="url" type="xs:string"/>
+    <xs:attribute name="proxy" type="xs:string"/>
+    <xs:attribute name="authorized-users">
+      <xs:simpleType>
+        <xs:list itemType="xs:string"/>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="authorized-roles">
+      <xs:simpleType>
+        <xs:list itemType="xs:string"/>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="display-group" type="xs:string"/>
+    <xs:attribute name="trust" type="xs:boolean"/>
+    <xs:attribute name="pre-command" type="xs:string"/>
+    <xs:attribute name="default-encoding" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="logNavigatorConfig">
+    <xs:annotation>
+      <xs:documentation><![CDATA[Root of all XML lognavigator configuration]]></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="log-access-config" type="logAccessConfig"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="logAccessType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HTTPD"/>
+      <xs:enumeration value="LOCAL"/>
+      <xs:enumeration value="SSH"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -40,6 +40,9 @@
 	</issueManagement>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    	
 		<spring.version>4.2.2.RELEASE</spring.version>
 		<spring.security.version>4.0.2.RELEASE</spring.security.version>
 		<tiles.version>3.0.5</tiles.version>
@@ -323,6 +326,37 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+	
+		<!-- Profile which generates LogNavigator XSD -->
+		<profile>
+			<id>generate-schema</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>jaxb2-maven-plugin</artifactId>
+						<version>2.2</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>schemagen</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<sources>
+										<source>src/main/java/org/lognavigator/bean/LogNavigatorConfig.java</source>
+										<source>src/main/java/org/lognavigator/bean/LogAccessConfig.java</source>
+									</sources>
+									<outputDirectory>${project.build.directory}/schema</outputDirectory>
+									<workDirectory>${project.build.directory}/schema-work</workDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+	
 		</profile>
 	</profiles>
 	
