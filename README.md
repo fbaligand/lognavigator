@@ -184,6 +184,7 @@ For example :
 
 - **forbidden.commands:** customize the list of forbidden commands (default is: rm,rmdir,mv,kill,ssh,chmod,chown,vi)
 - **filelist.maxcount:** customize the maximum file count displayed in the file list screen (default is: 1000)
+- **filelist.blockexternalpaths:** customize if external paths are blocked in the file list screen (default is: false)
 - **default.encoding:** customize the default encoding used to read command output (default is: UTF-8). Possible values are ISO-8859-1 and UTF-8
 
 You can customize advanced options using two ways :

@@ -1,6 +1,17 @@
 package org.lognavigator.controller;
 
-import static org.lognavigator.util.Constants.*;
+import static org.lognavigator.util.Constants.ACTIONS_TABLE_HEADER;
+import static org.lognavigator.util.Constants.BREADCRUMBS_KEY;
+import static org.lognavigator.util.Constants.DATE_TABLE_HEADER;
+import static org.lognavigator.util.Constants.FILE_TABLE_HEADER;
+import static org.lognavigator.util.Constants.SIZE_TABLE_HEADER;
+import static org.lognavigator.util.Constants.TABLE_HEADERS_KEY;
+import static org.lognavigator.util.Constants.TABLE_LAYOUT_CENTERED;
+import static org.lognavigator.util.Constants.TABLE_LAYOUT_CLASS_KEY;
+import static org.lognavigator.util.Constants.TABLE_LINES_KEY;
+import static org.lognavigator.util.Constants.VIEW_TABLE;
+import static org.lognavigator.util.Constants.WARN_MESSAGE_KEY;
+import static org.lognavigator.util.Constants.WARN_TITLE_KEY;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.TableCell;
+import org.lognavigator.exception.AuthorizationException;
 import org.lognavigator.exception.LogAccessException;
 import org.lognavigator.service.ConfigService;
 import org.lognavigator.service.LogAccessService;
@@ -49,7 +61,10 @@ public class ListController {
 			           @PathVariable String logAccessConfigId,
 			           @RequestParam(value="subPath", required=false) String subPath
 			           )
-			           throws LogAccessException, IOException {
+			           throws LogAccessException, IOException, AuthorizationException {
+		
+		// Is command forbidden ?
+		checkForbiddenSubPath(subPath);
 
 		// List files contained in requested logAccessConfigId/subPath
 		Set<FileInfo> fileInfos = logAccessService.listFiles(logAccessConfigId, subPath);
@@ -64,6 +79,27 @@ public class ListController {
 		return renderFileList(model, subPath, fileInfos);
 	}
 
+
+	/**
+	 * Checks that sub path doesn't contain any forbidden path (for security reasons)
+	 * @param subPath sub path to check
+	 * @throws AuthorizationException if subPath contains a forbidden path 
+	 */
+	void checkForbiddenSubPath(String subPath) throws AuthorizationException {
+		
+		// Must we check subPath ?
+		boolean mustCheckSubPath = (subPath != null && configService.getFileListBlockExternalPaths());
+		if (!mustCheckSubPath) {
+			return;
+		}
+		
+		// Check if subPath is forbidden
+		String forbiddenSubPathRegex = "^[A-Za-z]:.*|.*(\\.\\.).*|^/.*";
+		if (subPath.matches(forbiddenSubPathRegex)) {
+			throw new AuthorizationException("This sub path is forbidden : " + subPath);
+		}
+	}
+	
 
 	/**
 	 * Render a file list as a HTML table, using list view

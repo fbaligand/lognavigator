@@ -34,6 +34,7 @@ public class DefaultConfigService implements ConfigService {
 	
 	private static final String DEFAULT_LOGNAVIGATOR_CONFIG_LOCATION = "classpath:lognavigator.xml";
 	private static final int DEFAULT_FILE_LIST_MAX_COUNT = 1000;
+	private static final boolean DEFAULT_FILE_LIST_BLOCK_EXTERNAL_PATHS = false;
 	
 
 	/** All log access configurations loaded from lognavigator.xml */
@@ -53,6 +54,10 @@ public class DefaultConfigService implements ConfigService {
 	@Value("${filelist.maxcount:" + DEFAULT_FILE_LIST_MAX_COUNT + "}")
 	int fileListMaxCount; 
 	
+	/** is block external paths enabled */
+	@Value("${filelist.blockexternalpaths:" + DEFAULT_FILE_LIST_BLOCK_EXTERNAL_PATHS + "}")
+	private boolean fileListBlockExternalPaths;
+	
 	/** forbidden commands list */
 	@Value("${forbidden.commands:" + DEFAULT_FORBIDDEN_COMMANDS + "}")
 	String forbiddenCommands = DEFAULT_FORBIDDEN_COMMANDS;
@@ -60,7 +65,7 @@ public class DefaultConfigService implements ConfigService {
 	/** default encoding used to read command output */
 	@Value("${default.encoding:" + DEFAULT_ENCODING_OPTION + "}")
 	String defaultEncoding = DEFAULT_ENCODING_OPTION;
-	
+
 
 	@Override
 	public synchronized Set<LogAccessConfig> getLogAccessConfigs() throws ConfigException {
@@ -88,7 +93,12 @@ public class DefaultConfigService implements ConfigService {
 	public int getFileListMaxCount() {
 		return fileListMaxCount;
 	}
-	
+
+	@Override
+	public boolean getFileListBlockExternalPaths() {
+		return fileListBlockExternalPaths;
+	}
+
 	@Override
 	public String getForbiddenCommands() {
 		return forbiddenCommands;

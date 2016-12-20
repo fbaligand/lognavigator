@@ -31,6 +31,11 @@ public interface ConfigService {
 	 * Return configured maximum file count displayed in the file list screen
 	 */
 	public int getFileListMaxCount();
+	
+	/**
+	 * Return if external paths are blocked in the file list screen
+	 */
+	public boolean getFileListBlockExternalPaths();
 
 	/**
 	 * Return configured forbidden commands list
