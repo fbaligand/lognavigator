@@ -75,6 +75,7 @@ function renderResultsTable() {
 
 	// Render table using DataTables plugin
 	var datatable = $("#resultsTable").dataTable({
+		dom: "<if>rt",
 		fixedHeader: fixedHeader,
 		bPaginate: false,
 		bStateSave: true,

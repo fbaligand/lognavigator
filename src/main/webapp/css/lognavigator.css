@@ -65,3 +65,8 @@ table {
 div#resultsTableParent > table#resultsTable {
 	margin-top: 40px;
 }
+
+div.dataTables_info {
+	float: left;
+	color: #888;
+}
