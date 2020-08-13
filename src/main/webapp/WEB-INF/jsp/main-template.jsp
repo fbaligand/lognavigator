@@ -30,6 +30,8 @@
       <script src="<c:url value="/resources/webjars/html5shiv/3.7.2/dist/html5shiv.min.js"/>"></script>
       <script src="<c:url value="/resources/webjars/respond/1.4.2/dest/respond.min.js"/>"></script>
     <![endif]-->
+    
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/favicon.ico"/>" />
 
 </head>
 <%-- /HEADER PART --%>
