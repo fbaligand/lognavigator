@@ -36,17 +36,17 @@ function renderResultsTable() {
 		// 'size' column
 		else if ($(this).text().match(/size/gi)) {
 			dataTableColumnDefs.push({
-                render: function ( data, type, row ) {
-                	if (type == "display" || type == "filter" ) {
-	                    return (data == "-") ? data : numeral(data).format("0.[0] b");
-                	}
-                	else {
-                		return data;
-                	}
-                },
-                targets: index,
-                type: "num"
-            });
+				render: function ( data, type, row ) {
+					if (type == "display" || type == "filter" ) {
+						return (data == "-") ? data : numeral(data).format("0.[0] b");
+					}
+					else {
+						return data;
+					}
+				},
+				targets: index,
+				type: "num"
+			});
 		}
 		// 'actions' column
 		else if ($(this).text().match(/actions/gi)) {
@@ -67,9 +67,15 @@ function renderResultsTable() {
 			$("#resultsTable tbody").prepend(parentFolderLine);
 		}
 	}
-	
+
+	// Fix table head line position using FixedHeader extension
+	var fixedHeader = {
+		headerOffset: $("#displayTypeTABLE").length > 0 ? 215 : 165
+	};
+
 	// Render table using DataTables plugin
 	var datatable = $("#resultsTable").dataTable({
+		fixedHeader: fixedHeader,
 		bPaginate: false,
 		bStateSave: true,
 		fnStateSaveParams: function (oSettings, oData) {
@@ -83,10 +89,6 @@ function renderResultsTable() {
 		columnDefs: dataTableColumnDefs,
 		fnDrawCallback: fnDrawCallback
 	});
-	
-	// Fix table head line using FixedHeader extension
-	var dataTableOffsetTop = $("#displayTypeTABLE").length > 0 ? 215 : 165;
-	new $.fn.dataTable.FixedHeader(datatable, { offsetTop: dataTableOffsetTop } );
 }
 
 $(initLognavigatorTableView);

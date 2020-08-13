@@ -15,18 +15,19 @@
 	<title>LogNavigator</title>
 
 	<%-- STYLES --%>
-    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/bootstrap/3.3.5/dist/css/bootstrap.min.css"/>">
     <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/font-awesome/4.2.0/css/font-awesome.min.css"/>">
-    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/select2/3.5.2/select2.css"/>">
-    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/select2-bootstrap-css/1.4.4/select2-bootstrap.css"/>">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables-plugins/1.10.9-1/integration/bootstrap/3/dataTables.bootstrap.css"/>">
-	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/css/dataTables.fixedHeader.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/select2/3.5.4/select2.css"/>">
+    <link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css"/>">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables.net-bs/1.10.19/css/dataTables.bootstrap.min.css"/>">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables.net-fixedheader-bs/3.1.3/css/fixedHeader.bootstrap.min.css"/>">
+	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/webjars/datatables.net-scroller-bs/2.0.2/css/scroller.bootstrap.min.css"/>">
 	<link type="text/css" rel="stylesheet" href="<c:url value="/resources/${appVersion}/css/lognavigator.css"/>">
 	<%-- /STYLES --%>
 
     <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="<c:url value="/resources/webjars/html5shiv/3.7.2/html5shiv.min.js"/>"></script>
+      <script src="<c:url value="/resources/webjars/html5shiv/3.7.2/dist/html5shiv.min.js"/>"></script>
       <script src="<c:url value="/resources/webjars/respond/1.4.2/dest/respond.min.js"/>"></script>
     <![endif]-->
 
@@ -166,14 +167,16 @@
 		
         
 	<%-- SCRIPTS --%>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/jquery/1.11.1/jquery.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/bootstrap/3.3.5/js/bootstrap.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables/1.10.9/js/jquery.dataTables.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables-plugins/1.10.9-1/integration/bootstrap/3/dataTables.bootstrap.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables-fixedheader/2.1.2/js/dataTables.fixedHeader.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/numeral-js/1.5.3-1/min/numeral.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/jquery/1.11.1/dist/jquery.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/bootstrap/3.3.5/dist/js/bootstrap.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net/1.10.19/js/jquery.dataTables.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-bs/1.10.19/js/dataTables.bootstrap.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-fixedheader/3.1.3/js/dataTables.fixedHeader.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-scroller/2.0.2/js/dataTables.scroller.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-scroller-bs/2.0.2/js/scroller.bootstrap.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/numeral/1.5.6/min/numeral.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/webjars/jquery-placeholder/2.0.7/jquery.placeholder.min.js"/>"></script>
-   	<script type="text/javascript" src="<c:url value="/resources/webjars/select2/3.5.2/select2.min.js"/>"></script>
+   	<script type="text/javascript" src="<c:url value="/resources/webjars/select2/3.5.4/select2.min.js"/>"></script>
    	<script type="text/javascript" src="<c:url value="/resources/${appVersion}/js/lognavigator-common.js"/>"></script>
    	<tiles:importAttribute name="viewName"/>
    	<script type="text/javascript" src="<c:url value="/resources/${appVersion}/js/lognavigator-${viewName}.js"/>"></script>
