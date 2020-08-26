@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 /**
  * Bean containing informations of a file or directory
@@ -14,6 +16,7 @@ public class FileInfo implements Comparable<FileInfo> {
 	private String relativePath;
 	private boolean isDirectory;
 	private Long fileSize;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date lastModified;
 	private LogAccessType logAccessType;
 	

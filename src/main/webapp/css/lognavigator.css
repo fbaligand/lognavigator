@@ -70,3 +70,12 @@ div.dataTables_info {
 	float: left;
 	color: #888;
 }
+
+div.dts div.dataTables_scrollBody {
+	background: white;
+}
+
+.table-condensed > tbody > tr > td.dt-body-right, .table-condensed > thead > tr > td.dt-body-right {
+	text-align: right;
+	padding-right: 25px;
+}

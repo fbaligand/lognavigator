@@ -6,9 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.UnsupportedCharsetException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +27,7 @@ import org.lognavigator.bean.Breadcrumb;
 import org.lognavigator.bean.CommandLine;
 import org.lognavigator.bean.DisplayType;
 import org.lognavigator.bean.FileInfo;
+import org.lognavigator.bean.JsonResponse;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.bean.TableCell;
 import org.lognavigator.exception.AuthorizationException;
@@ -38,6 +36,7 @@ import org.lognavigator.service.ConfigService;
 import org.lognavigator.service.LogAccessService;
 import org.lognavigator.util.BreadcrumbFactory;
 import org.lognavigator.util.CommandLineParser;
+import org.lognavigator.util.UriUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -46,6 +45,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 
@@ -111,6 +111,13 @@ public class CommandController {
 		// Generate Breadcrumbs
 		generateBreadcrumbs(logAccessConfigId, commandLine, request);
 		
+		// Render archive entry list as a table
+		if (displayType == DisplayType.TABLE && (cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) || cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END))) {
+			String targzFileName = computeTarGzFilename(cmd);
+			String ajaxUrl = FILE_VIEW_URL_PREFIX + UriUtil.encode(cmd) + "&encoding=" + UriUtil.encode(encoding) + "&format=json";
+			return listController.renderFileList(model, targzFileName, new TreeSet<FileInfo>(), ajaxUrl);
+		}
+		
 		// Execute the command
 		InputStream resultStream = logAccessService.executeCommand(logAccessConfigId, cmd);
 		BufferedReader resultReader = new BufferedReader(new InputStreamReader(resultStream, encoding));
@@ -135,6 +142,46 @@ public class CommandController {
 				IOUtils.closeQuietly(resultReader);
 			}
 			return VIEW_TABLE;
+		}
+	}
+
+	@RequestMapping(path="/logs/{logAccessConfigId}/command", params="format=json")
+	@ResponseBody
+	public JsonResponse<Set<FileInfo>> executeCommandAsJson(
+		@PathVariable String logAccessConfigId, 
+		@RequestParam("cmd") String cmd,
+		@RequestParam("encoding") String encoding
+	) throws AuthorizationException, LogAccessException, IOException {
+		
+		// Parse command line
+		CommandLine commandLine = CommandLineParser.parseCommandLine(cmd);
+		
+		// Is command forbidden ?
+		checkForbiddenCommand(commandLine);
+		
+		// Is command supported for file list as json ?
+		if (!cmd.startsWith(TAR_GZ_FILE_VIEW_COMMAND_START) && !cmd.endsWith(TAR_GZ_FILE_VIEW_COMMAND_END)) {
+			throw new AuthorizationException("This command is not supported to generate file list using AJAX");
+		}
+		
+		// Execute the command
+		InputStream resultStream = logAccessService.executeCommand(logAccessConfigId, cmd);
+		BufferedReader resultReader = new BufferedReader(new InputStreamReader(resultStream, encoding));
+		
+		// Convert the result lines to a FileInfo list
+		try {
+			String targzFileName = computeTarGzFilename(cmd);
+			Set<FileInfo> fileInfos = parseTarGzList(resultReader, cmd, targzFileName);
+			JsonResponse<Set<FileInfo>> jsonResponse = new JsonResponse<Set<FileInfo>>();
+			jsonResponse.setData(fileInfos);
+
+			// Add a warning if too many files
+			listController.checkFileListMaxCount(fileInfos, jsonResponse);
+
+			return jsonResponse;
+		}
+		finally {
+			IOUtils.closeQuietly(resultReader);
 		}
 	}
 
@@ -165,10 +212,19 @@ public class CommandController {
 	private String processTarGzList(BufferedReader resultReader, Model model, String cmd) throws IOException {
 		
 		// Compute archive filename
-		Matcher matcher = Pattern.compile("[^ ]+\\.tar\\.gz").matcher(cmd);
-		matcher.find();
-		String targzFileName = matcher.group();
+		String targzFileName = computeTarGzFilename(cmd);
 		
+		// Parse command result to convert to file list
+		Set<FileInfo> archiveEntryList = parseTarGzList(resultReader, cmd, targzFileName);
+
+		// Render archive entry list in HTML
+		return listController.renderFileList(model, targzFileName, archiveEntryList, null);
+	}
+
+	/**
+	 * Parse tar.gz list command results and return a sorted FileInfo list
+	 */
+	private Set<FileInfo> parseTarGzList(BufferedReader resultReader, String cmd, String targzFileName) throws IOException {
 		Set<FileInfo> archiveEntryList = new TreeSet<FileInfo>();
 
 		// Compute archive contents list
@@ -222,9 +278,17 @@ public class CommandController {
 		catch (ParseException e) {
 			throw new IOException("Error while listing tar.gz entries. " + e.getMessage(), e);
 		}
+		return archiveEntryList;
+	}
 
-		// Render archive entry list in HTML
-		return listController.renderFileList(model, targzFileName, archiveEntryList);
+	/**
+	 * Compute and return tar.gz filename from command
+	 */
+	private String computeTarGzFilename(String cmd) {
+		Matcher matcher = Pattern.compile("[^ ]+\\.tar\\.gz").matcher(cmd);
+		matcher.find();
+		String targzFileName = matcher.group();
+		return targzFileName;
 	}
 
 	/**
@@ -295,20 +359,15 @@ public class CommandController {
 			BreadcrumbFactory.addSubPath(breadcrumbs, filePath, lastElementIsLink);
 		}
 		if (targzFilePath != null) {
-			try {
-				int filenameIndex = targzFilePath.lastIndexOf("/") + 1;
-				String targzFilename = filenameIndex > 0 ? targzFilePath.substring(filenameIndex) : targzFilePath;
-				String command = MessageFormat.format(TAR_GZ_FILE_VIEW_COMMAND, targzFilePath);
-				if (commandLine.getLine().startsWith(HTTPD_FILE_VIEW_COMMAND_START)) {
-					command = HTTPD_FILE_VIEW_COMMAND_START + targzFilePath + TAR_GZ_FILE_VIEW_COMMAND_END;
-				}
-				String link = FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING);
-				breadcrumbs.add(new Breadcrumb(targzFilename, link));
-				breadcrumbs.add(new Breadcrumb(targzSubFilename));
+			int filenameIndex = targzFilePath.lastIndexOf("/") + 1;
+			String targzFilename = filenameIndex > 0 ? targzFilePath.substring(filenameIndex) : targzFilePath;
+			String command = MessageFormat.format(TAR_GZ_FILE_VIEW_COMMAND, targzFilePath);
+			if (commandLine.getLine().startsWith(HTTPD_FILE_VIEW_COMMAND_START)) {
+				command = HTTPD_FILE_VIEW_COMMAND_START + targzFilePath + TAR_GZ_FILE_VIEW_COMMAND_END;
 			}
-			catch (UnsupportedEncodingException e) {
-				throw new UnsupportedCharsetException(URL_ENCODING);
-			}
+			String link = FILE_VIEW_URL_PREFIX + UriUtil.encode(command);
+			breadcrumbs.add(new Breadcrumb(targzFilename, link));
+			breadcrumbs.add(new Breadcrumb(targzSubFilename));
 		}
 		
 		request.setAttribute(BREADCRUMBS_KEY, breadcrumbs);

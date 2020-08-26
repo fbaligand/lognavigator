@@ -1,7 +1,7 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <!DOCTYPE html>
 <html>
@@ -148,14 +148,14 @@
 	<section class="container-fluid <c:if test="${!showOptions}">no-options</c:if>" role="results">
 
 		<%-- WARN MESSAGE --%>
-		<c:if test="${warnMessage != null}">
-			<div class="row-fluid">
+		<c:if test="${warnMessage != null or hideMessages}">
+			<div id="warnMessage" class="row-fluid <c:if test="${hideMessages}">hide</c:if>">
 				<div class="col-md-offset-2 col-md-8">
-					<div class="alert alert-warning alert-dismissible" role="alert">
+					<div id="warnMessageText" class="alert alert-warning alert-dismissible" role="alert">
 						<button type="button" class="close" data-dismiss="alert">
 							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 						</button>
-						<strong>${warnTitle}:</strong> ${warnMessage}
+						<strong>${warnTitle}:</strong> <span>${warnMessage}</span>
 					</div>
 				</div>
 			</div>
@@ -174,7 +174,7 @@
     <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net/1.10.19/js/jquery.dataTables.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-bs/1.10.19/js/dataTables.bootstrap.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-fixedheader/3.1.3/js/dataTables.fixedHeader.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-scroller/2.0.2/js/dataTables.scroller.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-scroller/2.0.2/js/dataTables.scroller.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/webjars/datatables.net-scroller-bs/2.0.2/js/scroller.bootstrap.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/webjars/numeral/1.5.6/min/numeral.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/webjars/jquery-placeholder/2.0.7/jquery.placeholder.min.js"/>"></script>

@@ -2,9 +2,6 @@ package org.lognavigator.util;
 
 import static org.lognavigator.util.Constants.*;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.UnsupportedCharsetException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,59 +43,55 @@ public class TableCellFactory {
 		List<TableCell> lineCells = new ArrayList<TableCell>();
 
 		// File name
-		try {
-			if (!isDirectory) {
-				
-				// Compute command pattern
-				String commandPattern = DEFAULT_FILE_VIEW_COMMAND;
-				String commandArg = relativePath;
-				if (fileName.endsWith(".tar.gz") || fileName.endsWith(".tgz")) {
-					commandPattern = TAR_GZ_FILE_VIEW_COMMAND;
-				}
-				else if (fileName.endsWith(".gz")) {
-					commandPattern = GZ_FILE_VIEW_COMMAND;
-				}
-
-				// Process special case of tar.gz contents
-				if (relativePath.contains(TAR_GZ_CONTENT_SPLIT)) {
-					String targzFileName = relativePath.split("!")[0];
-					String targzEntryPath = relativePath.split("!")[1];
-					commandPattern = commandPattern.replace(" {0}", "");
-					commandPattern = MessageFormat.format(TAR_GZ_CONTENT_FILE_VIEW_COMMAND, "{0}", targzEntryPath, commandPattern);
-					commandArg = targzFileName;
-				}
-
-				// Process special case of log access type HTTP
-				if (logAccessType == LogAccessType.HTTPD) {
-					if (commandPattern.startsWith("tar ")) {
-						commandPattern = commandPattern.replaceFirst("f", "");
-					}
-					commandPattern = commandPattern.replace(" {0}", "");
-					commandPattern = HTTPD_FILE_VIEW_COMMAND_PREFIX + commandPattern;
-				}
-				
-				// Compute view command
-				String command = MessageFormat.format(commandPattern, commandArg);
-				lineCells.add(new TableCell(fileName, FILE_VIEW_URL_PREFIX + URLEncoder.encode(command, URL_ENCODING)));
+		if (!isDirectory) {
+			
+			// Compute command pattern
+			String commandPattern = DEFAULT_FILE_VIEW_COMMAND;
+			String commandArg = relativePath;
+			if (fileName.endsWith(".tar.gz") || fileName.endsWith(".tgz")) {
+				commandPattern = TAR_GZ_FILE_VIEW_COMMAND;
 			}
-			// Directory
-			else {
-				String cellContent = fileName;
-				String link = relativePath != null ? FOLDER_VIEW_URL_PREFIX + URLEncoder.encode(relativePath, URL_ENCODING) : LOGS_LIST_URL;
-				String linkIcon = null;
-				if (fileName.equals("..")) {
-					linkIcon =  "fa fa-reply";
-					cellContent = "Parent Folder";
-				}
-				lineCells.add(new TableCell(cellContent, link, linkIcon, "text-warning"));
+			else if (fileName.endsWith(".gz")) {
+				commandPattern = GZ_FILE_VIEW_COMMAND;
 			}
-		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedCharsetException(URL_ENCODING);
+
+			// Process special case of tar.gz contents
+			if (relativePath.contains(TAR_GZ_CONTENT_SPLIT)) {
+				String targzFileName = relativePath.split("!")[0];
+				String targzEntryPath = relativePath.split("!")[1];
+				commandPattern = commandPattern.replace(" {0}", "");
+				commandPattern = MessageFormat.format(TAR_GZ_CONTENT_FILE_VIEW_COMMAND, "{0}", targzEntryPath, commandPattern);
+				commandArg = targzFileName;
+			}
+
+			// Process special case of log access type HTTP
+			if (logAccessType == LogAccessType.HTTPD) {
+				if (commandPattern.startsWith("tar ")) {
+					commandPattern = commandPattern.replaceFirst("f", "");
+				}
+				commandPattern = commandPattern.replace(" {0}", "");
+				commandPattern = HTTPD_FILE_VIEW_COMMAND_PREFIX + commandPattern;
+			}
+			
+			// Compute view command
+			String command = MessageFormat.format(commandPattern, commandArg);
+			lineCells.add(new TableCell(fileName, FILE_VIEW_URL_PREFIX + UriUtil.encode(command)));
+		}
+		// Directory
+		else {
+			String cellContent = fileName;
+			String link = relativePath != null ? FOLDER_VIEW_URL_PREFIX + UriUtil.encode(relativePath) : LOGS_LIST_URL;
+			String linkIcon = null;
+			if (fileName.equals("..")) {
+				linkIcon =  "fa fa-reply";
+				cellContent = "Parent Folder";
+			}
+			lineCells.add(new TableCell(cellContent, link, linkIcon, "text-warning"));
 		}
 
 		// File size
 		if (fileSize != null) {
-			lineCells.add(new TableCell(fileSize));
+			lineCells.add(new TableCell(fileSize, null, null, "dt-body-right"));
 		}
 
 		// File date

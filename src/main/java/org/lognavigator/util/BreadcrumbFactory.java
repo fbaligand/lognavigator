@@ -1,8 +1,5 @@
 package org.lognavigator.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +40,10 @@ public class BreadcrumbFactory {
 				continue;
 			}
 			if (!label.equals("*") && (lastElementIsLink || i < pathElements.length - 1)) {
-				try {
-					currentSlashIndex = path.indexOf('/', currentSlashIndex + 1);
-					String linkParam = (currentSlashIndex != -1) ? path.substring(0, currentSlashIndex) : path;
-					String link = FOLDER_VIEW_URL_PREFIX + URLEncoder.encode(linkParam, URL_ENCODING);
-					breadcrumbs.add(new Breadcrumb(label, link));
-				} catch (UnsupportedEncodingException e) {
-					throw new UnsupportedCharsetException(URL_ENCODING);
-				}
+				currentSlashIndex = path.indexOf('/', currentSlashIndex + 1);
+				String linkParam = (currentSlashIndex != -1) ? path.substring(0, currentSlashIndex) : path;
+				String link = FOLDER_VIEW_URL_PREFIX + UriUtil.encode(linkParam);
+				breadcrumbs.add(new Breadcrumb(label, link));
 			}
 			else {
 				breadcrumbs.add(new Breadcrumb(label));

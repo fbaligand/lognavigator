@@ -17,6 +17,7 @@ public class Constants {
 	public static final String FILE_VIEW_URL_PREFIX = "command?cmd=";
 
 	public static final String VIEW_TABLE = "table";
+	public static final String VIEW_SCROLLER_TABLE = "scroller-table";
 	public static final String VIEW_RAW = "raw";
 	public static final String VIEW_ERROR = "error";
 
@@ -40,7 +41,8 @@ public class Constants {
 	public static final String RAW_CONTENT_KEY = "rawContent";
 	public static final String TABLE_LAYOUT_CLASS_KEY = "tableLayoutClass";
 	public static final String BREADCRUMBS_KEY = "breadcrumbs";
-
+	public static final String AJAX_URL_KEY = "ajaxUrl";
+	public static final String HIDE_MESSAGES_KEY = "hideMessages";
 	
 	///////////////////
 	// TABLE HEADERS //
