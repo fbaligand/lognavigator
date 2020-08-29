@@ -36,7 +36,10 @@ public class LogNavigatorHandlerExceptionResolver implements HandlerExceptionRes
 		
 		// Compute error message to display
 		String errorTitle = exception.getClass().getSimpleName().replaceFirst("(Error|Exception)", " Error");
-		String errorMessage = HtmlUtils.htmlEscape(exception.getMessage()).replace("\n", "<br/>");
+		String errorMessage = exception.getMessage();
+		if (errorMessage != null) {
+			errorMessage = HtmlUtils.htmlEscape(errorMessage).replace("\n", "<br/>");
+		}
 
 		// Render error message, depending if format is JSON or HTML
 		if ("json".equals(request.getParameter("format"))) {

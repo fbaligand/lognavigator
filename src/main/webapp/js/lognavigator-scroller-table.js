@@ -39,13 +39,13 @@ function renderActions(data, type, row) {
 }
 
 function processAjaxResponse(response) {
-  if (response.warnMessage) {
+  if (response.warnTitle) {
     $("#warnMessageText > strong").html(response.warnTitle);
     $("#warnMessageText > span").html(response.warnMessage);
     $("#warnMessage").removeClass("hide");
   }
   
-  if (response.errorMessage) {
+  if (response.errorTitle) {
     $("#errorMessageText h4").html(response.errorTitle);
     $("#errorMessageText > div:last").html(response.errorMessage);
     $("#errorMessage").removeClass("hide");
