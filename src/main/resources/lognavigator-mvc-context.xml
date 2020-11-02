@@ -32,5 +32,6 @@
 	<context:property-placeholder location="META-INF/MANIFEST.MF"/>
 	<mvc:resources mapping="/resources/${Implementation-Version}/js/**" location="/js/" cache-period="31536000" />
 	<mvc:resources mapping="/resources/${Implementation-Version}/css/**" location="/css/" cache-period="31536000" />
+	<mvc:resources mapping="/resources/${Implementation-Version}/images/**" location="/images/" cache-period="31536000" />
 	
 </beans>

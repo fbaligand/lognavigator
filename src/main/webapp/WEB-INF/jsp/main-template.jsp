@@ -31,7 +31,7 @@
       <script src="<c:url value="/resources/webjars/respond/1.4.2/dest/respond.min.js"/>"></script>
     <![endif]-->
     
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/favicon.ico"/>" />
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/resources/${appVersion}/images/favicon.ico"/>" />
 
 </head>
 <%-- /HEADER PART --%>
