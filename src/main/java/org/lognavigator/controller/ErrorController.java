@@ -16,6 +16,11 @@ public class ErrorController {
 		throw accessDeniedException;
 	}
 
+	@RequestMapping("/error/404")
+	public void errorPageNotFound() throws Exception {
+		throw new Exception("Page not found.");
+	}
+
 	@RequestMapping("/error/500")
 	public void errorTechnical(HttpServletRequest request) throws Throwable {
 		Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
