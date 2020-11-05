@@ -17,10 +17,14 @@
 		<security:http request-matcher="regex" pattern="^/(error|resources)/.+$" security="none"/>
 	
 		<security:http realm="LogNavigator Authentication" use-expressions="false" access-decision-manager-ref="accessDecisionManager" >
+			<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+			<security:intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 			<security:intercept-url pattern="/logs/*/*" access="IS_AUTHENTICATED_FULLY, IS_AUTHORIZED_LOG_ACCESS_CONFIG" />
 			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
-			<security:http-basic />
-			<security:access-denied-handler error-page="/error/403"/>
+			<security:form-login login-page="/login" login-processing-url="/authenticate" authentication-failure-url="/login?authenticationError=true" />
+			<security:logout delete-cookies="JSESSIONID" logout-success-url="/login" />
+			<security:access-denied-handler error-page="/error/403" />
+			<security:csrf disabled="true"/>
 		</security:http>
 		
 		<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">

@@ -42,10 +42,12 @@
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 
+			<%-- LOGO --%>
 			<div class="navbar-header">
 				<a href="<c:url value="/"/>" class="navbar-brand" title="v${appVersion}">LogNavigator</a>
 			</div>
 
+			<%-- BREADCRUMBS --%>
 			<c:if test="${breadcrumbs != null}">
 				<div class="navbar-header">
 					<ul class="breadcrumb list-inline">
@@ -61,29 +63,39 @@
 				</div>
 			</c:if>
 
-			<div class="navbar-collapse collapse">
-				<form class="navbar-form navbar-right">
-					<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
-						<c:if test="${blockingError}">
-							<option></option>
-						</c:if>
-						<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
-							<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
-								<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
-									<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
-								</c:forEach>
-							</optgroup>
-						</c:forEach>
-					</select>
-				</form>
-			</div>
-			
+			<%-- USERNAME + LOG ACCESS CONFIGS --%>
+			<c:if test="${!loginView}">
+				<div class="navbar-collapse collapse">
+					<form class="navbar-form navbar-right">
+						<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
+							<c:if test="${blockingError}">
+								<option></option>
+							</c:if>
+							<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
+								<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
+									<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
+										<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
+									</c:forEach>
+								</optgroup>
+							</c:forEach>
+						</select>
+					</form>
+					<c:if test="${pageContext.request.userPrincipal != null}">
+						<ul class="nav navbar-nav navbar-right list-inline">
+							<li class="navbar-text"><span class="glyphicon glyphicon-user"></span> <c:out value="${pageContext.request.userPrincipal.name}"/></li>
+							<li><a href="javascript:logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+						</ul>
+					</c:if>
+				</div>
+				<form id="logoutForm" action="<c:url value="/logout"/>" method="post"></form>
+			</c:if>
+						
 		</div>
 	</nav>
    	<%-- /NAVBAR --%>
 
 	<%-- COMMAND FORM --%>
-	<section class="command-fixed-top <c:if test="${blockingError}">hide</c:if>" role="command-form">
+	<section class="command-fixed-top <c:if test="${blockingError or loginView}">hide</c:if>" role="command-form">
 		<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-offset-2 col-md-8">

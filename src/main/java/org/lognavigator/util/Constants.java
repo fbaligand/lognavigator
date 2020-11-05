@@ -20,6 +20,7 @@ public class Constants {
 	public static final String VIEW_SCROLLER_TABLE = "scroller-table";
 	public static final String VIEW_RAW = "raw";
 	public static final String VIEW_ERROR = "error";
+	public static final String VIEW_LOGIN = "login";
 
 	
 	////////////////////
@@ -43,6 +44,7 @@ public class Constants {
 	public static final String BREADCRUMBS_KEY = "breadcrumbs";
 	public static final String AJAX_URL_KEY = "ajaxUrl";
 	public static final String HIDE_MESSAGES_KEY = "hideMessages";
+	public static final String LOGIN_VIEW_KEY = "loginView";
 	
 	///////////////////
 	// TABLE HEADERS //

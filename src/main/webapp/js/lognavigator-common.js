@@ -48,4 +48,8 @@ function downloadCommandResult() {
 	}
 }
 
+function logout() {
+	$("#logoutForm").submit();
+}
+
 $(initPage);
