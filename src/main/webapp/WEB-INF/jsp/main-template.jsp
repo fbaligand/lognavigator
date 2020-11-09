@@ -42,14 +42,19 @@
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 
-			<%-- LOGO --%>
 			<div class="navbar-header">
-				<a href="<c:url value="/"/>" class="navbar-brand" title="v${appVersion}">LogNavigator</a>
-			</div>
+				<%-- HAMBURGER ICON FOR LOW RESOLUTION --%>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-right" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
 
-			<%-- BREADCRUMBS --%>
-			<c:if test="${breadcrumbs != null}">
-				<div class="navbar-header">
+				<%-- LOGO --%>
+				<a href="<c:url value="/"/>" class="navbar-brand" title="v${appVersion}">LogNavigator</a>
+
+				<%-- BREADCRUMBS --%>
+				<c:if test="${breadcrumbs != null}">
 					<ul class="breadcrumb list-inline">
 						<c:forEach var="breadcrumb" items="${breadcrumbs}">
 							<c:if test="${breadcrumb.link != null}">
@@ -60,36 +65,41 @@
 							</c:if>
 						</c:forEach>
 					</ul>
-				</div>
-			</c:if>
+				</c:if>
+			</div>
+
 
 			<%-- USERNAME + LOG ACCESS CONFIGS --%>
 			<c:if test="${!loginView}">
-				<div class="navbar-collapse collapse">
-					<form class="navbar-form navbar-right">
-						<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
-							<c:if test="${blockingError}">
-								<option></option>
-							</c:if>
-							<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
-								<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
-									<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
-										<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
+				<div class="navbar-collapse collapse" id="navbar-right">
+					<ul class="nav navbar-nav navbar-right list-inline">
+						<c:if test="${pageContext.request.userPrincipal != null}">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <c:out value="${pageContext.request.userPrincipal.name}"/></a>
+								<ul class="dropdown-menu">
+									<li><a href="javascript:logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+								</ul>
+							</li>
+							<li>
+								<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
+									<c:if test="${blockingError}">
+										<option></option>
+									</c:if>
+									<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
+										<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
+											<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
+												<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
+											</c:forEach>
+										</optgroup>
 									</c:forEach>
-								</optgroup>
-							</c:forEach>
-						</select>
-					</form>
-					<c:if test="${pageContext.request.userPrincipal != null}">
-						<ul class="nav navbar-nav navbar-right list-inline">
-							<li class="navbar-text"><span class="glyphicon glyphicon-user"></span> <c:out value="${pageContext.request.userPrincipal.name}"/></li>
-							<li><a href="javascript:logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
-						</ul>
-					</c:if>
+								</select>
+							</li>
+						</c:if>
+					</ul>
 				</div>
 				<form id="logoutForm" action="<c:url value="/logout"/>" method="post"></form>
 			</c:if>
-						
+
 		</div>
 	</nav>
    	<%-- /NAVBAR --%>

@@ -8,15 +8,40 @@ pre {
 	float: left;
 }
 
+nav.navbar-fixed-top {
+	z-index: 10000;
+}
+
 .navbar-header .breadcrumb {
-	padding-bottom: 8px; 
-	margin-bottom: 0px; 
-	margin-top: 8px; 
-	background-color: #F8F8F8;	
+	padding-bottom: 8px;
+	margin-bottom: 0px;
+	margin-top: 8px;
+	background-color: #F8F8F8;
+	float: left;
 }
 
 .navbar-header .breadcrumb li {
 	margin-left: -10px;
+}
+
+.select2-drop {
+	z-index: 11000;
+}
+
+.select2-container.form-control {
+	padding: 8px;
+}
+
+.collapsing .select2-container.form-control, .collapse.in .select2-container.form-control {
+	padding: 0px;
+}
+
+.select2-choice {
+	margin-left: -10px;
+}
+
+.collapsing .select2-choice, .collapse.in .select2-choice {
+	margin-left: 0px;
 }
 
 .rounded-right {
