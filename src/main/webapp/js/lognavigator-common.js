@@ -23,6 +23,13 @@ function initPage() {
 	// DisplayType buttons
 	var checkedDisplayTypeId = $("input[name=displayType][checked]").attr("id");
 	$("label[for=" + checkedDisplayTypeId + "]").addClass("active");
+	
+	// If navbar is on 2 lines, display a hamburger menu
+	if ($("nav").height() > 51) {
+		$("#navbar-right").hide();
+		$("#logout-menu-item,#log-access-configs-menu-item").appendTo("#hamburger-menu-items");
+		$("#hamburger-menu").removeClass("hide");
+	}
 
 	// Auto-Submit command form 
 	$("#downloadButton").click(downloadCommandResult);

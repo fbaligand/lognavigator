@@ -32,18 +32,6 @@ nav.navbar-fixed-top {
 	padding: 8px;
 }
 
-.collapsing .select2-container.form-control, .collapse.in .select2-container.form-control {
-	padding: 0px;
-}
-
-.select2-choice {
-	margin-left: -10px;
-}
-
-.collapsing .select2-choice, .collapse.in .select2-choice {
-	margin-left: 0px;
-}
-
 .rounded-right {
 	border-radius: 0 14px 14px 0;
 }
