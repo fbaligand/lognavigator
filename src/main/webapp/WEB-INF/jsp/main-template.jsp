@@ -80,23 +80,23 @@
 									<li id="logout-menu-item"><a href="javascript:logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
 								</ul>
 							</li>
-							<li id="log-access-configs-menu-item">
-								<div class="form-group">
-									<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
-										<c:if test="${blockingError}">
-											<option></option>
-										</c:if>
-										<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
-											<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
-												<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
-													<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
-												</c:forEach>
-											</optgroup>
-										</c:forEach>
-									</select>
-								</div>
-							</li>
 						</c:if>
+						<li id="log-access-configs-menu-item">
+							<div class="form-group">
+								<select name="logAccessConfigId" id="logAccessConfigId" class="form-control select2">
+									<c:if test="${blockingError}">
+										<option></option>
+									</c:if>
+									<c:forEach var="logAccessConfigIdsByDisplayGroupEntry" items="${logAccessConfigIdsByDisplayGroup}">
+										<optgroup label="${logAccessConfigIdsByDisplayGroupEntry.key}">
+											<c:forEach var="logAccessConfig" items="${logAccessConfigIdsByDisplayGroupEntry.value}">
+												<option <c:if test="${logAccessConfig.id == logAccessConfigId}">selected="selected"</c:if> >${logAccessConfig.id}</option>
+											</c:forEach>
+										</optgroup>
+									</c:forEach>
+								</select>
+							</div>
+						</li>
 					</ul>
 
 					<ul class="nav navbar-nav navbar-right list-inline hide" id="hamburger-menu">
