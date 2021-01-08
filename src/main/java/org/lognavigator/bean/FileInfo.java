@@ -68,6 +68,6 @@ public class FileInfo implements Comparable<FileInfo> {
 		if (this.isDirectory != other.isDirectory) {
 			return (this.isDirectory ? -1 : 1);
 		}
-		return this.fileName.compareToIgnoreCase(other.fileName);
+		return this.fileName.compareTo(other.fileName);
 	}
 }
