@@ -8,15 +8,21 @@ LogNavigator is a web application, made in java, which lets you browse your logs
 
 - Navigate into your logs with the comfort of a web interface
 - All your logs from different servers centralized in one entry point
-- Configure log access from different sources : 
+- Configure log access from different sources:
     - local directory
-    - directory on a remote server (using SSH)
-    - remote logs exposed by Apache Httpd DirectoryIndex (using HTTP)
-- List logs, watch log content, filter log content, download log content
-- Take advantage of powerful linux commands to get filtered log content
-- Easily browse file logs and watch log content inside `GZ` or `TAR.GZ` archives
+    - directory on a remote server (using SSH protocol)
+    - remote logs exposed by Apache Httpd DirectoryIndex (using HTTP protocol)
+- List log files, with scrolling list (until 50000 files), sorting and filtering
+- Watch log content, take advantage of powerful linux commands to get filtered log content
+- Download whole file content or only filtered log content
+- Easily browse file logs (with navigation bar)
+- Watch log content inside `TAR.GZ` and `GZ` archives
 - Smart combobox to choose current log access config, with filtering and grouping
-- Optionally securise log access with user authentication and role-based authorization
+-  Ability to choose log content encoding: UTF-8 (default) or ISO
+- Ability to choose log content display : RAW (default) or TABLE (with filtering)
+- Ability to secure log access with user authentication (login form, 8 hours session) and role-based authorization
+- Dangerous commands are blocked, and [command blacklist can be customized](#advanced-options)
+- Responsive design (thanks to Bootstrap library)
 
 # Getting Started
 
