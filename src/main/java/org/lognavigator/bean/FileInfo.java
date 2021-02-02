@@ -3,8 +3,9 @@ package org.lognavigator.bean;
 import java.util.Date;
 
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
+import org.lognavigator.util.LocaleDateJsonSerializer;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 
 /**
@@ -16,7 +17,7 @@ public class FileInfo implements Comparable<FileInfo> {
 	private String relativePath;
 	private boolean isDirectory;
 	private Long fileSize;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(using = LocaleDateJsonSerializer.class)
 	private Date lastModified;
 	private LogAccessType logAccessType;
 	
