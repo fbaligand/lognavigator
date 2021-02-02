@@ -28,8 +28,8 @@ nav.navbar-fixed-top {
 	z-index: 11000;
 }
 
-.select2-container.form-control {
-	padding: 8px;
+#log-access-configs-menu-item > .form-group {
+	margin: 8px;
 }
 
 .rounded-right {
