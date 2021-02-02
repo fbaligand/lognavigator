@@ -12,9 +12,11 @@ import java.util.TreeSet;
 
 import org.lognavigator.bean.FileInfo;
 import org.lognavigator.bean.LogAccessConfig;
-import org.lognavigator.bean.OsType;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
+import org.lognavigator.bean.OsType;
 import org.lognavigator.exception.LogAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -28,6 +30,7 @@ import org.springframework.util.StringUtils;
 @Qualifier("local")
 public class LocalLogAccessService extends AbstractShellLogAccessService implements LogAccessService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(LocalLogAccessService.class);
 	private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
 	private static final String WINDOWS_OS_MARKER = "windows";
 	private static final String AIX_OS_MARKER = "aix";
@@ -53,6 +56,9 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 				shellCommandArray = new String[]{"/bin/sh", "-c", shellCommand};
 			}
 			
+			// Log the command
+			LOGGER.debug("execute local command on '{}': {}", logAccessConfigId, shellCommand);
+
 			// Execute the command
 			File currentDirectory = (logAccessConfig.getDirectory() != null) ? new File(logAccessConfig.getDirectory()) : null;
 			Process process = Runtime.getRuntime().exec(shellCommandArray, null, currentDirectory);

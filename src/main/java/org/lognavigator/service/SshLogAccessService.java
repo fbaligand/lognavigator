@@ -10,6 +10,21 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.lognavigator.bean.FileInfo;
+import org.lognavigator.bean.LogAccessConfig;
+import org.lognavigator.bean.LogAccessConfig.LogAccessType;
+import org.lognavigator.bean.OsType;
+import org.lognavigator.exception.LogAccessException;
+import org.lognavigator.util.LastUpdatedRemoteResourceFilter;
+import org.lognavigator.util.ScpStreamingSystemFile;
+import org.lognavigator.util.SshCloseFilterInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+
 import net.schmizz.sshj.Config;
 import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
@@ -22,19 +37,6 @@ import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 
-import org.lognavigator.bean.FileInfo;
-import org.lognavigator.bean.LogAccessConfig;
-import org.lognavigator.bean.OsType;
-import org.lognavigator.bean.LogAccessConfig.LogAccessType;
-import org.lognavigator.exception.LogAccessException;
-import org.lognavigator.util.LastUpdatedRemoteResourceFilter;
-import org.lognavigator.util.ScpStreamingSystemFile;
-import org.lognavigator.util.SshCloseFilterInputStream;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
-
 
 /**
  * Service which manages SSH connections and commands to remote hosts
@@ -43,6 +45,7 @@ import org.springframework.util.StringUtils;
 @Qualifier("ssh")
 public class SshLogAccessService extends AbstractShellLogAccessService implements LogAccessService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SshLogAccessService.class);
 	private static final String GET_OS_INFO_COMMAND = "uname -a";
 	private static final String WINDOWS_OS_MARKER = "cygwin";
 	private static final String AIX_OS_MARKER = "aix";
@@ -96,6 +99,9 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		if (StringUtils.hasText(logAccessConfig.getPreCommand())) {
 			precommand = logAccessConfig.getPreCommand() + " && ";
 		}
+
+		// Log the command
+		LOGGER.debug("execute ssh command on '{}': {}", logAccessConfigId, shellCommand);
 
 		// Execute the shell command
 		Session session = null;
