@@ -200,7 +200,7 @@ You can customize advanced options using two ways :
 
 # Requirements
 
-- Java SE 6+
+- Java 6, 7 or 8 (not Java 9 or later)
 - Java Server compatible with Servlet API 2.5 (Tomcat 6+ , Jetty 6+, Glassfish 1+, JBoss AS 5+, ...)
 
 
