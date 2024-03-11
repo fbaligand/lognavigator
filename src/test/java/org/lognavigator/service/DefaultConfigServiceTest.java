@@ -1,6 +1,7 @@
 package org.lognavigator.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import javax.xml.bind.JAXBContext;
 
@@ -8,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lognavigator.bean.LogNavigatorConfig;
 import org.lognavigator.exception.ConfigException;
-import org.lognavigator.service.DefaultConfigService;
 import org.springframework.core.io.ClassPathResource;
 
 

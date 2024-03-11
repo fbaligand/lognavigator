@@ -1,16 +1,15 @@
 package org.lognavigator.bean;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.InputStream;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 
 import org.junit.Test;
-import org.lognavigator.bean.LogAccessConfig;
-import org.lognavigator.bean.LogNavigatorConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
-
-import static org.junit.Assert.*;
 
 
 

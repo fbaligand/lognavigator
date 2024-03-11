@@ -134,7 +134,7 @@ public class ListController {
 		// Check if subPath is forbidden
 		String forbiddenSubPathRegex = "^[A-Za-z]:.*|.*(\\.\\.).*|^/.*";
 		if (subPath.matches(forbiddenSubPathRegex)) {
-			throw new AuthorizationException("This sub path is forbidden : " + subPath);
+			throw new AuthorizationException("This sub path is forbidden: " + subPath);
 		}
 	}
 	

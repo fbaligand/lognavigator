@@ -6,35 +6,29 @@
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
 >
 
-	<!-- Profile which disables Spring-Security -->
+	<!-- Profile that disables Spring-Security -->
 	<beans profile="security-disabled">
 		<security:http security="none" />
 	</beans>
 
-	<!-- Profile which enables Spring-Security -->
+	<!-- Profile that enables Spring-Security -->
 	<beans profile="security-enabled">
 	
-		<security:http request-matcher="regex" pattern="^/(error|resources)/.+$" security="none"/>
-	
-		<security:http realm="LogNavigator Authentication" use-expressions="false" access-decision-manager-ref="accessDecisionManager" >
-			<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-			<security:intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-			<security:intercept-url pattern="/logs/*/*" access="IS_AUTHENTICATED_FULLY, IS_AUTHORIZED_LOG_ACCESS_CONFIG" />
-			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
+		<security:http realm="LogNavigator Authentication">
+
+			<security:intercept-url pattern="/login" access="permitAll" />
+			<security:intercept-url pattern="/resources/**" access="permitAll" />
+			<security:intercept-url pattern="/error/**" access="permitAll" />
+			<security:intercept-url pattern="/logs/{logAccessConfigId}/*" access="isFullyAuthenticated() and @webSecurity.hasPermission(authentication, #logAccessConfigId)" />
+			<security:intercept-url pattern="/**" access="isFullyAuthenticated()" />
+
 			<security:form-login login-page="/login" login-processing-url="/authenticate" authentication-failure-url="/login?authenticationError=true" />
 			<security:logout delete-cookies="JSESSIONID" logout-success-url="/login" />
 			<security:access-denied-handler error-page="/error/403" />
 			<security:csrf disabled="true"/>
 		</security:http>
 		
-		<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
-			<constructor-arg>
-				<list>
-					<bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
-					<bean class="org.lognavigator.mvc.LogAccessConfigAuthorizedVoter"/>
-				</list>
-			</constructor-arg>
-		</bean>
+		<bean id="webSecurity" class="org.lognavigator.security.WebSecurity" />
 		
 		<!-- Reference to external spring-security authentication-manager configuration -->	
 		<import resource="${lognavigator.authentication.config:classpath:lognavigator-authentication-context.xml}"/>

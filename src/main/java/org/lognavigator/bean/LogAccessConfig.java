@@ -272,7 +272,7 @@ public class LogAccessConfig implements Comparable<LogAccessConfig> {
 		case HTTPD:
 			return "LogAccessConfig [" + id + ": HTTPD " + url + "]";
 		default:
-			throw new IllegalStateException("Unknown LogAccessConfig type : " + type);
+			throw new IllegalStateException("Unknown LogAccessConfig type: " + type);
 		}
 	}
 	

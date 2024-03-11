@@ -95,7 +95,7 @@ public class HttpdLogAccessService implements LogAccessService {
 			FileCopyUtils.copy(remoteInputStream, downloadOutputStream);
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when executing downloading " + fileName + " on " + logAccessConfig, e);
+			throw new LogAccessException("Error when executing downloading '" + fileName + "' on '" + logAccessConfig + "'", e);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class HttpdLogAccessService implements LogAccessService {
 			remoteReader = new BufferedReader(new InputStreamReader(remoteInputStream, Constants.ISO_ENCODING));
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
+			throw new LogAccessException("Error when connecting to '" + logAccessConfig + "'", e);
 		}
 		
 		String currentLine = null;
@@ -135,7 +135,7 @@ public class HttpdLogAccessService implements LogAccessService {
 				}
 			}
 			if (!isTableStartReached) {
-				throw new LogAccessException("Impossible to get log files list on URL " + logAccessConfig.getUrl() + " :\n" + startContent.toString());
+				throw new LogAccessException("Impossible to get log files list on URL '" + logAccessConfig.getUrl() + "':\n" + startContent.toString());
 			}
 			
 			// Result meta-informations
@@ -220,13 +220,13 @@ public class HttpdLogAccessService implements LogAccessService {
 			
 		}
 		catch (RuntimeException e) {
-			throw new LogAccessException("Error when parsing this line :\n" + currentLine, e);
+			throw new LogAccessException("Error when parsing this line:\n" + currentLine, e);
 		}
 		catch (ParseException e) {
-			throw new LogAccessException("Error when parsing this line :\n" + currentLine, e);
+			throw new LogAccessException("Error when parsing this line:\n" + currentLine, e);
 		}
 		catch (IOException e) {
-			throw new LogAccessException("I/O Error when parsing log files list\n" + e.getMessage(), e);
+			throw new LogAccessException("I/O Error when parsing log files list:\n" + e.getMessage(), e);
 		}
 		finally {
 			IOUtils.closeQuietly(remoteReader);

@@ -22,4 +22,14 @@ public class ScpStreamingSystemFile extends InMemoryDestFile {
 		return this.outputStream;
 	}
 
+	@Override
+	public OutputStream getOutputStream(boolean append) throws IOException {
+		return this.outputStream;
+	}
+
+	@Override
+	public long getLength() {
+		return -1;
+	}
+
 }

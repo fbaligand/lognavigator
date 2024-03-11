@@ -86,7 +86,7 @@ public class DefaultConfigService implements ConfigService {
 		}
 		
 		// No LogAccessConfig found
-		throw new ConfigException("logAccessConfigId " + id + " doesn't correspond to any known log access config");
+		throw new ConfigException("logAccessConfigId '" + id + "' doesn't correspond to any known log access config");
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class DefaultConfigService implements ConfigService {
 		
 		// Does config file exist ?
 		if (!logNavigatorConfigResource.exists()) {
-			throw new ConfigException("The config file " + logNavigatorConfigResource + " does not exist");
+			throw new ConfigException("The config file '" + logNavigatorConfigResource + "' does not exist");
 		}
 		
 		// Should we reload config file ? (because it has been modified since last reload)
@@ -134,7 +134,7 @@ public class DefaultConfigService implements ConfigService {
 				return;
 			}
 		} catch (IOException e) {
-			throw new ConfigException("Error when trying to access lognavigator config file " + logNavigatorConfigResource, e);
+			throw new ConfigException("Error when trying to access lognavigator config file '" + logNavigatorConfigResource + "'", e);
 		}
 		
 		// Load lognavigator XML configuration
@@ -146,10 +146,10 @@ public class DefaultConfigService implements ConfigService {
 			this.logAccessConfigs = logNavigatorConfig.getLogAccessConfigs();
 		}
 		catch (IOException e) {
-			throw new ConfigException("I/O error when trying to load lognavigator config file " + logNavigatorConfigResource, e);
+			throw new ConfigException("I/O error when trying to load lognavigator config file '" + logNavigatorConfigResource + "'", e);
 		}
 		catch (JAXBException e) {
-			throw new ConfigException("XML load error when trying to load lognavigator config file " + logNavigatorConfigResource, e);
+			throw new ConfigException("XML load error when trying to load lognavigator config file '" + logNavigatorConfigResource + "'", e);
 		}
 		finally {
 			IOUtils.closeQuietly(logNavigatorConfigInputStream);
@@ -169,18 +169,18 @@ public class DefaultConfigService implements ConfigService {
 		
 		// Case where configuration is empty => config error
 		if (this.logAccessConfigs.isEmpty()) {
-			throw new ConfigException("lognavigator config file " + logNavigatorConfigResource + " is empty : at least one configuration must be defined");
+			throw new ConfigException("lognavigator config file '" + logNavigatorConfigResource + "' is empty: at least one configuration must be defined");
 		}
 		
 		for (LogAccessConfig logAccessConfig : this.logAccessConfigs) {
 			
 			if (logAccessConfig.getType() == null) {
-				throw new ConfigException("unknown type for log-access-config '" + logAccessConfig.getId() + "'. Valid values are : " + Arrays.asList(LogAccessType.values()));
+				throw new ConfigException("unknown type for log-access-config '" + logAccessConfig.getId() + "'. Valid values are: " + Arrays.asList(LogAccessType.values()));
 			}
 
 			switch (logAccessConfig.getType()) {
 			case LOCAL:
-				if (StringUtils.isEmpty(logAccessConfig.getDirectory())) {
+				if (!StringUtils.hasText(logAccessConfig.getDirectory())) {
 					throw new ConfigException("'directory' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
 				}
 				File directoryFile = new File(logAccessConfig.getDirectory());
@@ -189,7 +189,7 @@ public class DefaultConfigService implements ConfigService {
 				}
 				break;
 			case HTTPD:
-				if (StringUtils.isEmpty(logAccessConfig.getUrl())) {
+				if (!StringUtils.hasText(logAccessConfig.getUrl())) {
 					throw new ConfigException("'url' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
 				}
 				if (!logAccessConfig.getUrl().endsWith("/")) {
@@ -197,18 +197,18 @@ public class DefaultConfigService implements ConfigService {
 				}
 				break;
 			case SSH:
-				if (StringUtils.isEmpty(logAccessConfig.getUser())) {
+				if (!StringUtils.hasText(logAccessConfig.getUser())) {
 					throw new ConfigException("'user' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
 				}
-				if (StringUtils.isEmpty(logAccessConfig.getHost())) {
+				if (!StringUtils.hasText(logAccessConfig.getHost())) {
 					throw new ConfigException("'host' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
 				}
-				if (StringUtils.isEmpty(logAccessConfig.getDirectory())) {
+				if (!StringUtils.hasText(logAccessConfig.getDirectory())) {
 					throw new ConfigException("'directory' attribute must be defined for log-access-config '" + logAccessConfig.getId() + "'");
 				}
 				break;
 			default:
-				throw new IllegalStateException("unmanaged log access config type : " + logAccessConfig.getType() + "'");
+				throw new IllegalStateException("unmanaged log access config type: '" + logAccessConfig.getType() + "'");
 			}
 		}
 	}

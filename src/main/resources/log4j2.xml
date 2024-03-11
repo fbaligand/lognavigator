@@ -1,0 +1,20 @@
+<Configuration>
+
+	<Appenders>
+		<Console name="console">
+			<PatternLayout pattern="%5p - %c - %m%n" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<Root level="WARN">
+			<AppenderRef ref="console" />
+		</Root>
+
+		<Logger name="org.lognavigator" level="INFO" />
+		<Logger name="org.springframework" level="INFO" />
+		<Logger name="org.springframework.security" level="WARN" />
+		<Logger name="net.schmizz.sshj" level="WARN" />
+	</Loggers>
+
+</Configuration>

@@ -112,7 +112,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		}
 		catch (SSHException e) {
 			IOUtils.closeQuietly(session, sshClient);
-			throw new LogAccessException("Error when executing command " + shellCommand + " to " + logAccessConfig, e);
+			throw new LogAccessException("Error when executing command '" + shellCommand + "' to '" + logAccessConfig + "'", e);
 		}
 		
 		// Get and return the result stream
@@ -136,7 +136,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 			sshClient.newSCPFileTransfer().download(filePath, new ScpStreamingSystemFile(downloadOutputStream));
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when executing downloading " + fileName + " on " + logAccessConfig, e);
+			throw new LogAccessException("Error when executing downloading '" + fileName + "' on '" + logAccessConfig, e);
 		}
 		finally {
             try {
@@ -169,7 +169,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 			remoteResourceInfos = remoteResourcefilter.getRemoteResourceInfos();
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when listing files and directories on " + logAccessConfig, e);
+			throw new LogAccessException("Error when listing files and directories on '" + logAccessConfig + "'", e);
 		}
 		finally {
 			IOUtils.closeQuietly(sftpClient, sshClient);
@@ -223,7 +223,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 
 			}
 			catch (IOException ioe) {
-				throw new LogAccessException("Error while reading response of command : " + GET_OS_INFO_COMMAND, ioe);
+				throw new LogAccessException("Error while reading response of command: " + GET_OS_INFO_COMMAND, ioe);
 			}
 		}
 			
@@ -249,7 +249,7 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 			sshClient.connect(logAccessConfig.getHost());
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when connecting to " + logAccessConfig, e);
+			throw new LogAccessException("Error when connecting to '" + logAccessConfig + "'", e);
 		}
 		
 		// Authenticate to the remote host
@@ -270,11 +270,11 @@ public class SshLogAccessService extends AbstractShellLogAccessService implement
 		}
 		catch (SSHException e) {
 			IOUtils.closeQuietly(sshClient);
-			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
+			throw new LogAccessException("Error when authenticating to '" + logAccessConfig + "'", e);
 		}
 		catch (IOException e) {
 			IOUtils.closeQuietly(sshClient);
-			throw new LogAccessException("Error when authenticating to " + logAccessConfig, e);
+			throw new LogAccessException("Error when authenticating to '" + logAccessConfig + "'", e);
 		}
 		
 		// Return the connnected and authenticated client

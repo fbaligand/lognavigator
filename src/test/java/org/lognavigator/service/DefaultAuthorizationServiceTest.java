@@ -1,7 +1,7 @@
 package org.lognavigator.service;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.lognavigator.bean.LogAccessConfig;
 import org.lognavigator.bean.LogAccessConfig.LogAccessType;
 import org.lognavigator.exception.AuthorizationException;
-import org.lognavigator.service.AuthorizationService;
-import org.lognavigator.service.DefaultAuthorizationService;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 
 

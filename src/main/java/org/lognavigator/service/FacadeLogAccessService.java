@@ -82,7 +82,7 @@ public class FacadeLogAccessService implements LogAccessService {
 		case SSH: 
 			return logAccessServiceSsh;
 		default:
-			throw new IllegalArgumentException("Unknown type for log access config " + logAccessConfigId);
+			throw new IllegalArgumentException("Unknown type for log access config '" + logAccessConfigId + "'");
 		}
 	}
 }

@@ -1,7 +1,5 @@
 # LogNavigator
 
-[![Travis Build Status](https://travis-ci.org/fbaligand/lognavigator.svg)](https://travis-ci.org/fbaligand/lognavigator)
-
 LogNavigator is a web application, made in java, which lets you browse your logs, wherever they are.
 
 ## Features
@@ -96,8 +94,8 @@ Enabling security allows 2 points :
 - Provide user and role based authorization for each log access configuration
 
 To enable security, few steps :
-- create a new file called `lognavigator-authentication-context.xml`, containing users, passwords and roles (authorities).
-Here's an example :
+- create a new file called `lognavigator-authentication-context.xml`, containing users, passwords and roles (authorities).  
+Here's an example using bcrypt algorithm to hash passwords:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
@@ -108,7 +106,29 @@ Here's an example :
 >
 	<authentication-manager>
 		<authentication-provider>
-			<password-encoder hash="md5"/>
+			<password-encoder hash="bcrypt"/>
+			<user-service>
+				<user name="user1" password="$2y$10$GaRb0RZWrg.teBQOhJdJoeGD0Q8cs4B0/6v6wOFb0dc3AtDC0FfXm" authorities="role1, role2" />
+				<user name="user2" password="$2y$10$GaRb0RZWrg.teBQOhJdJoeGD0Q8cs4B0/6v6wOFb0dc3AtDC0FfXm" authorities="role3" />
+				<user name="user3" password="$2y$10$GaRb0RZWrg.teBQOhJdJoeGD0Q8cs4B0/6v6wOFb0dc3AtDC0FfXm" authorities="" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>
+```
+
+You can also use a simple digest algorithm to hash passwords (but it's not recommended):
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	   xmlns="http://www.springframework.org/schema/security"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
+>
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder ref="md5PasswordEncoder"/>
 			<user-service>
 				<user name="user1" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="role1, role2" />
 				<user name="user2" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="role3" />
@@ -116,9 +136,17 @@ Here's an example :
 			</user-service>
 		</authentication-provider>
 	</authentication-manager>
+	
+	<beans:bean id="md5PasswordEncoder" class="org.springframework.security.crypto.password.MessageDigestPasswordEncoder">
+		<beans:constructor-arg name="algorithm" value="MD5" />
+	</beans:bean>
+
 </beans:beans>
 ```
-In this example, passwords are hashed using `md5` algorithm. But you can also use `sha`, `sha-256`, `bcrypt` or even `plaintext`.
+In this example, passwords are hashed using `MD5` algorithm. But you can also use [all algorithms listed here](https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest).
+
+You can find other authentication-manager examples in [this sample configuration file](./src/test/resources/lognavigator-authentication-context.xml).
+
 
 - In your `lognavigator.xml` file, for each `log-access-config`, define authorized users and roles.
 For example : 
@@ -200,8 +228,8 @@ You can customize advanced options using two ways :
 
 # Requirements
 
-- Java 6, 7 or 8 (not Java 9 or later)
-- Java Server compatible with Servlet API 2.5 (Tomcat 6+ , Jetty 6+, Glassfish 1+, JBoss AS 5+, ...)
+- Java 8, 11, 17 or 21
+- JEE App Server compatible from Servlet API 3.1 to Servlet API 4.0, but not Servlet API 5.0 (Tomcat 8, Tomcat 9, but not Tomcat 10)
 
 
 # Change Log

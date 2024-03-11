@@ -22,7 +22,7 @@ public class DefaultAuthorizationService implements AuthorizationService {
 
 			// Case where user is unauthenticated
 			if (userName == null) {
-				throw new AuthorizationException("You are not authenticated. Authentication is needed to access to " + logAccessConfig.getId());
+				throw new AuthorizationException("You are not authenticated. Authentication is needed to access to '" + logAccessConfig.getId() + "'");
 			}
 			for (String authorizedUser : logAccessConfig.getAuthorizedUsers()) {
 				if (authorizedUser.equalsIgnoreCase(userName)) {
@@ -31,7 +31,7 @@ public class DefaultAuthorizationService implements AuthorizationService {
 			}
 			// Case where user is not in the authorized users list
 			if (logAccessConfig.isEveryRoleAuthorized()) {
-				throw new AuthorizationException("Your userName is not authorized to access to " + logAccessConfig.getId());
+				throw new AuthorizationException("Your username is not authorized to access to '" + logAccessConfig.getId() + "'");
 			}
 		}
 		
@@ -47,7 +47,7 @@ public class DefaultAuthorizationService implements AuthorizationService {
 				}
 			}
 			// Case where user has no role in the authorized roles list
-			throw new AuthorizationException("You don't have any role authorized to access to " + logAccessConfig.getId());
+			throw new AuthorizationException("You don't have any role authorized to access to '" + logAccessConfig.getId() + "'");
 		}
 	}
 	

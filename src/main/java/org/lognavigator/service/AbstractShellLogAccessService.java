@@ -55,14 +55,14 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 				// Check if perl is installed
 				String result = FileCopyUtils.copyToString(new InputStreamReader(resultStream));
 				if (!result.contains(DIRECTORY_OK_MARKER)) {
-					throw new LogAccessException("Configuration is invalid : directory " + logAccessConfig.getDirectory() + " does not exist");
+					throw new LogAccessException("Configuration is invalid: directory '" + logAccessConfig.getDirectory() + "' does not exist");
 				}
 				boolean isPerlInstalled = result.toLowerCase().contains(PERL_INSTALLED_MARKER);
 				// Update logAccessConfig to cache the information (and not execute command every time)
 				logAccessConfig.setPerlInstalled(isPerlInstalled);
 			}
 			catch (IOException ioe) {
-				throw new LogAccessException("Error while reading response of command : " + GET_PERL_INFO_COMMAND, ioe);
+				throw new LogAccessException("Error while reading response of command: " + GET_PERL_INFO_COMMAND, ioe);
 			}
 		}
 		return logAccessConfig.isPerlInstalled();
@@ -86,7 +86,7 @@ public abstract class AbstractShellLogAccessService implements LogAccessService 
 				logAccessConfig.setLsWithGroupDirectoriesFirstSupported(isLsWithGroupDirectoriesFirstSupported);
 			}
 			catch (IOException ioe) {
-				throw new LogAccessException("Error while reading response of command : " + LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND, ioe);
+				throw new LogAccessException("Error while reading response of command: " + LS_WITH_GROUP_DIRECTORIES_FIRST_CHECK_COMMAND, ioe);
 			}
 		}
 		return logAccessConfig.isLsWithGroupDirectoriesFirstSupported();

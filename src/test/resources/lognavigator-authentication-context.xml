@@ -3,39 +3,54 @@
 	   xmlns="http://www.springframework.org/schema/security"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd"
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
 >
 
-    	<!-- XML users -->
+   	<!-- XML users with bcrypt hash -->
 	<authentication-manager>
 		<authentication-provider>
-			<password-encoder hash="md5"/>
+			<password-encoder hash="bcrypt" />
 			<user-service>
-				<user name="user1" password="5f4dcc3b5aa765d61d8327deb882cf99"  authorities="lognavigator, lognavigator-protected" />
-				<user name="user2" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="lognavigator" />
-				<user name="user3" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="" />
+				<user name="user1" password="$2y$10$GaRb0RZWrg.teBQOhJdJoeGD0Q8cs4B0/6v6wOFb0dc3AtDC0FfXm"  authorities="lognavigator, lognavigator-protected" />
+				<user name="user2" password="$2y$10$GaRb0RZWrg.teBQOhJdJoeGD0Q8cs4B0/6v6wOFb0dc3AtDC0FfXm" authorities="lognavigator" />
+				<user name="user3" password="$2y$10$GaRb0RZWrg.teBQOhJdJoeGD0Q8cs4B0/6v6wOFb0dc3AtDC0FfXm" authorities="" />
 			</user-service>
 		</authentication-provider>
 	</authentication-manager>
-	
-    	<!-- Properties users -->
+
+   	<!-- XML users with MD5 hash -->
 <!-- 	<authentication-manager> -->
 <!-- 		<authentication-provider> -->
-<!-- 			<password-encoder hash="md5"/> -->
+<!-- 			<password-encoder ref="md5PasswordEncoder"/> -->
+<!-- 			<user-service> -->
+<!-- 				<user name="user1" password="5f4dcc3b5aa765d61d8327deb882cf99"  authorities="lognavigator, lognavigator-protected" /> -->
+<!-- 				<user name="user2" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="lognavigator" /> -->
+<!-- 				<user name="user3" password="5f4dcc3b5aa765d61d8327deb882cf99" authorities="" /> -->
+<!-- 			</user-service> -->
+<!-- 		</authentication-provider> -->
+<!-- 	</authentication-manager> -->
+<!-- 	<beans:bean id="md5PasswordEncoder" class="org.springframework.security.crypto.password.MessageDigestPasswordEncoder"> -->
+<!-- 		<beans:constructor-arg name="algorithm" value="MD5" /> -->
+<!-- 	</beans:bean> -->
+
+	<!-- Properties users -->
+<!-- 	<authentication-manager> -->
+<!-- 		<authentication-provider> -->
+<!-- 			<password-encoder hash="bcrypt" /> -->
 <!-- 			<user-service id="myUserService" properties="file:${user.dir}/src/test/resources/users.properties"/> -->
 <!-- 		</authentication-provider> -->
 <!-- 	</authentication-manager> -->
-	
+
 	<!-- Reloadable properties users -->
 <!-- 	<authentication-manager> -->
 <!-- 		<authentication-provider user-service-ref="userService"> -->
-<!-- 			<password-encoder hash="md5"/> -->
+<!-- 			<password-encoder hash="bcrypt" /> -->
 <!-- 		</authentication-provider> -->
 <!-- 	</authentication-manager> -->
-<!-- 	<beans:bean id="userService" class="org.lognavigator.mvc.ReloadableInMemoryUserDetailsService"> -->
+<!-- 	<beans:bean id="userService" class="org.lognavigator.security.ReloadableInMemoryUserDetailsService"> -->
 <!-- 	    <beans:property name="properties" value="file:${user.dir}/src/test/resources/users.properties"/> -->
 <!-- 	</beans:bean> -->
-	
+
 	<!-- LDAP users -->
 <!-- 	<authentication-manager> -->
 <!-- 	    <ldap-authentication-provider user-dn-pattern="uid={0},ou=people" group-search-base="ou=groups" role-prefix="none" /> -->

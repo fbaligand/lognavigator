@@ -1,4 +1,4 @@
-package org.lognavigator.mvc;
+package org.lognavigator.security;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +45,7 @@ public class ReloadableInMemoryUserDetailsService implements UserDetailsService 
 				return;
 			}
 		} catch (IOException e) {
-			throw new ConfigException("Error when trying to access users file " + usersPropertiesResource, e);
+			throw new ConfigException("Error when trying to access users file: " + usersPropertiesResource, e);
 		}
 		
 		// Update the lastModified date information for users file
@@ -60,7 +60,7 @@ public class ReloadableInMemoryUserDetailsService implements UserDetailsService 
 			this.inMemoryUserDetailsManager = new InMemoryUserDetailsManager(usersProperties);
 		}
 		catch (IOException e) {
-			throw new ConfigException("I/O error when trying to load users file " + usersPropertiesResource, e);
+			throw new ConfigException("I/O error when trying to load users file: " + usersPropertiesResource, e);
 		}
 		finally {
 			IOUtils.closeQuietly(usersFileInputStream);
@@ -87,7 +87,7 @@ public class ReloadableInMemoryUserDetailsService implements UserDetailsService 
 		
 		// Does users file exist ?
 		if (!usersPropertiesResource.exists()) {
-			throw new ConfigException("The users file " + usersPropertiesResource + " does not exist");
+			throw new ConfigException("The users file '" + usersPropertiesResource + "' does not exist");
 		}
 		
 		reloadUsersIfNecessary();

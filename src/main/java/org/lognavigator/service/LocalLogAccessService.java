@@ -71,10 +71,10 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 		}
 		catch (IOException e) {
 			if (e.getMessage().matches("Cannot run program \".+\" \\(in directory \".*\"\\).*")) {
-				throw new LogAccessException("Configuration is invalid : directory " + logAccessConfig.getDirectory() + " does not exist", e);
+				throw new LogAccessException("Configuration is invalid: directory '" + logAccessConfig.getDirectory() + "' does not exist", e);
 			}
 			else {
-				throw new LogAccessException("Error when executing command " + shellCommand + " to " + logAccessConfig, e);
+				throw new LogAccessException("Error when executing command '" + shellCommand + "' to '" + logAccessConfig + "'", e);
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public class LocalLogAccessService extends AbstractShellLogAccessService impleme
 			FileCopyUtils.copy(new FileInputStream(downloadFile), downloadOutputStream);
 		}
 		catch (IOException e) {
-			throw new LogAccessException("Error when executing downloading " + fileName + " on " + logAccessConfig, e);
+			throw new LogAccessException("Error when executing downloading '" + fileName + "' on '" + logAccessConfig + "'", e);
 		}
 	}
 

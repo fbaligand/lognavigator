@@ -9,7 +9,7 @@
 >
 
 	<!-- Spring MVC deserves all http requests (/*) -->
-	<mvc:default-servlet-handler/>
+	<mvc:default-servlet-handler />
 
 	<!-- Enable Spring MVC @Controller programming model -->
 	<context:component-scan base-package="org.lognavigator.controller, org.lognavigator.mvc" />
@@ -17,7 +17,7 @@
 
 	<!-- Enable Tiles Layout Templating -->
 	<mvc:tiles-configurer preparer-factory="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory">
-		<mvc:definitions location="/WEB-INF/tiles.xml"/>
+		<mvc:definitions location="/WEB-INF/tiles.xml" />
 	</mvc:tiles-configurer>
     
 	<!-- Enable Tiles View Resolver -->
@@ -28,8 +28,10 @@
 	<!-- Configure Third-Party Static Web Resources -->
 	<mvc:resources mapping="/resources/webjars/**" location="classpath:/META-INF/resources/webjars/" cache-period="31536000" />
 	
+	<!-- Configure webapp property placeholder -->
+	<context:property-placeholder location="META-INF/MANIFEST.MF" />
+	
 	<!-- Configure Project Static Web Resources -->
-	<context:property-placeholder location="META-INF/MANIFEST.MF"/>
 	<mvc:resources mapping="/resources/${Implementation-Version}/js/**" location="/js/" cache-period="31536000" />
 	<mvc:resources mapping="/resources/${Implementation-Version}/css/**" location="/css/" cache-period="31536000" />
 	<mvc:resources mapping="/resources/${Implementation-Version}/images/**" location="/images/" cache-period="31536000" />
