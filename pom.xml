@@ -42,17 +42,17 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    	
-    	<java.version>1.8</java.version>
-    	
+
+		<java.version>1.8</java.version>
+
 		<servlet-api.version>3.1.0</servlet-api.version>
 		<jsp-api.version>2.3.0</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
-    	<jaxb.version>2.3.9</jaxb.version>
-    	<annotation-api.version>1.3.2</annotation-api.version>
-    	
-		<spring.version>5.3.31</spring.version>
+		<jaxb.version>2.3.9</jaxb.version>
+		<annotation-api.version>1.3.2</annotation-api.version>
+
+		<spring.version>5.3.39</spring.version>
 		<spring.security.version>5.8.15</spring.security.version>
 		<jackson.version>2.16.1</jackson.version>
 		<tiles.version>3.0.8</tiles.version>
